@@ -6,7 +6,7 @@ namespace GameScene.Entities.Asteroid
     {
         public readonly Asteroid[] Asteroids;
 
-        public AsteroidsPool(Asteroid prefab, int sizePool, Transform transformSpawn, Transform transformParent)
+        public AsteroidsPool(Asteroid prefab, int sizePool, Transform transformSpawn, Transform transformParent, Asteroid[] smallAsteroids)
         {
             Asteroids = new Asteroid[sizePool];
 
