@@ -1,51 +1,63 @@
+using System;
 using UnityEngine;
 
 namespace GameScene.Entities.Asteroid
 {
     public class AsteroidFabric : MonoBehaviour
     {
-        [SerializeField] private float _minSpeedAsteroid;
-        [SerializeField] private float _maxSpeedAsteroid;
+        [SerializeField] private Vector2 _speed;
+        [SerializeField] private Vector2 _speedSmall;
         [SerializeField] private int _countAsteroids;
-        [SerializeField] private int _countSmallAsteroids;
-        [SerializeField] private int _destroyed;
         [SerializeField] private Asteroid _prefab;
         [SerializeField] private Asteroid _smallPrefab;
         [SerializeField] private Transform[] _transformsSpawn;
         [SerializeField] private Transform _transformParent;
         
+        private int _destroyed;
         private AsteroidsPool _asteroidsPool;
 
-        public void Start()
+        private void Start()
         {
             CreateAsteroids();
         }
-        
+
+        private void OnDestroy()
+        {
+            _asteroidsPool.Destroy();
+            _asteroidsPool.OnAsteroidDestroyed -= AddDestroyedAsteroid;
+        }
+
         private void CreateAsteroids()
         {
-            Transform transformSpawn = _transformsSpawn[Random.Range(0, _transformsSpawn.Length)];
-            _asteroidsPool = new AsteroidsPool(_prefab, _countAsteroids, transformSpawn, _transformParent);
+            _asteroidsPool = new AsteroidsPool(_prefab, _countAsteroids, _transformsSpawn, _transformParent, _smallPrefab, _speed, _speedSmall);
+            _asteroidsPool.OnAsteroidDestroyed += AddDestroyedAsteroid;
 
-            RespawnAsteroids();
+            RestartFly();
         }
-
-        private void RespawnAsteroids()
+        
+        private void RestartFly()
         {
-            foreach (Asteroid asteroid in _asteroidsPool.Asteroids)
+            for (int i = 0; i < _asteroidsPool.SmallAsteroids.Length; i ++)
             {
-                float vectorX = Random.Range(_minSpeedAsteroid, _maxSpeedAsteroid);
-                float vectorY = Random.Range(_minSpeedAsteroid, _maxSpeedAsteroid);
-                asteroid.Activate(new Vector2(vectorX, vectorY));
+                if (i < _asteroidsPool.Asteroids.Length)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, _transformsSpawn.Length);
+                    Transform transformSpawn = _transformsSpawn[randomIndex];
+                    _asteroidsPool.Asteroids[i].Activate(transformSpawn);
+                }
+                
+                _asteroidsPool.SmallAsteroids[i].Deactivate();
             }
         }
-
+        
         private void AddDestroyedAsteroid()
         {
             _destroyed++;
 
-            if (_destroyed == _countAsteroids + _countSmallAsteroids)
+            if (_destroyed == _countAsteroids * 3)
             {
-                
+                _destroyed = 0;
+                RestartFly();
             }
         }
     }
