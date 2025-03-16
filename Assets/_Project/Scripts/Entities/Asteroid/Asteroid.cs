@@ -1,38 +1,40 @@
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class Asteroid : MonoBehaviour
+    public class Asteroid
     {
         public event Action OnDestroyed;
         public event Action<Transform> OnDestroyed1;
-        
-        [SerializeField] private Rigidbody2D _rb;
 
-        private Vector2 _velocity;
+        private readonly Vector2 _velocity;
+        private readonly float _sprayVelocity;
 
-        public Asteroid Create(Transform transformSpawn, Transform transformParent, Vector2 velocity)
+        public Asteroid(Vector2 velocity, float sprayVelocity)
         {
-            Asteroid asteroid = Instantiate(this, transformSpawn, transformParent);
-            asteroid._velocity = velocity;
-            asteroid.Deactivate();
+            _velocity = velocity;
+            _sprayVelocity = sprayVelocity;
+        }
+        
+        public void Activate(GameObject thisObject, Transform transformSpawn, Rigidbody2D rb)
+        {
+            thisObject.SetActive(true);
+            thisObject.transform.position = transformSpawn.position;
             
-            return asteroid;
+            float velocityX = Random.Range(_velocity.x - _sprayVelocity, _velocity.x + _sprayVelocity);
+            float velocityY = Random.Range(_velocity.x - _sprayVelocity, _velocity.x + _sprayVelocity);
+            Vector2 velocity = new Vector2(velocityX, velocityY);
+            rb.linearVelocity = velocity;
         }
         
-        public void Activate(Transform transformSpawn)
-        {
-            gameObject.SetActive(true);
-            gameObject.transform.position = transformSpawn.position;
-            _rb.linearVelocity = _velocity;
-        }
-        
-        public void Deactivate()
+        public void Deactivate(GameObject thisObject, Transform thisTransform)
         {
             OnDestroyed?.Invoke();
-            OnDestroyed1?.Invoke(transform);
-            gameObject.SetActive(false);
+            OnDestroyed1?.Invoke(thisTransform);
+
+            thisObject.SetActive(false);
         }
     }
 }

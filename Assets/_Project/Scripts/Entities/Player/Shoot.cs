@@ -1,16 +1,15 @@
-using System;
-using Cysharp.Threading.Tasks;
-using GameScene.Entities.Asteroid;
+using _Project.Scripts.Entities;
 using UnityEngine;
 
 namespace GameScene.Entities.Player
 {
     public class Shoot : MonoBehaviour
     {
-        [SerializeField] private AsteroidDestroyer _prefab;
         [SerializeField] private Transform _transformSpawn;
         [SerializeField] private float _speed;
         [SerializeField] private int _timeDestroy;
+        
+        private PoolObjects _poolObjects;
 
         private void Update()
         {
@@ -25,29 +24,32 @@ namespace GameScene.Entities.Player
             }
         }
 
-        private async void SpawnBullet()
+        public void Initialize(PoolObjects poolObjects)
         {
-            AsteroidDestroyer bullet = Instantiate(_prefab, _transformSpawn.position, Quaternion.identity);
-
-            float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
-            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-            if (bullet.TryGetComponent(out Rigidbody2D rigidbody))
-                rigidbody.linearVelocity = direction * _speed;
-            else
-            {
-                Rigidbody2D rb = bullet.gameObject.AddComponent<Rigidbody2D>();
-                rb.gravityScale = 0;
-                rb.linearVelocity = direction * _speed;
-            }
-
-            await DestroyBullet(bullet.gameObject);
+            _poolObjects = poolObjects;
         }
 
-        private async UniTask DestroyBullet(GameObject bullet)
+        private void SpawnBullet()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(_timeDestroy));
-            Destroy(bullet);
+            foreach (Bullet bullet in _poolObjects.Bullets)
+            {
+                if (!bullet.gameObject.activeSelf)
+                {
+                    bullet.transform.position = bullet.SpawnPosition;
+                    
+                    float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
+                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+                    if (bullet.TryGetComponent(out Rigidbody2D rigidbody))
+                        rigidbody.linearVelocity = direction * _speed;
+                    else
+                    {
+                        Rigidbody2D rb = bullet.gameObject.AddComponent<Rigidbody2D>();
+                        rb.gravityScale = 0;
+                        rb.linearVelocity = direction * _speed;
+                    }
+                }
+            }
         }
     }
 }
