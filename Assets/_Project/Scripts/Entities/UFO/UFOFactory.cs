@@ -1,29 +1,34 @@
 using System;
 using System.Threading;
-using _Project.Scripts.Entities;
+using GameScene.Repositories;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using GameScene.Entities.Player;
+using GameScene.Level;
 
-namespace GameScene.Entities.UFO
+namespace GameScene.Entities.UFOs
 {
     public class UFOFactory : MonoBehaviour
     {
         [SerializeField] private float _inTimeSpawn;
         [SerializeField] private float _maxTimeSpawn;
 
-        private Player _player;
+        private EndPanel _endPanel;
+        private PlayerUI _player;
         private PoolObjects _poolObjects;
         private CancellationTokenSource _tokenSource;
 
         private void OnDestroy()
         {
             _player.OnDeath -= StopSpawnUFO;
+            _endPanel.OnRestart -= StartSpawnUFO;
         }
 
-        public void Initialize(Player player, PoolObjects poolObjects)
+        public void Initialize(PlayerUI player, PoolObjects poolObjects, EndPanel endPanel)
         {
+            _endPanel = endPanel;
+            _endPanel.OnRestart += StartSpawnUFO;
             _player = player;
             _poolObjects = poolObjects;
             _player.OnDeath += StopSpawnUFO;
@@ -47,11 +52,11 @@ namespace GameScene.Entities.UFO
             {
                 float time = Random.Range(_inTimeSpawn, _maxTimeSpawn);
                 await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                foreach (UFO UFO in _poolObjects.Ufos)
+                foreach (Ufo UFO in _poolObjects.Ufos)
                 {
                     if (!UFO.gameObject.activeSelf)
                     {
-                        UFO.Activate();
+                        UFO.Activate(_poolObjects.GetRandomTransform());
                         break;
                     }
                 }

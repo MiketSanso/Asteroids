@@ -1,14 +1,10 @@
 using UnityEngine;
-using System;
 using Random = UnityEngine.Random;
 
 namespace GameScene.Entities.Asteroid
 {
     public class Asteroid
     {
-        public event Action OnDestroyed;
-        public event Action<Transform> OnDestroyed1;
-
         private readonly Vector2 _velocity;
         private readonly float _sprayVelocity;
 
@@ -29,11 +25,8 @@ namespace GameScene.Entities.Asteroid
             rb.linearVelocity = velocity;
         }
         
-        public void Deactivate(GameObject thisObject, Transform thisTransform)
+        public void Deactivate(GameObject thisObject)
         {
-            OnDestroyed?.Invoke();
-            OnDestroyed1?.Invoke(thisTransform);
-
             thisObject.SetActive(false);
         }
     }

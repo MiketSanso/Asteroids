@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameScene.Level
+namespace GameScene.Entities.Teleport
 {
     public class TeleportedObject : MonoBehaviour
     {

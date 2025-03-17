@@ -1,42 +1,52 @@
 using UnityEngine;
+using System;
+using GameScene.Interfaces;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidUI : MonoBehaviour
+    public class AsteroidUI : MonoBehaviour, IDestroyableEnemy
     {
+        public event Action OnDestroyed;
+        public event Action<int> OnDestroyedWithScore;
+        public event Action<Transform> OnDestroyedWithPoint;
+        
         [SerializeField] private Rigidbody2D _rb;
-        public Asteroid Asteroid { get; private set; }
+        [SerializeField] private int scoreSize;
+        
+        private Asteroid _asteroid;
 
-        public AsteroidUI Create(Transform transformSpawn, Transform transformParent, Vector2 velocity, float sprayVelocity)
+        public AsteroidUI Create(Transform transformSpawn, 
+            Transform transformParent, 
+            Vector2 velocity, 
+            float sprayVelocity)
         {
-            AsteroidUI asteroid = Instantiate(this, transformSpawn, transformParent);
-            asteroid.Asteroid = new Asteroid(velocity, sprayVelocity);
-            asteroid.Asteroid.Deactivate(gameObject, transform);
+            AsteroidUI asteroid = Instantiate(this, transformSpawn.position, Quaternion.identity, transformParent);
+            asteroid._asteroid = new Asteroid(velocity, sprayVelocity);
+            asteroid._asteroid.Deactivate(gameObject);
             
             return asteroid;
         }
-        
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.TryGetComponent(out IEnemyDestroyer asteroidDestroyer))
-            {
-                Asteroid.Deactivate(gameObject, transform);
-                asteroidDestroyer.Destroy();
-            }
-        }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        public void Destroy(bool isPlayer)
         {
-            if (other.gameObject.TryGetComponent(out IEnemyDestroyer asteroidDestroyer))
-            {
-                Asteroid.Deactivate(gameObject, transform);
-                asteroidDestroyer.Destroy();
-            }
+             _asteroid.Deactivate(gameObject);
+
+             if (!isPlayer)
+             {
+                 OnDestroyedWithScore?.Invoke(scoreSize);
+                 OnDestroyedWithPoint?.Invoke(transform);
+                 OnDestroyed?.Invoke();
+             }
         }
         
         public void Activate(Transform transformSpawn)
         {
-            Asteroid.Activate(gameObject, transformSpawn, _rb);
+            _asteroid.Activate(gameObject, transformSpawn, _rb);
+        }
+        
+        public void Deactivate()
+        {
+            _asteroid.Deactivate(gameObject);
         }
     }
 }
