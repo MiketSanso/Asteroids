@@ -7,7 +7,9 @@ namespace GameScene.Entities.Player
 {
     public class Bullet : MonoBehaviour
     {
+        [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
+        [SerializeField] private Rigidbody2D _rb;
 
         public Bullet Create(PlayerUI player, Transform transformParent)
         {
@@ -34,8 +36,17 @@ namespace GameScene.Entities.Player
             gameObject.SetActive(false);
         }
 
-        public async UniTask DelayedDeactivate()
+        public async UniTask Shot(Transform transformSpawn)
         {
+            Activate();
+            
+            transform.position = transformSpawn.position;
+                    
+            float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            
+            _rb.linearVelocity = direction * _speed;
+            
             await UniTask.Delay(TimeSpan.FromSeconds(_timeDeactivate));
             Deactivate();
         }

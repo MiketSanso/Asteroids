@@ -3,16 +3,14 @@ using GameScene.Entities.Player;
 using GameScene.Entities.UFOs;
 using UnityEngine;
 using GameScene.Repositories;
+using Zenject;
 
 namespace GameScene.Level
 {
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private AsteroidFactory asteroidFactory;
-        [SerializeField] private UFOFactory _ufoFactory;
-        [SerializeField] private Shoot _shoot;
-        [SerializeField] private GameUI _gameUI;
-        [SerializeField] private PlayerUI _playerUI;
+        [SerializeField] private UfoFactory _ufoFactory;
         [SerializeField] private AsteroidData _asteroidData;
         [SerializeField] private AsteroidData _smallAsteroidData;
         [SerializeField] private Ufo _prefabUFO;
@@ -21,11 +19,12 @@ namespace GameScene.Level
         [SerializeField] private int _sizeUfoPool;
         [SerializeField] private int _sizeBulletsPool;
         [SerializeField] private Transform[] _transformsSpawn;
-        [SerializeField] private Transform transformParent;
-        [SerializeField] private EndPanel _endPanel;
+        [SerializeField] private Transform _transformParent;
         [SerializeField] private ScoreInfo _scoreInfo;
         
-        private PoolObjects _poolObjects;
+        [Inject] private EndPanel _endPanel;
+        [Inject] private PlayerUI _playerUI;
+        [Inject] private Shoot _shoot;
 
         private void Start()
         {
@@ -39,23 +38,11 @@ namespace GameScene.Level
 
         private void StartGame()
         {
-            _poolObjects = new PoolObjects(_smallAsteroidData, 
-                _asteroidData, 
-                _prefabUFO,
-                _prefabBullet, 
-                _sizeAsteroidsPool, 
-                _sizeUfoPool, 
-                _sizeBulletsPool,
-                _transformsSpawn,
-                transformParent,
-                _playerUI);
-            
-            _scoreInfo.Initialize(_endPanel, _poolObjects);
+            _scoreInfo.Initialize(_poolObjects);
             _shoot.Initialize(_poolObjects);
-            _ufoFactory.Initialize(_playerUI, _poolObjects, _endPanel);
-            asteroidFactory.Initialize(_poolObjects, _endPanel);
-            _endPanel.Initialize(_playerUI, _scoreInfo);
-            _gameUI.Initialize(_playerUI, _shoot); 
+            _ufoFactory.Initialize(_poolObjects);
+            asteroidFactory.Initialize(_poolObjects);
+            _endPanel.Initialize(_scoreInfo);
         }
     }
 }

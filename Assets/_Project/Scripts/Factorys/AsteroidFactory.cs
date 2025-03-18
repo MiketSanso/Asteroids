@@ -1,48 +1,48 @@
 using GameScene.Repositories;
 using UnityEngine;
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidFactory : MonoBehaviour
+    public class AsteroidFactory
     {
         [SerializeField] private Transform[] _transformsSpawn;
         [SerializeField] private int _countAsteroids; 
         
-        private EndPanel _endPanel;
+        [Inject] private EndPanel _endPanel;
         private int _destroyed;
-        private PoolObjects _poolObjects;
+        private AsteroidsPool _poolAsteroids;
 
         private void OnDestroy()
         {
             _endPanel.OnRestart -= RestartFly;
             
-            foreach (AsteroidUI asteroid in _poolObjects.Asteroids)
+            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
             {
                 asteroid.OnDestroyedWithPoint -= ActivateSmallAsteroids;
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
             
-            foreach (AsteroidUI asteroid in _poolObjects.SmallAsteroids)
+            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
             {
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
         }
 
-        public void Initialize(PoolObjects poolObjects, EndPanel endPanel)
+        public void Initialize(AsteroidsPool poolAsteroids)
         {
-            _endPanel = endPanel;
             _endPanel.OnRestart += RestartFly;
-            _poolObjects = poolObjects;
+            _poolAsteroids = poolAsteroids;
             RestartFly();
 
-            foreach (AsteroidUI asteroid in _poolObjects.Asteroids)
+            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
             {
                 asteroid.OnDestroyedWithPoint += ActivateSmallAsteroids;
                 asteroid.OnDestroyed += AddDestroyedAsteroid;
             }
             
-            foreach (AsteroidUI asteroid in _poolObjects.SmallAsteroids)
+            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
             {
                 asteroid.OnDestroyed += AddDestroyedAsteroid;
             }
@@ -52,13 +52,13 @@ namespace GameScene.Entities.Asteroid
         {
             _destroyed = 0;
             
-            for (int i = 0; i < _poolObjects.SmallAsteroids.Length; i ++)
+            for (int i = 0; i < _poolAsteroids.SmallAsteroids.Length; i ++)
             {
-                if (i < _poolObjects.Asteroids.Length)
+                if (i < _poolAsteroids.Asteroids.Length)
                 {
                     int randomIndex = UnityEngine.Random.Range(0, _transformsSpawn.Length);
                     Transform transformSpawn = _transformsSpawn[randomIndex];
-                    _poolObjects.Asteroids[i].Activate(transformSpawn);
+                    _poolAsteroids.Asteroids[i].Activate(transformSpawn);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace GameScene.Entities.Asteroid
         {
             int countActivatedAsteroids = 0;
             
-            foreach (AsteroidUI asteroid in _poolObjects.SmallAsteroids)
+            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
             {
                 if (countActivatedAsteroids < 2 && !asteroid.gameObject.activeSelf)
                 {

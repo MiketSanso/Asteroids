@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using GameScene.Entities.Player;
+using Zenject;
 
 namespace GameScene.Level
 {
@@ -12,8 +13,8 @@ namespace GameScene.Level
         [SerializeField] private TMP_Text _countLaserCharges;
         [SerializeField] private TMP_Text _timeRollbackLaser;
 
-        private PlayerUI _playerUI;
-        private Shoot _shoot;
+        [Inject] private PlayerUI _playerUI;
+        [Inject] private Shoot _shoot;
 
         private void Update()
         {
@@ -24,12 +25,6 @@ namespace GameScene.Level
             _angleOfRotations.text = $"Rotation: {Mathf.Round(_playerUI.transform.rotation.eulerAngles.z)}°";
             _countLaserCharges.text = $"Count shoots laser: {_shoot.CountShotsLaser}";
             _timeRollbackLaser.text = $"Time rollback laser: {_shoot.TimeRechargeLaser}";
-        }
-        
-        public void Initialize(PlayerUI playerUI, Shoot shoot)
-        {
-            _shoot = shoot;
-            _playerUI = playerUI;
         }
     }
 }

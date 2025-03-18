@@ -17,7 +17,7 @@ namespace GameScene.Entities.Player
         [SerializeField] private float _stepTimeRecharge;
         [SerializeField] private int _maxCountLaserShoots;
         
-        private PoolObjects _poolObjects;
+        private BulletPool _poolBullets;
         private UniTaskCompletionSource _rechargeCompletionSource;
         
         public float TimeRechargeLaser { get; private set; }
@@ -43,9 +43,9 @@ namespace GameScene.Entities.Player
             await RechargeLaser();
         }
 
-        public void Initialize(PoolObjects poolObjects)
+        public void Initialize(BulletPool poolBullets)
         {
-            _poolObjects = poolObjects;
+            _poolBullets = poolBullets;
         }
         
         private async void ShootLaser()
@@ -116,27 +116,11 @@ namespace GameScene.Entities.Player
 
         private async UniTask SpawnBullet()
         {
-            foreach (Bullet bullet in _poolObjects.Bullets)
+            foreach (Bullet bullet in _poolBullets.Bullets)
             {
                 if (!bullet.gameObject.activeSelf)
                 {
                     bullet.Activate();
-                    bullet.transform.position = _transformSpawn.position;
-                    
-                    float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
-                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-                    if (bullet.TryGetComponent(out Rigidbody2D rigidbody))
-                    {
-                        Debug.Log($"Direction: {direction}, Angle: {angle}");
-                        rigidbody.linearVelocity = direction * _speed;
-                    }
-                    else
-                    {
-                        Debug.LogError("У Player-а отсутствует Rigidbody!");
-                    }
-                    
-                    await bullet.DelayedDeactivate();
                     break;
                 }
             }

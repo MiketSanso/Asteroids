@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using GameScene.Interfaces;
+using UnityEngine.Serialization;
 
 namespace GameScene.Entities.Asteroid
 {
@@ -11,7 +12,7 @@ namespace GameScene.Entities.Asteroid
         public event Action<Transform> OnDestroyedWithPoint;
         
         [SerializeField] private Rigidbody2D _rb;
-        [SerializeField] private int scoreSize;
+        [SerializeField] private int _scoreSize;
         
         private Asteroid _asteroid;
 
@@ -33,7 +34,7 @@ namespace GameScene.Entities.Asteroid
 
              if (!isPlayer)
              {
-                 OnDestroyedWithScore?.Invoke(scoreSize);
+                 OnDestroyedWithScore?.Invoke(_scoreSize);
                  OnDestroyedWithPoint?.Invoke(transform);
                  OnDestroyed?.Invoke();
              }

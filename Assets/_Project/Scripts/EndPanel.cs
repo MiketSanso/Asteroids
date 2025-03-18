@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using GameScene.Repositories;
 using TMPro;
+using Zenject;
 
 namespace GameScene.Level
 {
@@ -16,7 +17,7 @@ namespace GameScene.Level
         [SerializeField] private TMP_Text _text;
         
         private ScoreInfo _scoreInfo;
-        private PlayerUI _playerUI;
+        [Inject] private PlayerUI _playerUI;
         
         private void Start()
         {
@@ -29,17 +30,16 @@ namespace GameScene.Level
             _restartButton.onClick.RemoveListener(Restart);
         }
         
+        public void Initialize(ScoreInfo scoreInfo)
+        {
+            _scoreInfo = scoreInfo;
+            _playerUI.OnDeath += Activate;
+        }
+        
         private void Restart()
         {
             OnRestart?.Invoke();
             Deactivate();
-        }
-        
-        public void Initialize(PlayerUI playerUI, ScoreInfo scoreInfo)
-        {
-            _scoreInfo = scoreInfo;
-            _playerUI = playerUI;
-            _playerUI.OnDeath += Activate;
         }
 
         private void Activate()

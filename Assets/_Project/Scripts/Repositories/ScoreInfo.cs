@@ -2,13 +2,14 @@ using GameScene.Entities.Asteroid;
 using GameScene.Entities.UFOs;
 using UnityEngine;
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Repositories
 {
     public class ScoreInfo : MonoBehaviour
     {
         private PoolObjects _poolObjects;
-        private EndPanel _endPanel;
+        [Inject] private EndPanel _endPanel;
         
         public float Score { get; private set; }
         
@@ -32,10 +33,9 @@ namespace GameScene.Repositories
             }
         }
         
-        public void Initialize(EndPanel endPanel, PoolObjects poolObjects)
+        public void Initialize(PoolObjects poolObjects)
         {
             _poolObjects = poolObjects;
-            _endPanel = endPanel;
             _endPanel.OnRestart += ResetScore;
             
             foreach (AsteroidUI asteroid in _poolObjects.Asteroids)
