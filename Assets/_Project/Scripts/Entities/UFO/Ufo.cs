@@ -50,11 +50,5 @@ namespace GameScene.Entities.UFOs
         {
             gameObject.SetActive(false);
         }
-
-        public Ufo Create(Vector2 positionSpawn, Transform transformParent)
-        {
-            Ufo ufo = Instantiate(this, positionSpawn, Quaternion.identity, transformParent);
-            return ufo;
-        }
     }
 }

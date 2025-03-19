@@ -8,7 +8,7 @@ namespace GameScene.Repositories
         public AsteroidUI[] Asteroids { get; private set; }
         public AsteroidUI[] SmallAsteroids { get; private set; }
         
-        private AsteroidsPool(AsteroidData smallAsteroidData,
+        public AsteroidsPool(AsteroidData smallAsteroidData,
             AsteroidData asteroidData,
             int sizeAsteroidPool,
             Transform transformParent)
@@ -16,13 +16,21 @@ namespace GameScene.Repositories
             Asteroids = new AsteroidUI[sizeAsteroidPool];
             for (int i = 0; i < sizeAsteroidPool; i ++)
             {
-                Asteroids[i] = asteroidData.Prefab.Create(GetRandomTransform(), transformParent, asteroidData.Speed, asteroidData.SpraySpeed);
+                Asteroids[i] = Create(asteroidData.Prefab, 
+                    GetRandomTransform(), 
+                    transformParent, 
+                    asteroidData.Speed, 
+                    asteroidData.SpraySpeed);
             }
             
             SmallAsteroids = new AsteroidUI[sizeAsteroidPool * 2];
             for (int i = 0; i < sizeAsteroidPool * 2; i++)
             {
-                SmallAsteroids[i] = smallAsteroidData.Prefab.Create(GetRandomTransform(), transformParent, smallAsteroidData.Speed, smallAsteroidData.SpraySpeed);
+                SmallAsteroids[i] = Create(smallAsteroidData.Prefab, 
+                    GetRandomTransform(),
+                    transformParent, 
+                    smallAsteroidData.Speed, 
+                    smallAsteroidData.SpraySpeed);
             }
         }
 
@@ -37,6 +45,20 @@ namespace GameScene.Repositories
             {
                 bullet.Deactivate();
             }
+        }
+        
+        private AsteroidUI Create(AsteroidUI prefab,
+            Vector2 positionSpawn, 
+            Transform transformParent, 
+            Vector2 velocity, 
+            float sprayVelocity)
+        {
+            AsteroidUI asteroidUI = Object.Instantiate(prefab, positionSpawn, Quaternion.identity, transformParent);
+            Asteroid asteroid = new Asteroid(velocity, sprayVelocity);
+            asteroidUI.Initialize(asteroid);
+            asteroidUI.Deactivate();
+            
+            return asteroidUI;
         }
     }
 }

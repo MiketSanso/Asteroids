@@ -114,17 +114,5 @@ namespace GameScene.Entities.Player
             
             _rechargeCompletionSource.TrySetResult();
         }
-
-        private void SpawnBullet()
-        {
-            foreach (Bullet bullet in _poolBullets.Bullets)
-            {
-                if (!bullet.gameObject.activeSelf)
-                {
-                    bullet.Activate();
-                    break;
-                }
-            }
-        }
     }
 }

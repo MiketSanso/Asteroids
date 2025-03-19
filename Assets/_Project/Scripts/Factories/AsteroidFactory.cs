@@ -1,6 +1,7 @@
 using GameScene.Repositories;
 using UnityEngine;
 using GameScene.Entities.Asteroid;
+using GameScene.Factories.ScriptableObjects;
 using Zenject;
 using GameScene.Level;
 
@@ -8,21 +9,16 @@ namespace GameScene.Factories
 {
     public class AsteroidFactory : Factory
     {
+        private AsteroidFactoryData _factoryData;
         private int _destroyed;
         private int _countAsteroids; 
         private AsteroidsPool _poolAsteroids;
         private EndPanel _endPanel;
         
-        [Inject]
-        public virtual void Construct(EndPanel endPanel)
+        public AsteroidFactory(AsteroidFactoryData factoryData)
         {
-            _endPanel = endPanel;
-        }
-        
-        public void Initialize(AsteroidsPool poolAsteroids)
-        {
+            _factoryData = factoryData;
             _endPanel.OnRestart += RestartFly;
-            _poolAsteroids = poolAsteroids;
             RestartFly();
 
             foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
@@ -35,6 +31,12 @@ namespace GameScene.Factories
             {
                 asteroid.OnDestroyed += AddDestroyedAsteroid;
             }
+        }
+        
+        [Inject]
+        public virtual void Construct(EndPanel endPanel)
+        {
+            _endPanel = endPanel;
         }
         
         public override void Destroy()
@@ -51,6 +53,14 @@ namespace GameScene.Factories
             {
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
+        }
+        
+        protected override void CreatePool()
+        {
+            _poolAsteroids = new AsteroidsPool(_factoryData.SmallAsteroidData, 
+                _factoryData.AsteroidData, 
+                _factoryData.SizePool, 
+                _factoryData.TransformParent);
         }
         
         private void RestartFly()

@@ -5,28 +5,23 @@ using UnityEngine;
 using GameScene.Repositories;
 using Zenject;
 using GameScene.Factories;
+using GameScene.Factories.ScriptableObjects;
 
 namespace GameScene.Level
 {
     public class EntryPoint : MonoBehaviour
     {
-        [SerializeField] private AsteroidData _asteroidData;
-        [SerializeField] private AsteroidData _smallAsteroidData;
-        [SerializeField] private Ufo _prefabUFO;
-        [SerializeField] private Bullet _prefabBullet;
-        [SerializeField] private int _sizeAsteroidsPool;
-        [SerializeField] private int _sizeUfoPool;
-        [SerializeField] private int _sizeBulletsPool;
-        [SerializeField] private Transform _transformParent;
+        [SerializeField] private AsteroidFactoryData _asteroidFactoryData;
+        [SerializeField] private BulletFactoryData _bulletFactoryData;
+        [SerializeField] private UfoFactoryData _ufoFactoryData;
         
-        private ScoreInfo _scoreInfo;
-        private AsteroidFactory asteroidFactory;
+        private BulletFactory _bulletFactory;
+        private AsteroidFactory _asteroidFactory;
         private UfoFactory _ufoFactory;
         private Shoot _shoot;
         private EndPanel _endPanel;
-        private AsteroidsPool _asteroidsPool;
-        private UfoPool _ufoPool;
-        private BulletPool _bulletPool;
+        private ScoreInfo _scoreInfo;
+
 
         private void Start()
         {
@@ -42,21 +37,17 @@ namespace GameScene.Level
 
         private void OnDestroy()
         {
-            _bulletPool.Destroy();
-            _ufoPool.Destroy();
-            _asteroidsPool.Destroy();
+
         }
 
         private void StartGame()
         {
-            _bulletPool = new BulletPool();
-            _ufoPool = new UfoPool();
-            _asteroidsPool = new AsteroidsPool();
+            _bulletFactory = new BulletFactory(_bulletFactoryData);
+            _ufoFactory = new UfoFactory(_ufoFactoryData);
+            _asteroidFactory = new AsteroidFactory(_asteroidFactoryData);
             
             _scoreInfo.Initialize(_asteroidsPool, _ufoPool);
             _shoot.Initialize(_bulletPool);
-            _ufoFactory.Initialize(_ufoPool);
-            asteroidFactory.Initialize(_asteroidsPool);
             _endPanel.Initialize(_scoreInfo);
         }
     }

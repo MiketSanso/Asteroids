@@ -10,12 +10,6 @@ namespace GameScene.Entities.Player
         [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
         [SerializeField] private Rigidbody2D _rb;
-
-        public Bullet Create(PlayerUI player, Transform transformParent)
-        {
-            Bullet bullet = Instantiate(this, player.transform.position, Quaternion.identity, transformParent);
-            return bullet;
-        }
         
         private void OnTriggerEnter2D(Collider2D other)
         {

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using GameScene.Interfaces;
-using UnityEngine.Serialization;
 
 namespace GameScene.Entities.Asteroid
 {
@@ -16,18 +15,11 @@ namespace GameScene.Entities.Asteroid
         
         private Asteroid _asteroid;
 
-        public AsteroidUI Create(Vector2 positionSpawn, 
-            Transform transformParent, 
-            Vector2 velocity, 
-            float sprayVelocity)
+        public void Initialize(Asteroid asteroid)
         {
-            AsteroidUI asteroid = Instantiate(this, positionSpawn, Quaternion.identity, transformParent);
-            asteroid._asteroid = new Asteroid(velocity, sprayVelocity);
-            asteroid._asteroid.Deactivate(gameObject);
-            
-            return asteroid;
+            _asteroid = asteroid;
         }
-
+        
         public void Destroy(bool isPlayer)
         {
              _asteroid.Deactivate(gameObject);

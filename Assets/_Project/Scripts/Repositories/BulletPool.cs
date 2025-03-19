@@ -10,14 +10,14 @@ namespace GameScene.Repositories
         
         private PlayerUI _playerUI;
         
-        private BulletPool(int poolSize, 
-            Bullet prefab, 
+        public BulletPool(Bullet prefab, 
+            int poolSize, 
             Transform transformParent)
         {
             Bullets = new Bullet[poolSize];
             for (int i = 0; i < poolSize; i++)
             {
-                Bullets[i] = prefab.Create(_playerUI, transformParent);
+                Bullets[i] = Create(prefab, _playerUI, transformParent);
                 Bullets[i].Deactivate();
             }
         }
@@ -34,6 +34,12 @@ namespace GameScene.Repositories
             {
                 bullet.Deactivate();
             }
+        }
+        
+        public Bullet Create(Bullet prefab, PlayerUI player, Transform transformParent)
+        {
+            Bullet bullet = Object.Instantiate(prefab, player.transform.position, Quaternion.identity, transformParent);
+            return bullet;
         }
     }
 }
