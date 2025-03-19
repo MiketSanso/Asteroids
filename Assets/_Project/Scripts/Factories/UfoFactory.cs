@@ -1,37 +1,43 @@
 using System;
 using System.Threading;
 using GameScene.Repositories;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using GameScene.Entities.Player;
 using GameScene.Level;
 using Zenject;
+using GameScene.Entities.UFOs;
 
-namespace GameScene.Entities.UFOs
+namespace GameScene.Factories
 {
-    public class UfoFactory : MonoBehaviour
+    public class UfoFactory : Factory
     {
-        [SerializeField] private float _inTimeSpawn;
-        [SerializeField] private float _maxTimeSpawn;
-
-        [Inject] private EndPanel _endPanel;
-        [Inject] private PlayerUI _player;
+        private float _inTimeSpawn;
+        private float _maxTimeSpawn;
+        private PlayerUI _playerUI;
         private UfoPool _poolUfo;
+        private EndPanel _endPanel;
         private CancellationTokenSource _tokenSource;
-
-        private void OnDestroy()
+        
+        [Inject]
+        public void Construct(PlayerUI playerUI, EndPanel endPanel)
         {
-            _player.OnDeath -= StopSpawnUFO;
-            _endPanel.OnRestart -= StartSpawnUFO;
+            _endPanel = endPanel;
+            _playerUI = playerUI;
         }
 
         public void Initialize(UfoPool poolUfo)
         {
             _endPanel.OnRestart += StartSpawnUFO;
             _poolUfo = poolUfo;
-            _player.OnDeath += StopSpawnUFO;
+            _playerUI.OnDeath += StopSpawnUFO;
             StartSpawnUFO();
+        }
+        
+        public override void Destroy()
+        {
+            _playerUI.OnDeath -= StopSpawnUFO;
+            _endPanel.OnRestart -= StartSpawnUFO;
         }
 
         private async void StartSpawnUFO()

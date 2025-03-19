@@ -42,6 +42,11 @@ namespace GameScene.Entities.Player
             _rechargeCompletionSource = new UniTaskCompletionSource();
             await RechargeLaser();
         }
+        
+        private void OnValidate()
+        {
+            _stepTimeRecharge = Mathf.Max(0, _stepTimeRecharge);
+        }
 
         public void Initialize(BulletPool poolBullets)
         {
@@ -97,10 +102,6 @@ namespace GameScene.Entities.Player
                 do
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(_stepTimeRecharge));
-                    if (_stepTimeRecharge < 0)
-                    {
-                        Debug.LogError("Шаг времени перезарядки - отрицательное значение!");
-                    }
                     
                     TimeRechargeLaser -= _stepTimeRecharge;
                     Mathf.Clamp(TimeRechargeLaser, 0, _fixedTimeRechargeLaser);
@@ -114,7 +115,7 @@ namespace GameScene.Entities.Player
             _rechargeCompletionSource.TrySetResult();
         }
 
-        private async UniTask SpawnBullet()
+        private void SpawnBullet()
         {
             foreach (Bullet bullet in _poolBullets.Bullets)
             {

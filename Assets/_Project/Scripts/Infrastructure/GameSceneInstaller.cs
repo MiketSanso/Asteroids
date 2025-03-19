@@ -1,21 +1,22 @@
-using GameScene.Entities.Asteroid;
 using GameScene.Entities.Player;
-using GameScene.Entities.UFOs;
-using GameScene.Level;
 using UnityEngine;
-using GameScene.Repositories;
 using Zenject;
 
-public class GameSceneInstaller : MonoInstaller
+namespace GameScene.Level
 {
-    [SerializeField] private PlayerUI _player;
-    [SerializeField] private EndPanel _endPanel;
-    [SerializeField] private Shoot _shoot;
-    
-    public override void InstallBindings()
+    public class GameSceneInstaller : MonoInstaller
     {
-        Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
-        Container.Bind<EndPanel>().FromInstance(_endPanel).AsSingle();
-        Container.Bind<Shoot>().FromInstance(_shoot).AsSingle();
+        [SerializeField] private PlayerUI _player;
+        [SerializeField] private EndPanel _endPanel;
+        [SerializeField] private Shoot _shoot;
+        [SerializeField] private SpawnTransform _spawnTransform;
+
+        public override void InstallBindings()
+        {
+            Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
+            Container.Bind<EndPanel>().FromInstance(_endPanel).AsSingle();
+            Container.Bind<Shoot>().FromInstance(_shoot).AsSingle();
+            Container.Bind<SpawnTransform>().FromInstance(_spawnTransform).AsSingle();
+        }
     }
 }

@@ -1,35 +1,24 @@
 using GameScene.Repositories;
 using UnityEngine;
-using GameScene.Level;
+using GameScene.Entities.Asteroid;
 using Zenject;
+using GameScene.Level;
 
-namespace GameScene.Entities.Asteroid
+namespace GameScene.Factories
 {
-    public class AsteroidFactory
+    public class AsteroidFactory : Factory
     {
-        [SerializeField] private Transform[] _transformsSpawn;
-        [SerializeField] private int _countAsteroids; 
-        
-        [Inject] private EndPanel _endPanel;
         private int _destroyed;
+        private int _countAsteroids; 
         private AsteroidsPool _poolAsteroids;
-
-        private void OnDestroy()
+        private EndPanel _endPanel;
+        
+        [Inject]
+        public virtual void Construct(EndPanel endPanel)
         {
-            _endPanel.OnRestart -= RestartFly;
-            
-            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
-            {
-                asteroid.OnDestroyedWithPoint -= ActivateSmallAsteroids;
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
-            }
-            
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
-            {
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
-            }
+            _endPanel = endPanel;
         }
-
+        
         public void Initialize(AsteroidsPool poolAsteroids)
         {
             _endPanel.OnRestart += RestartFly;
@@ -48,6 +37,22 @@ namespace GameScene.Entities.Asteroid
             }
         }
         
+        public override void Destroy()
+        {
+            _endPanel.OnRestart -= RestartFly;
+            
+            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
+            {
+                asteroid.OnDestroyedWithPoint -= ActivateSmallAsteroids;
+                asteroid.OnDestroyed -= AddDestroyedAsteroid;
+            }
+            
+            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            {
+                asteroid.OnDestroyed -= AddDestroyedAsteroid;
+            }
+        }
+        
         private void RestartFly()
         {
             _destroyed = 0;
@@ -56,9 +61,7 @@ namespace GameScene.Entities.Asteroid
             {
                 if (i < _poolAsteroids.Asteroids.Length)
                 {
-                    int randomIndex = UnityEngine.Random.Range(0, _transformsSpawn.Length);
-                    Transform transformSpawn = _transformsSpawn[randomIndex];
-                    _poolAsteroids.Asteroids[i].Activate(transformSpawn);
+                    _poolAsteroids.Asteroids[i].Activate(_poolAsteroids.GetRandomTransform());
                 }
             }
         }
@@ -83,7 +86,7 @@ namespace GameScene.Entities.Asteroid
                 if (countActivatedAsteroids < 2 && !asteroid.gameObject.activeSelf)
                 {
                     countActivatedAsteroids++;
-                    asteroid.Activate(transform);
+                    asteroid.Activate(transform.position);
                 }
                 else if (countActivatedAsteroids == 2)
                 {

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using GameScene.Interfaces;
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Entities.Player
 {
@@ -9,7 +10,7 @@ namespace GameScene.Entities.Player
     {
         public event Action OnDeath;
         
-        [SerializeField] private EndPanel _endPanel;
+        private EndPanel _endPanel;
 
         private void Start()
         {
@@ -30,7 +31,13 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public void Deactivate()
+        [Inject]
+        public void Construct(EndPanel endPanel)
+        {
+            _endPanel = endPanel;
+        }
+        
+        private void Deactivate()
         {
             OnDeath?.Invoke();
             gameObject.SetActive(false);

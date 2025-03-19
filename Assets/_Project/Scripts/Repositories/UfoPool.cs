@@ -9,9 +9,9 @@ namespace GameScene.Repositories
     {
         public Ufo[] Ufos { get; private set; }
     
-        [Inject] private readonly PlayerUI _playerUI;
+        private PlayerUI _playerUI;
     
-        private void CreateUfoPool(int poolSize,
+        private UfoPool(int poolSize,
             Ufo prefab,
             Transform transformParent)
         {
@@ -19,13 +19,18 @@ namespace GameScene.Repositories
     
             for (int i = 0; i < poolSize; i++)
             {
-                Transform transformSpawn = GetRandomTransform();
-                Ufos[i] = prefab.Create(transformSpawn, transformParent, _playerUI);
+                Ufos[i] = prefab.Create(GetRandomTransform(), transformParent);
                 Ufos[i].Deactivate();
             }
         }
         
-        public override void DeactivateObjects()
+        [Inject]
+        public void Construct(PlayerUI playerUI)
+        {
+            _playerUI = playerUI;
+        }
+        
+        protected override void DeactivateObjects()
         {
             foreach (Ufo bullet in Ufos)
             {

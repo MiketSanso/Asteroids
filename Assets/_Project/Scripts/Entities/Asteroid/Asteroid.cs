@@ -14,10 +14,10 @@ namespace GameScene.Entities.Asteroid
             _sprayVelocity = sprayVelocity;
         }
         
-        public void Activate(GameObject thisObject, Transform transformSpawn, Rigidbody2D rb)
+        public void Activate(GameObject thisObject, Vector2 positionSpawn, Rigidbody2D rb)
         {
             thisObject.SetActive(true);
-            thisObject.transform.position = transformSpawn.position;
+            thisObject.transform.position = positionSpawn;
             
             float velocityX = Random.Range(_velocity.x - _sprayVelocity, _velocity.x + _sprayVelocity);
             float velocityY = Random.Range(_velocity.x - _sprayVelocity, _velocity.x + _sprayVelocity);

@@ -1,17 +1,25 @@
 using UnityEngine;
 using GameScene.Entities.Player;
 using Zenject;
+using GameScene.Level;
 
 namespace GameScene.Repositories
 {
     public abstract class PoolObjects
     {
-        [Inject] private readonly PlayerUI _playerUI;
-        private Transform[] _transformsSpawn;
+        private PlayerUI _playerUI;
+        private SpawnTransform _spawnTransform;
         
         protected PoolObjects()
         {
             _playerUI.OnDeath += DeactivateObjects;
+        }
+        
+        [Inject]
+        public void Construct(PlayerUI playerUI, SpawnTransform spawnTransform)
+        {
+            _playerUI = playerUI;
+            _spawnTransform = spawnTransform;
         }
         
         public void Destroy()
@@ -19,12 +27,11 @@ namespace GameScene.Repositories
             _playerUI.OnDeath -= DeactivateObjects;
         }
         
-        public Transform GetRandomTransform()
+        public Vector2 GetRandomTransform()
         {
-            int randomIndex = Random.Range(0, _transformsSpawn.Length);
-            return _transformsSpawn[randomIndex];
+            return _spawnTransform.GetPosition();
         }
 
-        public abstract void DeactivateObjects();
+        protected abstract void DeactivateObjects();
     }
 }

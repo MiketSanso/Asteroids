@@ -2,6 +2,7 @@ using GameScene.Interfaces;
 using UnityEngine;
 using GameScene.Entities.Player;
 using System;
+using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
@@ -12,17 +13,23 @@ namespace GameScene.Entities.UFOs
         [SerializeField] private float _speed;
         [SerializeField] private int _scoreSize;
         
-        private PlayerUI Player;
+        private PlayerUI _playerUI;
 
         private void Update()
         {
-            if (Player != null)
+            if (_playerUI != null)
             {
-                Vector3 direction = Player.transform.position - transform.position;
+                Vector3 direction = _playerUI.transform.position - transform.position;
                 direction.Normalize();
 
                 transform.position += direction * _speed * Time.deltaTime;
             }
+        }
+        
+        [Inject]
+        public void Construct(PlayerUI playerUI)
+        {
+            _playerUI = playerUI;
         }
 
         public void Destroy(bool isPlayer)
@@ -33,9 +40,9 @@ namespace GameScene.Entities.UFOs
                  OnDestroyed?.Invoke(_scoreSize);
         }
 
-        public void Activate(Transform transformSpawn)
+        public void Activate(Vector2 positionSpawn)
         {
-            transform.position = transformSpawn.position;
+            transform.position = positionSpawn;
             gameObject.SetActive(true);
         }
 
@@ -44,10 +51,9 @@ namespace GameScene.Entities.UFOs
             gameObject.SetActive(false);
         }
 
-        public Ufo Create(Transform transformSpawn, Transform transformParent, PlayerUI player)
+        public Ufo Create(Vector2 positionSpawn, Transform transformParent)
         {
-            Ufo ufo = Instantiate(this, transformSpawn.position, Quaternion.identity, transformParent);
-            ufo.Player = player;
+            Ufo ufo = Instantiate(this, positionSpawn, Quaternion.identity, transformParent);
             return ufo;
         }
     }

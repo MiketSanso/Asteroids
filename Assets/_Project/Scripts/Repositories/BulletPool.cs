@@ -8,9 +8,9 @@ namespace GameScene.Repositories
     {
         public Bullet[] Bullets { get; private set; }
         
-        [Inject] private readonly PlayerUI _playerUI;
+        private PlayerUI _playerUI;
         
-        private void CreateBulletsPool(int poolSize, 
+        private BulletPool(int poolSize, 
             Bullet prefab, 
             Transform transformParent)
         {
@@ -21,8 +21,14 @@ namespace GameScene.Repositories
                 Bullets[i].Deactivate();
             }
         }
+        
+        [Inject]
+        public void Construct(PlayerUI playerUI)
+        {
+            _playerUI = playerUI;
+        }
 
-        public override void DeactivateObjects()
+        protected override void DeactivateObjects()
         {
             foreach (Bullet bullet in Bullets)
             {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Zenject;
 using GameScene.Entities.Asteroid;
 
 namespace GameScene.Repositories
@@ -9,29 +8,25 @@ namespace GameScene.Repositories
         public AsteroidUI[] Asteroids { get; private set; }
         public AsteroidUI[] SmallAsteroids { get; private set; }
         
-        private Transform[] _transformsSpawn;
-        
-        private void CreateAsteroidPools(AsteroidData smallAsteroidData,
+        private AsteroidsPool(AsteroidData smallAsteroidData,
             AsteroidData asteroidData,
-            int sizeAsteroidPoolPool,
+            int sizeAsteroidPool,
             Transform transformParent)
         {
-            Asteroids = new AsteroidUI[sizeAsteroidPoolPool];
-            for (int i = 0; i < sizeAsteroidPoolPool; i ++)
+            Asteroids = new AsteroidUI[sizeAsteroidPool];
+            for (int i = 0; i < sizeAsteroidPool; i ++)
             {
-                Transform transformSpawn = GetRandomTransform();
-                Asteroids[i] = asteroidData.Prefab.Create(transformSpawn, transformParent, asteroidData.Speed, asteroidData.SpraySpeed);
+                Asteroids[i] = asteroidData.Prefab.Create(GetRandomTransform(), transformParent, asteroidData.Speed, asteroidData.SpraySpeed);
             }
             
-            SmallAsteroids = new AsteroidUI[sizeAsteroidPoolPool * 2];
-            for (int i = 0; i < sizeAsteroidPoolPool * 2; i++)
+            SmallAsteroids = new AsteroidUI[sizeAsteroidPool * 2];
+            for (int i = 0; i < sizeAsteroidPool * 2; i++)
             {
-                Transform transformSpawn = GetRandomTransform();
-                SmallAsteroids[i] = smallAsteroidData.Prefab.Create(transformSpawn, transformParent, smallAsteroidData.Speed, smallAsteroidData.SpraySpeed);
+                SmallAsteroids[i] = smallAsteroidData.Prefab.Create(GetRandomTransform(), transformParent, smallAsteroidData.Speed, smallAsteroidData.SpraySpeed);
             }
         }
 
-        public override void DeactivateObjects()
+        protected override void DeactivateObjects()
         {
             foreach (AsteroidUI bullet in Asteroids)
             {

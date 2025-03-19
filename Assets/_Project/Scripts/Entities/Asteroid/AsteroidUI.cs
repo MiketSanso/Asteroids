@@ -16,12 +16,12 @@ namespace GameScene.Entities.Asteroid
         
         private Asteroid _asteroid;
 
-        public AsteroidUI Create(Transform transformSpawn, 
+        public AsteroidUI Create(Vector2 positionSpawn, 
             Transform transformParent, 
             Vector2 velocity, 
             float sprayVelocity)
         {
-            AsteroidUI asteroid = Instantiate(this, transformSpawn.position, Quaternion.identity, transformParent);
+            AsteroidUI asteroid = Instantiate(this, positionSpawn, Quaternion.identity, transformParent);
             asteroid._asteroid = new Asteroid(velocity, sprayVelocity);
             asteroid._asteroid.Deactivate(gameObject);
             
@@ -40,9 +40,9 @@ namespace GameScene.Entities.Asteroid
              }
         }
         
-        public void Activate(Transform transformSpawn)
+        public void Activate(Vector2 positionSpawn)
         {
-            _asteroid.Activate(gameObject, transformSpawn, _rb);
+            _asteroid.Activate(gameObject, positionSpawn, _rb);
         }
         
         public void Deactivate()

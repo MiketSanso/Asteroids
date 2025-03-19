@@ -17,7 +17,7 @@ namespace GameScene.Level
         [SerializeField] private TMP_Text _text;
         
         private ScoreInfo _scoreInfo;
-        [Inject] private PlayerUI _playerUI;
+        private PlayerUI _playerUI;
         
         private void Start()
         {
@@ -28,6 +28,12 @@ namespace GameScene.Level
         {
             _playerUI.OnDeath -= Activate;
             _restartButton.onClick.RemoveListener(Restart);
+        }
+        
+        [Inject]
+        public void Construct(PlayerUI playerUI)
+        {
+            _playerUI = playerUI;
         }
         
         public void Initialize(ScoreInfo scoreInfo)
