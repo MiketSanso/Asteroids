@@ -15,10 +15,11 @@ namespace GameScene.Factories
     {
         private UfoFactoryData _factoryData;
         private PlayerUI _playerUI;
-        private UfoPool _poolUfo;
         private EndPanel _endPanel;
         private CancellationTokenSource _tokenSource;
-        
+
+        public UfoPool PoolUfo { get; private set; }
+
         public UfoFactory(UfoFactoryData factoryData)
         {
             _factoryData = factoryData;
@@ -42,7 +43,7 @@ namespace GameScene.Factories
 
         protected override void CreatePool()
         {
-            _poolUfo = new UfoPool(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent);
+            PoolUfo = new UfoPool(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent.Transform);
         }
 
         private async void StartSpawnUFO()
@@ -64,11 +65,11 @@ namespace GameScene.Factories
                 {
                     float time = Random.Range(_factoryData.MinTimeSpawn, _factoryData.MaxTimeSpawn);
                     await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                    foreach (Ufo UFO in _poolUfo.Ufos)
+                    foreach (Ufo UFO in PoolUfo.Ufos)
                     {
                         if (!UFO.gameObject.activeSelf)
                         {
-                            UFO.Activate(_poolUfo.GetRandomTransform());
+                            UFO.Activate(PoolUfo.GetRandomTransform());
                             break;
                         }
                     }

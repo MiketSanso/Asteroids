@@ -6,9 +6,8 @@ namespace GameScene.Entities.Asteroid
 {
     public class AsteroidUI : MonoBehaviour, IDestroyableEnemy
     {
-        public event Action OnDestroyed;
-        public event Action<int> OnDestroyedWithScore;
-        public event Action<Transform> OnDestroyedWithPoint;
+        public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
+        public event DestroyedEventHandler OnDestroyed;
         
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private int _scoreSize;
@@ -20,16 +19,10 @@ namespace GameScene.Entities.Asteroid
             _asteroid = asteroid;
         }
         
-        public void Destroy(bool isPlayer)
+        public void Destroy()
         {
              _asteroid.Deactivate(gameObject);
-
-             if (!isPlayer)
-             {
-                 OnDestroyedWithScore?.Invoke(_scoreSize);
-                 OnDestroyedWithPoint?.Invoke(transform);
-                 OnDestroyed?.Invoke();
-             }
+             OnDestroyed?.Invoke(_scoreSize, transform);
         }
         
         public void Activate(Vector2 positionSpawn)

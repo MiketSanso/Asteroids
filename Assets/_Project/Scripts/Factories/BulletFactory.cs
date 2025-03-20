@@ -1,5 +1,4 @@
 using GameScene.Repositories;
-using UnityEngine;
 using GameScene.Entities.Player;
 using GameScene.Factories.ScriptableObjects;
 
@@ -7,7 +6,7 @@ namespace GameScene.Factories
 {
     public class BulletFactory : Factory
     {
-        private BulletFactoryData _factoryData;
+        private readonly BulletFactoryData _factoryData;
         private BulletPool _poolBullets;
 
         public BulletFactory(BulletFactoryData factoryData)
@@ -16,16 +15,14 @@ namespace GameScene.Factories
         }
         
         public override void Destroy()
-        {
-            
-        }
+        { }
 
         protected override void CreatePool()
         {
-            _poolBullets = new BulletPool(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent);
+            _poolBullets = new BulletPool(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent.Transform);
         }
         
-        private void SpawnBullet()
+        public void SpawnBullet()
         {
             foreach (Bullet bullet in _poolBullets.Bullets)
             {

@@ -4,7 +4,7 @@ using Zenject;
 
 namespace GameScene.Entities.Player
 {
-    public class KeyboardMovement : MonoBehaviour, IMovement
+    public class KeyboardMovement : IMovement
     {
         private PlayerMovement _playerMovement;
 
@@ -29,7 +29,7 @@ namespace GameScene.Entities.Player
         
         private void MoveForward()
         {
-            float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
+            float angle = (_playerMovement.transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             _playerMovement.Rb.AddForce(direction.normalized * _playerMovement.SpeedMove);
             _playerMovement.Rb.linearVelocity = Vector2.ClampMagnitude(_playerMovement.Rb.linearVelocity, _playerMovement.MaxSpeed);

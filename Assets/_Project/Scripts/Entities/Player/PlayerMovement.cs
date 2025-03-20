@@ -1,20 +1,27 @@
 using GameScene.Interfaces;
+using Zenject;
 using UnityEngine;
 
 namespace GameScene.Entities.Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private IMovement _movement;
+        private IMovement _iMovement;
         
         [field: SerializeField] public float SpeedRotation { get; private set; }
         [field: SerializeField] public float SpeedMove { get; private set; }
         [field: SerializeField] public Rigidbody2D Rb { get; private set; }
         [field: SerializeField] public float MaxSpeed { get; private set; }
+
+        [Inject]
+        private void Container(IMovement iMovement)
+        {
+            _iMovement = iMovement;
+        }
         
         private void Update()
         {
-            _movement.Move();
+            _iMovement.Move();
         }
     }    
 }

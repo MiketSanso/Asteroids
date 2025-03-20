@@ -1,6 +1,6 @@
 using GameScene.Entities.Asteroid;
 using GameScene.Entities.Player;
-using GameScene.Entities.UFOs;
+using Zenject;
 using UnityEngine;
 using GameScene.Repositories;
 using Zenject;
@@ -9,7 +9,7 @@ using GameScene.Factories.ScriptableObjects;
 
 namespace GameScene.Level
 {
-    public class EntryPoint : MonoBehaviour
+    public class EntryPoint : MonoInstaller
     {
         [SerializeField] private AsteroidFactoryData _asteroidFactoryData;
         [SerializeField] private BulletFactoryData _bulletFactoryData;
@@ -21,8 +21,7 @@ namespace GameScene.Level
         private Shoot _shoot;
         private EndPanel _endPanel;
         private ScoreInfo _scoreInfo;
-
-
+        
         private void Start()
         {
             StartGame();
@@ -37,7 +36,9 @@ namespace GameScene.Level
 
         private void OnDestroy()
         {
-
+            _bulletFactory.Destroy();
+            _ufoFactory.Destroy();
+            _asteroidFactory.Destroy();
         }
 
         private void StartGame()
@@ -46,8 +47,11 @@ namespace GameScene.Level
             _ufoFactory = new UfoFactory(_ufoFactoryData);
             _asteroidFactory = new AsteroidFactory(_asteroidFactoryData);
             
-            _scoreInfo.Initialize(_asteroidsPool, _ufoPool);
-            _shoot.Initialize(_bulletPool);
+            Container.Inject(_ufoFactory);
+            Container.Inject(_asteroidFactory);
+            
+            _scoreInfo.Initialize(_asteroidFactory, _ufoFactory);
+            _shoot.Initialize(_bulletFactory);
             _endPanel.Initialize(_scoreInfo);
         }
     }

@@ -2,6 +2,7 @@ using System;
 using GameScene.Repositories;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using GameScene.Factories;
 using GameScene.Interfaces;
 
 namespace GameScene.Entities.Player
@@ -17,8 +18,8 @@ namespace GameScene.Entities.Player
         [SerializeField] private float _stepTimeRecharge;
         [SerializeField] private int _maxCountLaserShoots;
         
-        private BulletPool _poolBullets;
         private UniTaskCompletionSource _rechargeCompletionSource;
+        private BulletFactory _bulletFactory;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
@@ -27,7 +28,7 @@ namespace GameScene.Entities.Player
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SpawnBullet();
+                _bulletFactory.SpawnBullet();
             }
             
             if (Input.GetKeyDown(KeyCode.E))
@@ -48,9 +49,9 @@ namespace GameScene.Entities.Player
             _stepTimeRecharge = Mathf.Max(0, _stepTimeRecharge);
         }
 
-        public void Initialize(BulletPool poolBullets)
+        public void Initialize(BulletFactory bulletFactory)
         {
-            _poolBullets = poolBullets;
+            _bulletFactory = bulletFactory;
         }
         
         private async void ShootLaser()
@@ -71,7 +72,7 @@ namespace GameScene.Entities.Player
                 {
                     if (hit.collider != null && hit.collider.gameObject.TryGetComponent(out IDestroyableEnemy enemy))
                     {
-                        enemy.Destroy(false);
+                        enemy.Destroy();
                     }
                 }
 

@@ -12,22 +12,23 @@ namespace GameScene.Factories
         private AsteroidFactoryData _factoryData;
         private int _destroyed;
         private int _countAsteroids; 
-        private AsteroidsPool _poolAsteroids;
         private EndPanel _endPanel;
-        
+
+        public AsteroidsPool PoolAsteroids { get; private set; }
+
         public AsteroidFactory(AsteroidFactoryData factoryData)
         {
             _factoryData = factoryData;
             _endPanel.OnRestart += RestartFly;
             RestartFly();
 
-            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
+            foreach (AsteroidUI asteroid in PoolAsteroids.Asteroids)
             {
-                asteroid.OnDestroyedWithPoint += ActivateSmallAsteroids;
+                asteroid.OnDestroyed += ActivateSmallAsteroids;
                 asteroid.OnDestroyed += AddDestroyedAsteroid;
             }
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            foreach (AsteroidUI asteroid in PoolAsteroids.SmallAsteroids)
             {
                 asteroid.OnDestroyed += AddDestroyedAsteroid;
             }
@@ -43,13 +44,13 @@ namespace GameScene.Factories
         {
             _endPanel.OnRestart -= RestartFly;
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
+            foreach (AsteroidUI asteroid in PoolAsteroids.Asteroids)
             {
-                asteroid.OnDestroyedWithPoint -= ActivateSmallAsteroids;
+                asteroid.OnDestroyed -= ActivateSmallAsteroids;
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            foreach (AsteroidUI asteroid in PoolAsteroids.SmallAsteroids)
             {
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
@@ -57,26 +58,25 @@ namespace GameScene.Factories
         
         protected override void CreatePool()
         {
-            _poolAsteroids = new AsteroidsPool(_factoryData.SmallAsteroidData, 
+            PoolAsteroids = new AsteroidsPool(_factoryData.SmallAsteroidData, 
                 _factoryData.AsteroidData, 
                 _factoryData.SizePool, 
-                _factoryData.TransformParent);
+                _factoryData.TransformParent.Transform);
         }
         
         private void RestartFly()
         {
             _destroyed = 0;
+
+            PoolAsteroids.DeactivateObjects();
             
-            for (int i = 0; i < _poolAsteroids.SmallAsteroids.Length; i ++)
+            foreach (AsteroidUI asteroid in PoolAsteroids.Asteroids)
             {
-                if (i < _poolAsteroids.Asteroids.Length)
-                {
-                    _poolAsteroids.Asteroids[i].Activate(_poolAsteroids.GetRandomTransform());
-                }
+                asteroid.Activate(PoolAsteroids.GetRandomTransform());
             }
         }
         
-        private void AddDestroyedAsteroid()
+        private void AddDestroyedAsteroid(int scoreSize, Transform transform)
         {
             _destroyed++;
 
@@ -87,11 +87,11 @@ namespace GameScene.Factories
             }
         }
         
-        private void ActivateSmallAsteroids(Transform transform)
+        private void ActivateSmallAsteroids(int scoreSize, Transform transform)
         {
             int countActivatedAsteroids = 0;
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            foreach (AsteroidUI asteroid in PoolAsteroids.SmallAsteroids)
             {
                 if (countActivatedAsteroids < 2 && !asteroid.gameObject.activeSelf)
                 {

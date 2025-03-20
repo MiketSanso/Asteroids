@@ -1,14 +1,16 @@
 using GameScene.Entities.Asteroid;
 using GameScene.Entities.UFOs;
+using GameScene.Factories;
 using GameScene.Level;
+using UnityEngine;
 using Zenject;
 
 namespace GameScene.Repositories
 {
     public class ScoreInfo
     {
-        private AsteroidsPool _poolAsteroids;
-        private UfoPool _poolUfo;
+        private AsteroidFactory _asteroidFactory;
+        private UfoFactory _ufoFactory;
         private EndPanel _endPanel;
         
         public float Score { get; private set; }
@@ -19,23 +21,23 @@ namespace GameScene.Repositories
             _endPanel = endPanel;
         }
         
-        public void Initialize(AsteroidsPool poolAsteroids,
-        UfoPool poolUfo)
+        public void Initialize(AsteroidFactory asteroidFactory,
+        UfoFactory ufoFactory)
         {
-            _poolAsteroids = poolAsteroids;
-            _poolUfo = poolUfo;
+            _asteroidFactory = asteroidFactory;
+            _ufoFactory = ufoFactory;
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
+            foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.Asteroids)
             {
-                asteroid.OnDestroyedWithScore += AddScore;
+                asteroid.OnDestroyed += AddScore;
             }
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.SmallAsteroids)
             {
-                asteroid.OnDestroyedWithScore += AddScore;
+                asteroid.OnDestroyed += AddScore;
             }
             
-            foreach (Ufo ufo in _poolUfo.Ufos)
+            foreach (Ufo ufo in _ufoFactory.PoolUfo.Ufos)
             {
                 ufo.OnDestroyed += AddScore;
             }
@@ -45,25 +47,25 @@ namespace GameScene.Repositories
         {
             _endPanel.OnRestart -= ResetScore;
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.Asteroids)
+            foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.Asteroids)
             {
-                asteroid.OnDestroyedWithScore -= AddScore;
+                asteroid.OnDestroyed -= AddScore;
             }
             
-            foreach (AsteroidUI asteroid in _poolAsteroids.SmallAsteroids)
+            foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.SmallAsteroids)
             {
-                asteroid.OnDestroyedWithScore -= AddScore;
+                asteroid.OnDestroyed -= AddScore;
             }
             
-            foreach (Ufo ufo in _poolUfo.Ufos)
+            foreach (Ufo ufo in _ufoFactory.PoolUfo.Ufos)
             {
                 ufo.OnDestroyed -= AddScore;
             }
         }
         
-        private void AddScore(int score)
+        private void AddScore(int scoreSize, Transform transform)
         {
-            Score += score;
+            Score += scoreSize;
         }
 
         private void ResetScore()

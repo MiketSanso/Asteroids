@@ -4,8 +4,8 @@ namespace GameScene.Level
 {
     public class SpawnTransform : MonoBehaviour
     {
-        [SerializeField] private int _maxPositionX;
-        [SerializeField] private int _maxPositionY;
+        [SerializeField] private float _maxPositionX;
+        [SerializeField] private float _maxPositionY;
 
         public Vector2 GetPosition()
         {

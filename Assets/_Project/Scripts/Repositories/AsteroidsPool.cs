@@ -34,7 +34,7 @@ namespace GameScene.Repositories
             }
         }
 
-        protected override void DeactivateObjects()
+        public override void DeactivateObjects()
         {
             foreach (AsteroidUI bullet in Asteroids)
             {

@@ -8,7 +8,8 @@ namespace GameScene.Entities.UFOs
 {
     public class Ufo : MonoBehaviour, IDestroyableEnemy
     {
-        public event Action<int> OnDestroyed;
+        public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
+        public event DestroyedEventHandler OnDestroyed;
         
         [SerializeField] private float _speed;
         [SerializeField] private int _scoreSize;
@@ -32,12 +33,10 @@ namespace GameScene.Entities.UFOs
             _playerUI = playerUI;
         }
 
-        public void Destroy(bool isPlayer)
+        public void Destroy()
         {
              Deactivate();
-            
-             if (!isPlayer) 
-                 OnDestroyed?.Invoke(_scoreSize);
+             OnDestroyed?.Invoke(_scoreSize, transform);
         }
 
         public void Activate(Vector2 positionSpawn)

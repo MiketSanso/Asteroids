@@ -28,7 +28,7 @@ namespace GameScene.Repositories
             _playerUI = playerUI;
         }
 
-        protected override void DeactivateObjects()
+        public override void DeactivateObjects()
         {
             foreach (Bullet bullet in Bullets)
             {
@@ -36,7 +36,7 @@ namespace GameScene.Repositories
             }
         }
         
-        public Bullet Create(Bullet prefab, PlayerUI player, Transform transformParent)
+        private Bullet Create(Bullet prefab, PlayerUI player, Transform transformParent)
         {
             Bullet bullet = Object.Instantiate(prefab, player.transform.position, Quaternion.identity, transformParent);
             return bullet;

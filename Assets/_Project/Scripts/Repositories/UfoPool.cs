@@ -20,7 +20,7 @@ namespace GameScene.Repositories
             }
         }
         
-        protected override void DeactivateObjects()
+        public override void DeactivateObjects()
         {
             foreach (Ufo bullet in Ufos)
             {

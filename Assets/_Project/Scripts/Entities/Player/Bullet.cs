@@ -15,7 +15,7 @@ namespace GameScene.Entities.Player
         {
             if (other.TryGetComponent(out IDestroyableEnemy enemy))
             {
-                enemy.Destroy(false);
+                enemy.Destroy();
                 Deactivate();
             }
         }
