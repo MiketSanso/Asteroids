@@ -6,7 +6,7 @@ using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
-    public class Ufo : MonoBehaviour, IDestroyableEnemy
+    public class Ufo : MonoBehaviour, IPooledObject
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;

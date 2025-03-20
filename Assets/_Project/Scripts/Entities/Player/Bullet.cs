@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 
 namespace GameScene.Entities.Player
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : MonoBehaviour, IPooledObject
     {
         [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
@@ -20,8 +20,9 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public void Activate()
+        public void Activate(Vector2 spawnPosition)
         {
+            transform.position = spawnPosition;
             gameObject.SetActive(true);
         }
         
@@ -30,11 +31,9 @@ namespace GameScene.Entities.Player
             gameObject.SetActive(false);
         }
 
-        public async UniTask Shot(Transform transformSpawn)
+        public async UniTask Shot(Vector2 spawnPosition)
         {
-            Activate();
-            
-            transform.position = transformSpawn.position;
+            Activate(spawnPosition);
                     
             float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));

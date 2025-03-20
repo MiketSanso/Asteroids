@@ -1,9 +1,7 @@
-using GameScene.Entities.Asteroid;
 using GameScene.Entities.Player;
 using Zenject;
 using UnityEngine;
 using GameScene.Repositories;
-using Zenject;
 using GameScene.Factories;
 using GameScene.Factories.ScriptableObjects;
 
@@ -43,12 +41,9 @@ namespace GameScene.Level
 
         private void StartGame()
         {
-            _bulletFactory = new BulletFactory(_bulletFactoryData);
+            _bulletFactory = Container.Instantiate<BulletFactory>(new object[] { _bulletFactoryData });
             _ufoFactory = new UfoFactory(_ufoFactoryData);
             _asteroidFactory = new AsteroidFactory(_asteroidFactoryData);
-            
-            Container.Inject(_ufoFactory);
-            Container.Inject(_asteroidFactory);
             
             _scoreInfo.Initialize(_asteroidFactory, _ufoFactory);
             _shoot.Initialize(_bulletFactory);
