@@ -4,44 +4,28 @@ using GameScene.Interfaces;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidUI : MonoBehaviour, IDestroyableEnemy
+    public class AsteroidUI : MonoBehaviour, IPooledObject
     {
-        public event Action OnDestroyed;
-        public event Action<int> OnDestroyedWithScore;
-        public event Action<Transform> OnDestroyedWithPoint;
+        [SerializeField] private Vector2 _velocity;
+        [SerializeField] private float _sprayVelocity;
+        
+        public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
+        public event DestroyedEventHandler OnDestroyed;
         
         [SerializeField] private Rigidbody2D _rb;
-        [SerializeField] private int scoreSize;
+        [SerializeField] private int _scoreSize;
         
-        private Asteroid _asteroid;
-
-        public AsteroidUI Create(Transform transformSpawn, 
-            Transform transformParent, 
-            Vector2 velocity, 
-            float sprayVelocity)
-        {
-            AsteroidUI asteroid = Instantiate(this, transformSpawn.position, Quaternion.identity, transformParent);
-            asteroid._asteroid = new Asteroid(velocity, sprayVelocity);
-            asteroid._asteroid.Deactivate(gameObject);
-            
-            return asteroid;
-        }
-
-        public void Destroy(bool isPlayer)
+        private readonly Asteroid _asteroid = new Asteroid();
+        
+        public void Destroy()
         {
              _asteroid.Deactivate(gameObject);
-
-             if (!isPlayer)
-             {
-                 OnDestroyedWithScore?.Invoke(scoreSize);
-                 OnDestroyedWithPoint?.Invoke(transform);
-                 OnDestroyed?.Invoke();
-             }
+             OnDestroyed?.Invoke(_scoreSize, transform);
         }
         
-        public void Activate(Transform transformSpawn)
+        public void Activate(Vector2 positionSpawn)
         {
-            _asteroid.Activate(gameObject, transformSpawn, _rb);
+            _asteroid.Activate(gameObject, positionSpawn, _rb, _velocity, _sprayVelocity);
         }
         
         public void Deactivate()

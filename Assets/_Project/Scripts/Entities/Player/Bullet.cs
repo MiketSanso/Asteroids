@@ -5,27 +5,24 @@ using Cysharp.Threading.Tasks;
 
 namespace GameScene.Entities.Player
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : MonoBehaviour, IPooledObject
     {
+        [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
-
-        public Bullet Create(PlayerUI player, Transform transformParent)
-        {
-            Bullet bullet = Instantiate(this, player.transform.position, Quaternion.identity, transformParent);
-            return bullet;
-        }
+        [SerializeField] private Rigidbody2D _rb;
         
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent(out IDestroyableEnemy enemy))
             {
-                enemy.Destroy(false);
+                enemy.Destroy();
                 Deactivate();
             }
         }
         
-        public void Activate()
+        public void Activate(Vector2 spawnPosition)
         {
+            transform.position = spawnPosition;
             gameObject.SetActive(true);
         }
         
@@ -34,8 +31,15 @@ namespace GameScene.Entities.Player
             gameObject.SetActive(false);
         }
 
-        public async UniTask DelayedDeactivate()
+        public async UniTask Shot(Vector2 spawnPosition)
         {
+            Activate(spawnPosition);
+                    
+            float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            
+            _rb.linearVelocity = direction * _speed;
+            
             await UniTask.Delay(TimeSpan.FromSeconds(_timeDeactivate));
             Deactivate();
         }

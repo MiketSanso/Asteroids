@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using GameScene.Entities.Player;
+using Zenject;
 
 namespace GameScene.Level
 {
@@ -26,7 +27,8 @@ namespace GameScene.Level
             _timeRollbackLaser.text = $"Time rollback laser: {_shoot.TimeRechargeLaser}";
         }
         
-        public void Initialize(PlayerUI playerUI, Shoot shoot)
+        [Inject]
+        public void Construct(Shoot shoot, PlayerUI playerUI)
         {
             _shoot = shoot;
             _playerUI = playerUI;

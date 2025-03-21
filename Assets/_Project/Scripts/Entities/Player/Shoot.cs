@@ -1,8 +1,9 @@
 using System;
-using GameScene.Repositories;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using GameScene.Factories;
 using GameScene.Interfaces;
+using Zenject;
 
 namespace GameScene.Entities.Player
 {
@@ -17,8 +18,8 @@ namespace GameScene.Entities.Player
         [SerializeField] private float _stepTimeRecharge;
         [SerializeField] private int _maxCountLaserShoots;
         
-        private PoolObjects _poolObjects;
         private UniTaskCompletionSource _rechargeCompletionSource;
+        private BulletFactory _bulletFactory;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
@@ -27,7 +28,7 @@ namespace GameScene.Entities.Player
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SpawnBullet();
+                _bulletFactory.SpawnBullet();
             }
             
             if (Input.GetKeyDown(KeyCode.E))
@@ -42,10 +43,16 @@ namespace GameScene.Entities.Player
             _rechargeCompletionSource = new UniTaskCompletionSource();
             await RechargeLaser();
         }
-
-        public void Initialize(PoolObjects poolObjects)
+        
+        private void OnValidate()
         {
-            _poolObjects = poolObjects;
+            _stepTimeRecharge = Mathf.Max(0, _stepTimeRecharge);
+        }
+
+        [Inject]
+        private void Construct(BulletFactory bulletFactory)
+        {
+            _bulletFactory = bulletFactory;
         }
         
         private async void ShootLaser()
@@ -66,7 +73,7 @@ namespace GameScene.Entities.Player
                 {
                     if (hit.collider != null && hit.collider.gameObject.TryGetComponent(out IDestroyableEnemy enemy))
                     {
-                        enemy.Destroy(false);
+                        enemy.Destroy();
                     }
                 }
 
@@ -97,10 +104,6 @@ namespace GameScene.Entities.Player
                 do
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(_stepTimeRecharge));
-                    if (_stepTimeRecharge < 0)
-                    {
-                        Debug.LogError("Шаг времени перезарядки - отрицательное значение!");
-                    }
                     
                     TimeRechargeLaser -= _stepTimeRecharge;
                     Mathf.Clamp(TimeRechargeLaser, 0, _fixedTimeRechargeLaser);
@@ -112,34 +115,6 @@ namespace GameScene.Entities.Player
             } while (CountShotsLaser < _maxCountLaserShoots);
             
             _rechargeCompletionSource.TrySetResult();
-        }
-
-        private async UniTask SpawnBullet()
-        {
-            foreach (Bullet bullet in _poolObjects.Bullets)
-            {
-                if (!bullet.gameObject.activeSelf)
-                {
-                    bullet.Activate();
-                    bullet.transform.position = _transformSpawn.position;
-                    
-                    float angle = (transform.eulerAngles.z + 90) * Mathf.Deg2Rad;
-                    Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-                    if (bullet.TryGetComponent(out Rigidbody2D rigidbody))
-                    {
-                        Debug.Log($"Direction: {direction}, Angle: {angle}");
-                        rigidbody.linearVelocity = direction * _speed;
-                    }
-                    else
-                    {
-                        Debug.LogError("У Player-а отсутствует Rigidbody!");
-                    }
-                    
-                    await bullet.DelayedDeactivate();
-                    break;
-                }
-            }
         }
     }
 }
