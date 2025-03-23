@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AsteroidFactoryData
   m_EditorClassIdentifier: 
   <SizePool>k__BackingField: 5
-  <SmallAsteroidData>k__BackingField: {fileID: 11400000, guid: b9f5d4d6b987ab648aab409ffd109a40, type: 2}
-  <AsteroidData>k__BackingField: {fileID: 11400000, guid: 42416a075eaa5334f83d28c1de98748e, type: 2}
+  <SmallPrefab>k__BackingField: {fileID: 3257873801558751609, guid: abb836a9c4aacaa45844a3ec051d4afa, type: 3}
+  <Prefab>k__BackingField: {fileID: 6847352266223767652, guid: ddfce527a729bce40bcb55a4fc76e825, type: 3}

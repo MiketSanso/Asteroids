@@ -48,8 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b76d3f340e14727836182639fef0068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _velocity: {x: 3, y: 3}
+  _sprayVelocity: 2
   _rb: {fileID: -6718094786650314816}
-  scoreSize: 150
+  _scoreSize: 100
 --- !u!61 &7451509933503025529
 BoxCollider2D:
   m_ObjectHideFlags: 0

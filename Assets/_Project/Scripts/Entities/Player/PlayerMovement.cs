@@ -16,7 +16,6 @@ namespace GameScene.Entities.Player
         [Inject]
         public void Construct(IMovement iMovement)
         {
-            Debug.Log(1);
             _iMovement = iMovement;
         }
         

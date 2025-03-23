@@ -9,21 +9,23 @@ namespace GameScene.Factories
 {
     public class AsteroidFactory : Factory
     {
-        private readonly AsteroidFactoryData _factoryData;
         private int _destroyed;
         private int _countAsteroids; 
         private readonly EndPanel _endPanel;
+        private readonly AsteroidFactoryData _factoryData;
 
         public PoolObjects<AsteroidUI> PoolAsteroids { get; private set; }
         public PoolObjects<AsteroidUI> PoolSmallAsteroids { get; private set; }
 
         [Inject]
-        public AsteroidFactory(AsteroidFactoryData factoryData, EndPanel endPanel)
+        public AsteroidFactory(TransformParent transformParent, 
+            SpawnTransform spawnTransform, 
+            AsteroidFactoryData factoryData, 
+            EndPanel endPanel) : base(transformParent, spawnTransform)
         {
             _endPanel = endPanel;
             _factoryData = factoryData;
             _endPanel.OnRestart += RestartFly;
-            CreatePool();
             RestartFly();
 
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
@@ -56,13 +58,9 @@ namespace GameScene.Factories
         
         protected override void CreatePool()
         {
-            PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, 
-                _factoryData.SizePool, 
-                _factoryData.TransformParent.Transform);
+            PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
             
-            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(_factoryData.SmallPrefab, 
-                _factoryData.SizePool, 
-                _factoryData.TransformParent.Transform);
+            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(_factoryData.SmallPrefab, _factoryData.SizePool, TransformParent.transform);
         }
         
         private void RestartFly()
@@ -73,7 +71,7 @@ namespace GameScene.Factories
             
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
             {
-                asteroid.Activate(PoolAsteroids.GetRandomTransform());
+                asteroid.Activate(SpawnTransform.GetPosition());
             }
         }
         

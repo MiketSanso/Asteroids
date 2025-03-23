@@ -2,6 +2,8 @@ using GameScene.Repositories;
 using GameScene.Entities.Player;
 using GameScene.Factories.ScriptableObjects;
 using UnityEngine;
+using Zenject;
+using GameScene.Level;
 
 namespace GameScene.Factories
 {
@@ -9,8 +11,10 @@ namespace GameScene.Factories
     {
         private readonly BulletFactoryData _factoryData;
         private PoolObjects<Bullet> _poolBullets;
-
-        public BulletFactory(BulletFactoryData factoryData)
+        
+        public BulletFactory(TransformParent transformParent, 
+            SpawnTransform spawnTransform,
+            BulletFactoryData factoryData) : base(transformParent, spawnTransform)
         {
             _factoryData = factoryData;
         }
@@ -20,7 +24,7 @@ namespace GameScene.Factories
 
         protected override void CreatePool()
         {
-            _poolBullets = new PoolObjects<Bullet>(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent.Transform);
+            _poolBullets = new PoolObjects<Bullet>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
         }
         
         public void SpawnBullet()

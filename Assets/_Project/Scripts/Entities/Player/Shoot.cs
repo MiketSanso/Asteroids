@@ -50,7 +50,7 @@ namespace GameScene.Entities.Player
         }
 
         [Inject]
-        private void Construct(BulletFactory bulletFactory)
+        public void Construct(BulletFactory bulletFactory)
         {
             _bulletFactory = bulletFactory;
         }

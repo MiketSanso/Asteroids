@@ -20,7 +20,9 @@ namespace GameScene.Factories
 
         public PoolObjects<Ufo> PoolUfo { get; private set; }
 
-        public UfoFactory(UfoFactoryData factoryData)
+        public UfoFactory(TransformParent transformParent, 
+            SpawnTransform spawnTransform,
+            UfoFactoryData factoryData) : base(transformParent, spawnTransform)
         {
             _factoryData = factoryData;
             _endPanel.OnRestart += StartSpawnUFO;
@@ -43,7 +45,7 @@ namespace GameScene.Factories
 
         protected override void CreatePool()
         {
-            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, _factoryData.TransformParent.Transform);
+            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
         }
 
         private async void StartSpawnUFO()
@@ -69,7 +71,7 @@ namespace GameScene.Factories
                     {
                         if (!UFO.gameObject.activeSelf)
                         {
-                            UFO.Activate(PoolUfo.GetRandomTransform());
+                            UFO.Activate(SpawnTransform.GetPosition());
                             break;
                         }
                     }

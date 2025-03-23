@@ -31,11 +31,9 @@ namespace GameScene.Level
         }
         
         [Inject]
-        public void Construct(PlayerUI playerUI, ScoreInfo scoreInfo)
+        public void Construct()
         {
-            _playerUI = playerUI;
-            _scoreInfo = scoreInfo;
-            _playerUI.OnDeath += Activate;
+            Debug.Log(1);
         }
         
         private void Restart()
