@@ -11,18 +11,20 @@ namespace GameScene.Repositories
     {
         private AsteroidFactory _asteroidFactory;
         private UfoFactory _ufoFactory;
-        private EndPanel _endPanel;
+        private GameStateController _gameStateController;
         
         public float Score { get; private set; }
         
         [Inject]
         public ScoreInfo(AsteroidFactory asteroidFactory,
         UfoFactory ufoFactory,
-        EndPanel endPanel)
+        GameStateController gameStateController)
         {
-            _endPanel = endPanel;
+            _gameStateController = gameStateController;
             _asteroidFactory = asteroidFactory;
             _ufoFactory = ufoFactory;
+            
+            _gameStateController.OnRestart += ResetScore;
             
             foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.Objects)
             {
@@ -42,7 +44,7 @@ namespace GameScene.Repositories
         
         private void Destroy()
         {
-            _endPanel.OnRestart -= ResetScore;
+            _gameStateController.OnRestart -= ResetScore;
             
             foreach (AsteroidUI asteroid in _asteroidFactory.PoolAsteroids.Objects)
             {

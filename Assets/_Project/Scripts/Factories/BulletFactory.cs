@@ -22,7 +22,7 @@ namespace GameScene.Factories
         public override void Destroy()
         { }
 
-        protected override void CreatePool()
+        private void CreatePool()
         {
             _poolBullets = new PoolObjects<Bullet>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
         }

@@ -8,18 +8,22 @@ namespace GameScene.Entities.Player
 {
     public class PlayerUI : MonoBehaviour
     {
-        public event Action OnDeath;
-        
-        private EndPanel _endPanel;
+        private GameStateController _gameStateController;
 
+        [Inject]
+        private void Construct(GameStateController gameStateController)
+        {
+            _gameStateController = gameStateController;
+        }
+        
         private void Start()
         {
-            _endPanel.OnRestart += Activate;
+            _gameStateController.OnRestart += Activate;
         }
         
         private void OnDestroy()
         {
-            _endPanel.OnRestart -= Activate;
+            _gameStateController.OnRestart -= Activate;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -31,15 +35,9 @@ namespace GameScene.Entities.Player
             }
         }
         
-        [Inject]
-        private void Construct(EndPanel endPanel)
-        {
-            _endPanel = endPanel;
-        }
-        
         private void Deactivate()
         {
-            OnDeath?.Invoke();
+            _gameStateController.FinishGame();
             gameObject.SetActive(false);
         }
 

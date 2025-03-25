@@ -10,35 +10,35 @@ namespace GameScene.Level
 {
     public class EndPanel : MonoBehaviour
     {
-        public event Action OnRestart;
-        
         [SerializeField] private GameObject _panel;
         [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _text;
         
         private ScoreInfo _scoreInfo;
-        private PlayerUI _playerUI;
+        private GameStateController _gameStateController;
+        
+        [Inject]
+        public void Construct(GameStateController gameStateController, ScoreInfo scoreInfo)
+        {
+            _gameStateController = gameStateController;
+            _scoreInfo = scoreInfo;
+        }
         
         private void Start()
         {
             _restartButton.onClick.AddListener(Restart);
+            _gameStateController.OnFinish += Activate;
         }
         
         private void OnDestroy()
         {
-            _playerUI.OnDeath -= Activate;
             _restartButton.onClick.RemoveListener(Restart);
-        }
-        
-        [Inject]
-        public void Construct()
-        {
-            Debug.Log(1);
+            _gameStateController.OnFinish -= Activate;
         }
         
         private void Restart()
         {
-            OnRestart?.Invoke();
+            _gameStateController.RestartGame();
             Deactivate();
         }
 

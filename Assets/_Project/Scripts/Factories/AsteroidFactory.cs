@@ -10,8 +10,8 @@ namespace GameScene.Factories
     public class AsteroidFactory : Factory
     {
         private int _destroyed;
-        private int _countAsteroids; 
-        private readonly EndPanel _endPanel;
+        private int _countAsteroids;
+        private readonly GameStateController _gameStateController;
         private readonly AsteroidFactoryData _factoryData;
 
         public PoolObjects<AsteroidUI> PoolAsteroids { get; private set; }
@@ -21,11 +21,12 @@ namespace GameScene.Factories
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             AsteroidFactoryData factoryData, 
-            EndPanel endPanel) : base(transformParent, spawnTransform)
+            GameStateController gameStateController) : base(transformParent, spawnTransform)
         {
-            _endPanel = endPanel;
+            _gameStateController = gameStateController;
             _factoryData = factoryData;
-            _endPanel.OnRestart += RestartFly;
+            _gameStateController.OnRestart += RestartFly;
+            CreatePool();
             RestartFly();
 
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
@@ -42,7 +43,7 @@ namespace GameScene.Factories
         
         public override void Destroy()
         {
-            _endPanel.OnRestart -= RestartFly;
+            _gameStateController.OnRestart -= RestartFly;
             
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
             {
@@ -56,7 +57,7 @@ namespace GameScene.Factories
             }
         }
         
-        protected override void CreatePool()
+        private void CreatePool()
         {
             PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
             

@@ -14,36 +14,30 @@ namespace GameScene.Factories
     public class UfoFactory : Factory
     {
         private UfoFactoryData _factoryData;
-        private PlayerUI _playerUI;
-        private EndPanel _endPanel;
+        private GameStateController _gameStateController;
         private CancellationTokenSource _tokenSource;
 
         public PoolObjects<Ufo> PoolUfo { get; private set; }
 
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            UfoFactoryData factoryData) : base(transformParent, spawnTransform)
+            UfoFactoryData factoryData,
+            GameStateController gameStateController) : base(transformParent, spawnTransform)
         {
             _factoryData = factoryData;
-            _endPanel.OnRestart += StartSpawnUFO;
-            _playerUI.OnDeath += StopSpawnUFO;
+            _gameStateController = gameStateController;
+            _gameStateController.OnRestart += StartSpawnUFO;
+            _gameStateController.OnFinish += StopSpawnUFO;
             StartSpawnUFO();
-        }
-        
-        [Inject]
-        public void Construct(PlayerUI playerUI, EndPanel endPanel)
-        {
-            _endPanel = endPanel;
-            _playerUI = playerUI;
         }
 
         public override void Destroy()
         {
-            _playerUI.OnDeath -= StopSpawnUFO;
-            _endPanel.OnRestart -= StartSpawnUFO;
+            _gameStateController.OnFinish -= StopSpawnUFO;
+            _gameStateController.OnRestart -= StartSpawnUFO;
         }
 
-        protected override void CreatePool()
+        private void CreatePool()
         {
             PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
         }

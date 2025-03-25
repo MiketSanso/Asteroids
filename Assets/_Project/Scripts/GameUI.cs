@@ -16,6 +16,13 @@ namespace GameScene.Level
         private PlayerUI _playerUI;
         private Shoot _shoot;
 
+        [Inject]
+        public void Construct(Shoot shoot, PlayerUI playerUI)
+        {
+            _shoot = shoot;
+            _playerUI = playerUI;
+        }
+        
         private void Update()
         {
             float speed = Mathf.Round(Mathf.Abs(_playerUI.GetComponent<Rigidbody2D>().linearVelocity.magnitude) * 100) / 100f;
@@ -25,13 +32,6 @@ namespace GameScene.Level
             _angleOfRotations.text = $"Rotation: {Mathf.Round(_playerUI.transform.rotation.eulerAngles.z)}°";
             _countLaserCharges.text = $"Count shoots laser: {_shoot.CountShotsLaser}";
             _timeRollbackLaser.text = $"Time rollback laser: {_shoot.TimeRechargeLaser}";
-        }
-        
-        [Inject]
-        public void Construct(Shoot shoot, PlayerUI playerUI)
-        {
-            _shoot = shoot;
-            _playerUI = playerUI;
         }
     }
 }
