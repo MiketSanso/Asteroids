@@ -3,16 +3,16 @@ using System.Threading;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
-using GameScene.Entities.Player;
 using GameScene.Level;
-using Zenject;
 using GameScene.Entities.UFOs;
 using GameScene.Factories.ScriptableObjects;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory
+    public class UfoFactory
     {
+        private readonly SpawnTransform SpawnTransform;
+        private readonly TransformParent TransformParent;
         private UfoFactoryData _factoryData;
         private GameStateController _gameStateController;
         private CancellationTokenSource _tokenSource;
@@ -22,25 +22,24 @@ namespace GameScene.Factories
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             UfoFactoryData factoryData,
-            GameStateController gameStateController) : base(transformParent, spawnTransform)
+            GameStateController gameStateController)
         {
+            SpawnTransform = spawnTransform;
+            TransformParent = transformParent;
             _factoryData = factoryData;
             _gameStateController = gameStateController;
             _gameStateController.OnRestart += StartSpawnUFO;
             _gameStateController.OnFinish += StopSpawnUFO;
-            CreatePool();
+            
+            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
+            
             StartSpawnUFO();
         }
 
-        public override void Destroy()
+        public void Destroy()
         {
             _gameStateController.OnFinish -= StopSpawnUFO;
             _gameStateController.OnRestart -= StartSpawnUFO;
-        }
-
-        private void CreatePool()
-        {
-            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
         }
 
         private async void StartSpawnUFO()

@@ -29,7 +29,10 @@ namespace GameScene.Factories
             _gameStateController = gameStateController;
             _factoryData = factoryData;
             _gameStateController.OnRestart += RestartFly;
-            CreatePool();
+            
+            PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
+            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(_factoryData.SmallPrefab, _factoryData.SizePool, TransformParent.transform);
+            
             RestartFly();
 
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
@@ -58,13 +61,6 @@ namespace GameScene.Factories
             {
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
-        }
-        
-        private void CreatePool()
-        {
-            PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
-            
-            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(_factoryData.SmallPrefab, _factoryData.SizePool, TransformParent.transform);
         }
         
         private void RestartFly()

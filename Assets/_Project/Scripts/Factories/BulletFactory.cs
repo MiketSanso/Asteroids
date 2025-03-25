@@ -22,7 +22,6 @@ namespace GameScene.Factories
             _factoryData = factoryData;
             
             _poolBullets = new PoolObjects<Bullet>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
-
         }
         
         public void Destroy()
