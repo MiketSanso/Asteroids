@@ -26,7 +26,7 @@ namespace GameScene.Level
             Container.Bind<Shoot>().FromInstance(_shoot).AsSingle();
             Container.Bind<SpawnTransform>().FromInstance(_spawnTransform).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
-            Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData).NonLazy();
+            Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData);
             Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData);
             Container.Bind<ScoreInfo>().AsSingle();

@@ -28,6 +28,7 @@ namespace GameScene.Factories
             _gameStateController = gameStateController;
             _gameStateController.OnRestart += StartSpawnUFO;
             _gameStateController.OnFinish += StopSpawnUFO;
+            CreatePool();
             StartSpawnUFO();
         }
 

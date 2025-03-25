@@ -14,6 +14,7 @@ namespace GameScene.Repositories
             for (int i = 0; i < poolSize; i++)
             {
                 Objects[i] = Object.Instantiate(prefab, transformParent);
+                Objects[i].Deactivate();
             }
         }
 

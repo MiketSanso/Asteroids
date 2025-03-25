@@ -24,11 +24,17 @@ namespace GameScene.Entities.Player
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
 
+        [Inject]
+        public void Construct(BulletFactory bulletFactory)
+        {
+            _bulletFactory = bulletFactory;
+        }
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletFactory.SpawnBullet();
+                _bulletFactory.SpawnBullet(_transformSpawn.position);
             }
             
             if (Input.GetKeyDown(KeyCode.E))
@@ -47,12 +53,6 @@ namespace GameScene.Entities.Player
         private void OnValidate()
         {
             _stepTimeRecharge = Mathf.Max(0, _stepTimeRecharge);
-        }
-
-        [Inject]
-        public void Construct(BulletFactory bulletFactory)
-        {
-            _bulletFactory = bulletFactory;
         }
         
         private async void ShootLaser()

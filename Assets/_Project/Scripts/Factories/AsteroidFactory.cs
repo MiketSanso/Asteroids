@@ -7,8 +7,10 @@ using GameScene.Level;
 
 namespace GameScene.Factories
 {
-    public class AsteroidFactory : Factory
+    public class AsteroidFactory
     {
+        protected readonly SpawnTransform SpawnTransform;
+        protected readonly TransformParent TransformParent;
         private int _destroyed;
         private int _countAsteroids;
         private readonly GameStateController _gameStateController;
@@ -16,13 +18,14 @@ namespace GameScene.Factories
 
         public PoolObjects<AsteroidUI> PoolAsteroids { get; private set; }
         public PoolObjects<AsteroidUI> PoolSmallAsteroids { get; private set; }
-
-        [Inject]
+        
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             AsteroidFactoryData factoryData, 
-            GameStateController gameStateController) : base(transformParent, spawnTransform)
+            GameStateController gameStateController)
         {
+            SpawnTransform = spawnTransform;
+            TransformParent = transformParent;
             _gameStateController = gameStateController;
             _factoryData = factoryData;
             _gameStateController.OnRestart += RestartFly;
@@ -41,7 +44,7 @@ namespace GameScene.Factories
             }
         }
         
-        public override void Destroy()
+        public void Destroy()
         {
             _gameStateController.OnRestart -= RestartFly;
             

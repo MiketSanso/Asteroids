@@ -8,7 +8,7 @@ namespace GameScene.Factories
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
         
-        protected Factory(TransformParent transformParent, SpawnTransform spawnTransform)
+        public Factory(TransformParent transformParent, SpawnTransform spawnTransform)
         {
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
