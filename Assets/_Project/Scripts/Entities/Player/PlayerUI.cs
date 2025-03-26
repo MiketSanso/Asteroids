@@ -1,38 +1,42 @@
 using UnityEngine;
-using System;
 using GameScene.Interfaces;
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Entities.Player
 {
     public class PlayerUI : MonoBehaviour
     {
-        public event Action OnDeath;
-        
-        [SerializeField] private EndPanel _endPanel;
+        private GameStateController _gameStateController;
 
+        [Inject]
+        private void Construct(GameStateController gameStateController)
+        {
+            _gameStateController = gameStateController;
+        }
+        
         private void Start()
         {
-            _endPanel.OnRestart += Activate;
+            _gameStateController.OnRestart += Activate;
         }
         
         private void OnDestroy()
         {
-            _endPanel.OnRestart -= Activate;
+            _gameStateController.OnRestart -= Activate;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent(out IDestroyableEnemy enemy))
             {
-                enemy.Destroy(true);
+                enemy.Destroy();
                 Deactivate();
             }
         }
         
-        public void Deactivate()
+        private void Deactivate()
         {
-            OnDeath?.Invoke();
+            _gameStateController.FinishGame();
             gameObject.SetActive(false);
         }
 

@@ -1,45 +1,46 @@
-using GameScene.Entities.Player;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 using GameScene.Repositories;
 using TMPro;
+using Zenject;
 
 namespace GameScene.Level
 {
     public class EndPanel : MonoBehaviour
     {
-        public event Action OnRestart;
-        
         [SerializeField] private GameObject _panel;
         [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _text;
         
         private ScoreInfo _scoreInfo;
-        private PlayerUI _playerUI;
+        private GameStateController _gameStateController;
         
-        private void Start()
+        [Inject]
+        private void Construct(GameStateController gameStateController, ScoreInfo scoreInfo)
+        {
+            _gameStateController = gameStateController;
+            _scoreInfo = scoreInfo;
+
+            Initialize();
+        }
+
+        private void Initialize()
         {
             _restartButton.onClick.AddListener(Restart);
+            _gameStateController.OnFinish += Activate;
+            Deactivate();
         }
         
         private void OnDestroy()
         {
-            _playerUI.OnDeath -= Activate;
             _restartButton.onClick.RemoveListener(Restart);
+            _gameStateController.OnFinish -= Activate;
         }
         
         private void Restart()
         {
-            OnRestart?.Invoke();
+            _gameStateController.RestartGame();
             Deactivate();
-        }
-        
-        public void Initialize(PlayerUI playerUI, ScoreInfo scoreInfo)
-        {
-            _scoreInfo = scoreInfo;
-            _playerUI = playerUI;
-            _playerUI.OnDeath += Activate;
         }
 
         private void Activate()

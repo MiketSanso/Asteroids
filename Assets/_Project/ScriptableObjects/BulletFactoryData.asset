@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7718553d60b44d2a87aee849c63ef683, type: 3}
-  m_Name: SmallAsteroid
+  m_Script: {fileID: 11500000, guid: c3e02c2b931b40fdba6003e50878b55c, type: 3}
+  m_Name: BulletFactoryData
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 3257873801558751609, guid: abb836a9c4aacaa45844a3ec051d4afa, type: 3}
-  <Speed>k__BackingField: {x: 2, y: 2}
-  <SpraySpeed>k__BackingField: 3
+  <SizePool>k__BackingField: 15
+  <Prefab>k__BackingField: {fileID: 8910872240583744831, guid: dfaab23bdfb363841b974cc3a7bf42a1, type: 3}
