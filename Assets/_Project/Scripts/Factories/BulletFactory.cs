@@ -3,31 +3,26 @@ using GameScene.Entities.Player;
 using GameScene.Factories.ScriptableObjects;
 using UnityEngine;
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Factories
 {
-    public class BulletFactory
+    public class BulletFactory : Factory
     {
-        private readonly SpawnTransform SpawnTransform;
-        private readonly TransformParent TransformParent;
-        private readonly BulletFactoryData _factoryData;
-        private PoolObjects<Bullet> _poolBullets;
+        private readonly PoolObjects<Bullet> _poolBullets;
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            BulletFactoryData factoryData)
+            BulletFactoryData factoryData,
+            IInstantiator instantiator) : base(transformParent, spawnTransform)
         {
-            SpawnTransform = spawnTransform;
-            TransformParent = transformParent;
-            _factoryData = factoryData;
-            
-            _poolBullets = new PoolObjects<Bullet>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
+            _poolBullets = new PoolObjects<Bullet>(factoryData.Prefab, factoryData.SizePool, TransformParent.transform, instantiator);
         }
         
-        public void Destroy()
+        public override void Destroy()
         { }
         
-        public async void SpawnBullet(Vector2 positionSpawn)
+        public async void SpawnBullet(Transform positionSpawn)
         {
             foreach (Bullet bullet in _poolBullets.Objects)
             {

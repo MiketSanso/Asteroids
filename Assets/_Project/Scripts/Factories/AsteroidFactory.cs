@@ -7,49 +7,35 @@ using GameScene.Level;
 
 namespace GameScene.Factories
 {
-    public class AsteroidFactory
+    public class AsteroidFactory : Factory
     {
-        protected readonly SpawnTransform SpawnTransform;
-        protected readonly TransformParent TransformParent;
+        public readonly PoolObjects<AsteroidUI> PoolAsteroids;
+        public readonly PoolObjects<AsteroidUI> PoolSmallAsteroids;
+        
         private int _destroyed;
-        private int _countAsteroids;
+        private readonly int _countAsteroids;
         private readonly GameStateController _gameStateController;
-        private readonly AsteroidFactoryData _factoryData;
-
-        public PoolObjects<AsteroidUI> PoolAsteroids { get; private set; }
-        public PoolObjects<AsteroidUI> PoolSmallAsteroids { get; private set; }
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             AsteroidFactoryData factoryData, 
-            GameStateController gameStateController)
+            GameStateController gameStateController,
+            IInstantiator instantiator) : base(transformParent, spawnTransform)
         {
-            SpawnTransform = spawnTransform;
-            TransformParent = transformParent;
             _gameStateController = gameStateController;
-            _factoryData = factoryData;
-            _gameStateController.OnRestart += RestartFly;
-            
-            PoolAsteroids = new PoolObjects<AsteroidUI>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
-            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(_factoryData.SmallPrefab, _factoryData.SizePool, TransformParent.transform);
-            
-            RestartFly();
+            _countAsteroids = factoryData.SizePool;
 
-            foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
-            {
-                asteroid.OnDestroyed += ActivateSmallAsteroids;
-                asteroid.OnDestroyed += AddDestroyedAsteroid;
-            }
-            
-            foreach (AsteroidUI asteroid in PoolSmallAsteroids.Objects)
-            {
-                asteroid.OnDestroyed += AddDestroyedAsteroid;
-            }
+            PoolAsteroids = new PoolObjects<AsteroidUI>(factoryData.Prefab, factoryData.SizePool, TransformParent.transform, instantiator);
+            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(factoryData.SmallPrefab, factoryData.SizePool, TransformParent.transform, instantiator);
+
+            Initialize();
+            RestartFly();
         }
         
-        public void Destroy()
+        public override void Destroy()
         {
             _gameStateController.OnRestart -= RestartFly;
+            _gameStateController.OnCloseGame -= Destroy;
             
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
             {
@@ -62,23 +48,41 @@ namespace GameScene.Factories
                 asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
         }
+
+        private void Initialize()
+        {
+            _gameStateController.OnRestart += RestartFly;
+            _gameStateController.OnCloseGame += Destroy;
+            
+            foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
+            {
+                asteroid.OnDestroyed += ActivateSmallAsteroids;
+                asteroid.OnDestroyed += AddDestroyedAsteroid;
+            }
+            
+            foreach (AsteroidUI asteroid in PoolSmallAsteroids.Objects)
+            {
+                asteroid.OnDestroyed += AddDestroyedAsteroid;
+            }
+        }
         
         private void RestartFly()
         {
-            _destroyed = 0;
-
             PoolAsteroids.DeactivateObjects();
+            PoolSmallAsteroids.DeactivateObjects();
             
             foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
             {
                 asteroid.Activate(SpawnTransform.GetPosition());
             }
+            
+            _destroyed = 0;
         }
         
         private void AddDestroyedAsteroid(int scoreSize, Transform transform)
         {
             _destroyed++;
-
+            
             if (_destroyed == _countAsteroids * 3)
             {
                 _destroyed = 0;

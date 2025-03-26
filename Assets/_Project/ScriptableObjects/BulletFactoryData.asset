@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e02c2b931b40fdba6003e50878b55c, type: 3}
   m_Name: BulletFactoryData
   m_EditorClassIdentifier: 
-  <SizePool>k__BackingField: 30
+  <SizePool>k__BackingField: 15
   <Prefab>k__BackingField: {fileID: 8910872240583744831, guid: dfaab23bdfb363841b974cc3a7bf42a1, type: 3}

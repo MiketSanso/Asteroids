@@ -1,17 +1,15 @@
 using UnityEngine;
-using System;
 using GameScene.Interfaces;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidUI : MonoBehaviour, IPooledObject
+    public class AsteroidUI : MonoBehaviour, IPooledObject, IDestroyableEnemy
     {
-        [SerializeField] private Vector2 _velocity;
-        [SerializeField] private float _sprayVelocity;
-        
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;
         
+        [SerializeField] private Vector2 _velocity;
+        [SerializeField] private float _sprayVelocity;
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private int _scoreSize;
         

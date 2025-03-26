@@ -13,7 +13,6 @@ namespace GameScene.Entities.Player
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private float _laserRange;
         [SerializeField] private float _timeVisibleLaser;
-        [SerializeField] private float _speed;
         [SerializeField] private float _fixedTimeRechargeLaser;
         [SerializeField] private float _stepTimeRecharge;
         [SerializeField] private int _maxCountLaserShoots;
@@ -25,7 +24,7 @@ namespace GameScene.Entities.Player
         public int CountShotsLaser { get; private set; }
 
         [Inject]
-        public void Construct(BulletFactory bulletFactory)
+        private void Construct(BulletFactory bulletFactory)
         {
             _bulletFactory = bulletFactory;
         }
@@ -34,7 +33,7 @@ namespace GameScene.Entities.Player
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletFactory.SpawnBullet(_transformSpawn.position);
+                _bulletFactory.SpawnBullet(_transformSpawn);
             }
             
             if (Input.GetKeyDown(KeyCode.E))
@@ -93,6 +92,8 @@ namespace GameScene.Entities.Player
         {
             await UniTask.Delay(TimeSpan.FromSeconds(_timeVisibleLaser));
             _lineRenderer.enabled = false;
+            
+            Debug.Log(1);
         }
         
         private async UniTask RechargeLaser()

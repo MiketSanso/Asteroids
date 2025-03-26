@@ -1,5 +1,4 @@
 using GameScene.Level;
-using Zenject;
 
 namespace GameScene.Factories
 {
@@ -8,7 +7,7 @@ namespace GameScene.Factories
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
         
-        public Factory(TransformParent transformParent, SpawnTransform spawnTransform)
+        protected Factory(TransformParent transformParent, SpawnTransform spawnTransform)
         {
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;

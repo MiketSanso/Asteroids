@@ -6,66 +6,72 @@ using Random = UnityEngine.Random;
 using GameScene.Level;
 using GameScene.Entities.UFOs;
 using GameScene.Factories.ScriptableObjects;
+using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory
+    public class UfoFactory : Factory
     {
-        private readonly SpawnTransform SpawnTransform;
-        private readonly TransformParent TransformParent;
-        private UfoFactoryData _factoryData;
-        private GameStateController _gameStateController;
+        public readonly PoolObjects<Ufo> PoolUfo;
+        
+        private readonly UfoFactoryData _factoryData;
+        private readonly GameStateController _gameStateController;
         private CancellationTokenSource _tokenSource;
-
-        public PoolObjects<Ufo> PoolUfo { get; private set; }
-
+        
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             UfoFactoryData factoryData,
-            GameStateController gameStateController)
+            GameStateController gameStateController,
+            IInstantiator instantiator) : base(transformParent, spawnTransform)
         {
-            SpawnTransform = spawnTransform;
-            TransformParent = transformParent;
             _factoryData = factoryData;
             _gameStateController = gameStateController;
-            _gameStateController.OnRestart += StartSpawnUFO;
-            _gameStateController.OnFinish += StopSpawnUFO;
-            
-            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform);
-            
-            StartSpawnUFO();
+            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform, instantiator);
+
+            Initialize();
+            StartSpawnUfo();
         }
 
-        public void Destroy()
+        public override void Destroy()
         {
-            _gameStateController.OnFinish -= StopSpawnUFO;
-            _gameStateController.OnRestart -= StartSpawnUFO;
+            _gameStateController.OnCloseGame -= Destroy;
+            _gameStateController.OnRestart -= PoolUfo.DeactivateObjects;
+            _gameStateController.OnFinish -= StopSpawnUfo;
+            _gameStateController.OnRestart -= StartSpawnUfo;
         }
 
-        private async void StartSpawnUFO()
+        private void Initialize()
+        {
+            _gameStateController.OnCloseGame += Destroy;
+            _gameStateController.OnRestart += PoolUfo.DeactivateObjects;
+            _gameStateController.OnRestart += StartSpawnUfo;
+            _gameStateController.OnFinish += StopSpawnUfo;
+        }
+
+        private async void StartSpawnUfo()
         {
             _tokenSource = new CancellationTokenSource();
-            await SpawnUFOs();
+            await SpawnUfos();
         }
 
-        private void StopSpawnUFO()
+        private void StopSpawnUfo()
         {
             _tokenSource.Cancel();
         }
 
-        private async UniTask SpawnUFOs()
+        private async UniTask SpawnUfos()
         {
             try
             {
-                while (_tokenSource.IsCancellationRequested == false);
+                while (_tokenSource.IsCancellationRequested == false)
                 {
                     float time = Random.Range(_factoryData.MinTimeSpawn, _factoryData.MaxTimeSpawn);
                     await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                    foreach (Ufo UFO in PoolUfo.Objects)
+                    foreach (Ufo ufo in PoolUfo.Objects)
                     {
-                        if (!UFO.gameObject.activeSelf)
+                        if (!ufo.gameObject.activeSelf)
                         {
-                            UFO.Activate(SpawnTransform.GetPosition());
+                            ufo.Activate(SpawnTransform.GetPosition());
                             break;
                         }
                     }

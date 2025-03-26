@@ -1,7 +1,5 @@
-using GameScene.Entities.Player;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 using GameScene.Repositories;
 using TMPro;
 using Zenject;
@@ -18,16 +16,19 @@ namespace GameScene.Level
         private GameStateController _gameStateController;
         
         [Inject]
-        public void Construct(GameStateController gameStateController, ScoreInfo scoreInfo)
+        private void Construct(GameStateController gameStateController, ScoreInfo scoreInfo)
         {
             _gameStateController = gameStateController;
             _scoreInfo = scoreInfo;
+
+            Initialize();
         }
-        
-        private void Start()
+
+        private void Initialize()
         {
             _restartButton.onClick.AddListener(Restart);
             _gameStateController.OnFinish += Activate;
+            Deactivate();
         }
         
         private void OnDestroy()

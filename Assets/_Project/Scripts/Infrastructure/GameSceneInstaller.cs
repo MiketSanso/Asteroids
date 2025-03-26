@@ -11,7 +11,6 @@ namespace GameScene.Level
     public class GameSceneInstaller : MonoInstaller
     {
         [SerializeField] private PlayerUI _player;
-        [SerializeField] private EndPanel _endPanel;
         [SerializeField] private Shoot _shoot;
         [SerializeField] private SpawnTransform _spawnTransform;
         [SerializeField] private TransformParent _transformParent;
@@ -21,14 +20,13 @@ namespace GameScene.Level
         
         public override void InstallBindings()
         {
-            //Container.Bind<EndPanel>().FromInstance(_endPanel).AsSingle();
             Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
             Container.Bind<Shoot>().FromInstance(_shoot).AsSingle();
             Container.Bind<SpawnTransform>().FromInstance(_spawnTransform).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
+            Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData);
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData);
-            Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData);
             Container.Bind<ScoreInfo>().AsSingle();
             Container.Bind<GameStateController>().AsSingle();
             Container.Bind<IMovement>().To<KeyboardMovement>().AsSingle();

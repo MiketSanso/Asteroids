@@ -1,6 +1,4 @@
 using UnityEngine;
-using GameScene.Level;
-using Zenject;
 
 namespace GameScene.Factories.ScriptableObjects
 {

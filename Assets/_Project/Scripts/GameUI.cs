@@ -17,7 +17,7 @@ namespace GameScene.Level
         private Shoot _shoot;
 
         [Inject]
-        public void Construct(Shoot shoot, PlayerUI playerUI)
+        private void Construct(Shoot shoot, PlayerUI playerUI)
         {
             _shoot = shoot;
             _playerUI = playerUI;
