@@ -1,24 +1,46 @@
+using GameScene.Interfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class Asteroid
+    public class Asteroid : IPooledObject
     {
-        public void Activate(GameObject thisObject, Vector2 positionSpawn, Rigidbody2D rb, Vector2 velocity, float sprayVelocity)
+        public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
+        public event DestroyedEventHandler OnDestroyed;
+
+        public readonly GameObject ThisObject;
+        
+        private readonly AsteroidData _asteroidData;
+        private readonly Rigidbody2D _rb;
+        public Asteroid(AsteroidData asteroidData,
+        Rigidbody2D rb)
         {
-            thisObject.SetActive(true);
-            thisObject.transform.position = positionSpawn;
-            
-            float velocityX = Random.Range(velocity.x - sprayVelocity, velocity.x + sprayVelocity);
-            float velocityY = Random.Range(velocity.x - sprayVelocity, velocity.x + sprayVelocity);
-            Vector2 newVelocity = new Vector2(velocityX, velocityY);
-            rb.linearVelocity = newVelocity;
+            _asteroidData = asteroidData;
+            _rb = rb;
+            ThisObject = rb.gameObject;
         }
         
-        public void Deactivate(GameObject thisObject)
+        public void Activate(Transform transformSpawn)
         {
-            thisObject.SetActive(false);
+            ThisObject.SetActive(true);
+            ThisObject.transform.position = transformSpawn.position;
+            
+            float velocityX = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);
+            float velocityY = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);
+            Vector2 newVelocity = new Vector2(velocityX, velocityY);
+            _rb.linearVelocity = newVelocity;
+        }
+        
+        public void Deactivate()
+        {
+            ThisObject.SetActive(false);
+        }
+        
+        public void Destroy()
+        {
+            Deactivate();
+            OnDestroyed?.Invoke(_asteroidData.ScoreSize, ThisObject.transform);
         }
     }
 }

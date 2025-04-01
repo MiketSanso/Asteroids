@@ -1,3 +1,4 @@
+using GameScene.Entities.Asteroid;
 using GameScene.Entities.Player;
 using GameScene.Interfaces;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace GameScene.Level
         [SerializeField] private AsteroidFactoryData _asteroidFactoryData;
         [SerializeField] private BulletFactoryData _bulletFactoryData;
         [SerializeField] private UfoFactoryData _ufoFactoryData;
+        [SerializeField] private AsteroidData _asteroidData;
+        [SerializeField] private AsteroidData _asteroidDataSmall;
         
         public override void InstallBindings()
         {
@@ -24,9 +27,11 @@ namespace GameScene.Level
             Container.Bind<Shoot>().FromInstance(_shoot).AsSingle();
             Container.Bind<SpawnTransform>().FromInstance(_spawnTransform).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
-            Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData);
+            Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData, _asteroidData, _asteroidDataSmall);
+            Container.Bind<IInitializable>().To<AsteroidFactory>().FromResolve(); 
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData);
+            Container.Bind<IInitializable>().To<UfoFactory>().FromResolve(); 
             Container.Bind<ScoreInfo>().AsSingle();
             Container.Bind<GameStateController>().AsSingle();
             Container.Bind<IMovement>().To<KeyboardMovement>().AsSingle();

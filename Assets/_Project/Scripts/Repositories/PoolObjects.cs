@@ -1,30 +1,56 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 using GameScene.Interfaces;
-using Zenject;
 
 namespace GameScene.Repositories
 {
-    public class PoolObjects<T> where T : MonoBehaviour, IPooledObject
+    public class PoolObjects<T> where T : IPooledObject
     {
-        public readonly T[] Objects;
+        private readonly Func<T> _preloadFunc;
+        private readonly Action<T> _getAction;
+        private readonly Action<T> _returnAction;
+        private List<T> _active = new List<T>();
 
-        public PoolObjects(T prefab, int poolSize, Transform transformParent, IInstantiator instantiator)
+        public Queue<T> Pool { get; private set; } = new Queue<T>();
+
+
+        public PoolObjects(Func<T> preloadFunc, Action<T> getAction, Action<T> returnAction, int preloadCount)
         {
-            Objects = new T[poolSize];
-            
-            for (int i = 0; i < poolSize; i++)
+            _preloadFunc = preloadFunc;
+            _getAction = getAction;
+            _returnAction = returnAction;
+
+            if (preloadFunc == null)
             {
-                Objects[i] = instantiator.InstantiatePrefabForComponent<T>(prefab, transformParent);
-                Objects[i].Deactivate();
+                Debug.LogError("Preload function is null");
+                return;
             }
+            
+            for (int i = 0; i < preloadCount; i++)
+                Return(preloadFunc());
         }
 
-        public void DeactivateObjects()
+        public T Get()
         {
-            foreach (T poolObject in Objects)
-            {
-                poolObject.Deactivate();
-            }
+            T item = Pool.Count > 0 ? Pool.Dequeue() : _preloadFunc();
+            _getAction(item);
+            _active.Add(item);
+
+            return item;
+        }
+
+        public void Return(T item)
+        {
+            _returnAction(item);
+            Pool.Enqueue(item);
+            _active.Remove(item);
+        }
+
+        public void ReturnAll()
+        {
+            foreach (T item in _active.ToArray())
+                Return(item);
         }
     }
 }

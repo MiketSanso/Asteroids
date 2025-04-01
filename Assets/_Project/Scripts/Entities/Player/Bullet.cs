@@ -2,6 +2,7 @@ using System;
 using GameScene.Interfaces;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using GameScene.Level;
 
 namespace GameScene.Entities.Player
 {
@@ -20,22 +21,21 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public void Activate(Vector2 spawnPosition)
+        public async void Activate(Transform spawnPosition)
         {
-            transform.position = spawnPosition;
+            transform.position = spawnPosition.position;
             gameObject.SetActive(true);
+            await Shot(spawnPosition);
         }
-        
+
         public void Deactivate()
         {
             gameObject.SetActive(false);
         }
 
-        public async UniTask Shot(Transform transformSpawn)
+        private async UniTask Shot(Transform spawnPosition)
         {
-            Activate(transformSpawn.position);
-                    
-            float angle = (transformSpawn.eulerAngles.z + 90) * Mathf.Deg2Rad;
+            float angle = (spawnPosition.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             
             _rb.linearVelocity = direction * _speed;

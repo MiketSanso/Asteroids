@@ -38,9 +38,9 @@ namespace GameScene.Entities.UFOs
              OnDestroyed?.Invoke(_scoreSize, transform);
         }
 
-        public void Activate(Vector2 positionSpawn)
+        public void Activate(Transform transformSpawn)
         {
-            transform.position = positionSpawn;
+            transform.position = transformSpawn.position;
             gameObject.SetActive(true);
         }
 

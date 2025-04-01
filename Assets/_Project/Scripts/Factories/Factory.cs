@@ -1,4 +1,5 @@
 using GameScene.Level;
+using Zenject;
 
 namespace GameScene.Factories
 {
@@ -6,13 +7,13 @@ namespace GameScene.Factories
     {
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
+        protected readonly IInstantiator Instantiator;
         
-        protected Factory(TransformParent transformParent, SpawnTransform spawnTransform)
+        protected Factory(TransformParent transformParent, SpawnTransform spawnTransform, IInstantiator instantiator)
         {
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
+            Instantiator = instantiator;
         }
-        
-        public abstract void Destroy();
     }
 }

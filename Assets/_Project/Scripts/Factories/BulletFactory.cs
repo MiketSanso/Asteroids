@@ -10,28 +10,43 @@ namespace GameScene.Factories
     public class BulletFactory : Factory
     {
         private readonly PoolObjects<Bullet> _poolBullets;
+        private readonly GameStateController _gameStateController;
+        private BulletFactoryData _factoryData;
+        private PlayerUI _playerUi;
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
+            IInstantiator instantiator,
             BulletFactoryData factoryData,
-            IInstantiator instantiator) : base(transformParent, spawnTransform)
+            PlayerUI player) : base(transformParent, spawnTransform, instantiator)
         {
-            _poolBullets = new PoolObjects<Bullet>(factoryData.Prefab, factoryData.SizePool, TransformParent.transform, instantiator);
+            _factoryData = factoryData;
+            _playerUi = player;
+            
+            _poolBullets = new PoolObjects<Bullet>(Preload, 
+                GetAction, 
+                ReturnAction, 
+                _factoryData.SizePool);        
         }
         
-        public override void Destroy()
-        { }
-        
-        public async void SpawnBullet(Transform positionSpawn)
+        public async void Spawn(Transform positionSpawn)
         {
-            foreach (Bullet bullet in _poolBullets.Objects)
-            {
-                if (!bullet.gameObject.activeSelf)
-                {
-                    await bullet.Shot(positionSpawn);
-                    break;
-                }
-            }
+            _poolBullets.Get();
         }
+        
+          private Bullet Preload()
+        {
+            Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(_factoryData.Prefab, TransformParent.transform);
+            bullet.Deactivate();
+            return bullet;
+        }
+
+        private void GetAction(Bullet bullet)
+        {
+            bullet.Activate(_playerUi.transform);
+            bullet.Shot();
+        } 
+
+        private void ReturnAction(Bullet bullet) => bullet.Deactivate();
     }
 }

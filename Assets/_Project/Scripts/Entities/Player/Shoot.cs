@@ -33,7 +33,7 @@ namespace GameScene.Entities.Player
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletFactory.SpawnBullet(_transformSpawn);
+                _bulletFactory.Spawn(_transformSpawn);
             }
             
             if (Input.GetKeyDown(KeyCode.E))

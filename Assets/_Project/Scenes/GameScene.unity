@@ -287,7 +287,6 @@ MonoBehaviour:
   _lineRenderer: {fileID: 2025009552}
   _laserRange: 20
   _timeVisibleLaser: 0.01
-  _speed: 13
   _fixedTimeRechargeLaser: 3
   _stepTimeRecharge: 1
   _maxCountLaserShoots: 5
@@ -387,10 +386,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 263411581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 395}
-  m_SizeDelta: {x: 344.84, y: 118.53}
+  m_AnchorMin: {x: 0.30027083, y: 0.8138519}
+  m_AnchorMax: {x: 0.72, y: 0.9205186}
+  m_AnchoredPosition: {x: -0.79003906, y: -1.6325073}
+  m_SizeDelta: {x: -0.58999634, y: 3.2649999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &217347401
 MonoBehaviour:
@@ -526,10 +525,10 @@ RectTransform:
   - {fileID: 420581139}
   m_Father: {fileID: 344473569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &263411582
 MonoBehaviour:
@@ -727,10 +726,10 @@ RectTransform:
   - {fileID: 1815082650}
   m_Father: {fileID: 263411581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -286}
-  m_SizeDelta: {x: 271.89, y: 107.87}
+  m_AnchorMin: {x: 0.42829174, y: 0.186}
+  m_AnchorMax: {x: 0.5693959, y: 0.28885186}
+  m_AnchoredPosition: {x: 2, y: -2.499878}
+  m_SizeDelta: {x: 1.8900146, y: -3.130005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &420581140
 MonoBehaviour:
@@ -846,10 +845,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1756107419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -778, y: 497}
-  m_SizeDelta: {x: 327.67, y: 50}
+  m_AnchorMin: {x: 0.008854167, y: 0.9378519}
+  m_AnchorMax: {x: 0.18, y: 0.9832963}
+  m_AnchoredPosition: {x: 1, y: -0.5}
+  m_SizeDelta: {x: -0.32995605, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &502448472
 MonoBehaviour:
@@ -982,10 +981,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1756107419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -777.99994, y: 404}
-  m_SizeDelta: {x: 327.67, y: 50}
+  m_AnchorMin: {x: 0.008854167, y: 0.83300006}
+  m_AnchorMax: {x: 0.18, y: 0.8795187}
+  m_AnchoredPosition: {x: 1, y: 0.099975586}
+  m_SizeDelta: {x: -0.32995605, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &504872296
 MonoBehaviour:
@@ -1255,10 +1254,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 263411581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &536662400
 MonoBehaviour:
@@ -1744,10 +1743,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1756107419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -777.99994, y: 373}
-  m_SizeDelta: {x: 327.67, y: 50}
+  m_AnchorMin: {x: 0.008854167, y: 0.80200005}
+  m_AnchorMax: {x: 0.18, y: 0.84822226}
+  m_AnchoredPosition: {x: 0.5, y: 0}
+  m_SizeDelta: {x: -1.329956, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &802040154
 MonoBehaviour:
@@ -2028,10 +2027,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1756107419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -777.99994, y: 468}
-  m_SizeDelta: {x: 327.67, y: 50}
+  m_AnchorMin: {x: 0.008854167, y: 0.90300006}
+  m_AnchorMax: {x: 0.18, y: 0.947}
+  m_AnchoredPosition: {x: 1, y: 0.099975586}
+  m_SizeDelta: {x: -0.32995605, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1018445136
 MonoBehaviour:
@@ -2380,10 +2379,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 263411581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 233}
-  m_SizeDelta: {x: 639.19, y: 118.53}
+  m_AnchorMin: {x: 0.20970832, y: 0.6611482}
+  m_AnchorMax: {x: 0.8065835, y: 0.7713333}
+  m_AnchoredPosition: {x: 1.6500244, y: -0.13250732}
+  m_SizeDelta: {x: -2.5799866, y: 0.2649994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1499580367
 MonoBehaviour:
@@ -2566,10 +2565,10 @@ RectTransform:
   - {fileID: 802040153}
   m_Father: {fileID: 344473569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000091553, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1756107420
 MonoBehaviour:
@@ -2620,10 +2619,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1756107419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -777.99994, y: 436}
-  m_SizeDelta: {x: 327.67, y: 50}
+  m_AnchorMin: {x: 0.008854167, y: 0.86766654}
+  m_AnchorMax: {x: 0.18, y: 0.91300005}
+  m_AnchoredPosition: {x: 1.5, y: -0.2000122}
+  m_SizeDelta: {x: 0.67004395, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811223792
 MonoBehaviour:
@@ -3372,6 +3371,8 @@ MonoBehaviour:
   _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
   _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
   _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
+  _asteroidData: {fileID: 11400000, guid: f4a12d14a76a9d6448ae3576ac09a596, type: 2}
+  _asteroidDataSmall: {fileID: 11400000, guid: 5a3af436fd0739647bec637c1ccd4074, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
