@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class Asteroid : IPooledObject
+    public class Asteroid
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;
@@ -21,10 +21,10 @@ namespace GameScene.Entities.Asteroid
             ThisObject = rb.gameObject;
         }
         
-        public void Activate(Transform transformSpawn)
+        public void Activate(Vector2 transformSpawn)
         {
             ThisObject.SetActive(true);
-            ThisObject.transform.position = transformSpawn.position;
+            ThisObject.transform.position = transformSpawn;
             
             float velocityX = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);
             float velocityY = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);

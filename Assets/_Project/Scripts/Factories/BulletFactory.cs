@@ -41,10 +41,10 @@ namespace GameScene.Factories
             return bullet;
         }
 
-        private void GetAction(Bullet bullet)
+        private async void GetAction(Bullet bullet)
         {
-            bullet.Activate(_playerUi.transform);
-            bullet.Shot();
+            bullet.Activate(_playerUi.transform.position);
+            await bullet.Shot(_playerUi.transform);
         } 
 
         private void ReturnAction(Bullet bullet) => bullet.Deactivate();

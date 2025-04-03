@@ -129,9 +129,9 @@ GameObject:
   m_Component:
   - component: {fileID: 23701573}
   - component: {fileID: 23701575}
-  - component: {fileID: 23701579}
   - component: {fileID: 23701574}
   - component: {fileID: 23701578}
+  - component: {fileID: 23701579}
   - component: {fileID: 23701577}
   - component: {fileID: 23701576}
   m_Layer: 0
@@ -280,16 +280,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 23701572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ec121053ea4cb3bac6bd111f89fd2a, type: 3}
+  m_Script: {fileID: 11500000, guid: c10ea08c241a4003a380511ae06630dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _transformSpawn: {fileID: 2025009551}
-  _lineRenderer: {fileID: 2025009552}
-  _laserRange: 20
-  _timeVisibleLaser: 0.01
-  _fixedTimeRechargeLaser: 3
-  _stepTimeRecharge: 1
-  _maxCountLaserShoots: 5
 --- !u!1 &161430317
 GameObject:
   m_ObjectHideFlags: 0
@@ -3156,6 +3150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2025009551}
+  - component: {fileID: 2025009553}
   - component: {fileID: 2025009552}
   m_Layer: 0
   m_Name: ShootPoint
@@ -3286,6 +3281,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2025009553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025009550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b968f79406c9431593c8e30e30613616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <LineRenderer>k__BackingField: {fileID: 2025009552}
 --- !u!1 &2032101197
 GameObject:
   m_ObjectHideFlags: 0
@@ -3364,15 +3372,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2935bd450602c4d469b1363e2b56333a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _endPanel: {fileID: 263411582}
+  _laserRenderer: {fileID: 2025009553}
   _player: {fileID: 23701574}
-  _shoot: {fileID: 23701579}
-  _spawnTransform: {fileID: 1664130574}
   _transformParent: {fileID: 415304348}
   _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
   _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
   _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
   _asteroidData: {fileID: 11400000, guid: f4a12d14a76a9d6448ae3576ac09a596, type: 2}
   _asteroidDataSmall: {fileID: 11400000, guid: 5a3af436fd0739647bec637c1ccd4074, type: 2}
+  _laserData: {fileID: 11400000, guid: a1c538a4cfb8a6c4b8f2668b8b4ba674, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

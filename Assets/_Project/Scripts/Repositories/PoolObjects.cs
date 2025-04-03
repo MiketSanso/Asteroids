@@ -5,7 +5,7 @@ using GameScene.Interfaces;
 
 namespace GameScene.Repositories
 {
-    public class PoolObjects<T> where T : IPooledObject
+    public class PoolObjects<T>
     {
         private readonly Func<T> _preloadFunc;
         private readonly Action<T> _getAction;

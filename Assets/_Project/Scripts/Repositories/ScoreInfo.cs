@@ -3,10 +3,11 @@ using GameScene.Entities.UFOs;
 using GameScene.Factories;
 using GameScene.Level;
 using UnityEngine;
+using Zenject;
 
 namespace GameScene.Repositories
 {
-    public class ScoreInfo
+    public class ScoreInfo : IInitializable
     {
         private readonly AsteroidFactory _asteroidFactory;
         private readonly UfoFactory _ufoFactory;
@@ -21,11 +22,9 @@ namespace GameScene.Repositories
             _gameStateController = gameStateController;
             _asteroidFactory = asteroidFactory;
             _ufoFactory = ufoFactory;
-
-            Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             _gameStateController.OnRestart += ResetScore;
             _gameStateController.OnCloseGame += Destroy;

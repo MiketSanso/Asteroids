@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
-    public class Ufo : MonoBehaviour, IPooledObject, IDestroyableEnemy
+    public class Ufo : MonoBehaviour, IDestroyableEnemy
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;
@@ -38,9 +38,9 @@ namespace GameScene.Entities.UFOs
              OnDestroyed?.Invoke(_scoreSize, transform);
         }
 
-        public void Activate(Transform transformSpawn)
+        public void Activate(Vector2 positionSpawn)
         {
-            transform.position = transformSpawn.position;
+            transform.position = positionSpawn;
             gameObject.SetActive(true);
         }
 

@@ -6,7 +6,7 @@ using Zenject;
 
 namespace GameScene.Level
 {
-    public class EndPanel : MonoBehaviour
+    public class EndPanel : MonoBehaviour, IInitializable
     {
         [SerializeField] private GameObject _panel;
         [SerializeField] private Button _restartButton;
@@ -20,11 +20,9 @@ namespace GameScene.Level
         {
             _gameStateController = gameStateController;
             _scoreInfo = scoreInfo;
-
-            Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             _restartButton.onClick.AddListener(Restart);
             _gameStateController.OnFinish += Activate;

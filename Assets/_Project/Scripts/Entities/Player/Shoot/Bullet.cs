@@ -2,11 +2,10 @@ using System;
 using GameScene.Interfaces;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using GameScene.Level;
 
 namespace GameScene.Entities.Player
 {
-    public class Bullet : MonoBehaviour, IPooledObject
+    public class Bullet : MonoBehaviour
     {
         [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
@@ -21,11 +20,10 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public async void Activate(Transform spawnPosition)
+        public async void Activate(Vector2 spawnPosition)
         {
-            transform.position = spawnPosition.position;
+            transform.position = spawnPosition;
             gameObject.SetActive(true);
-            await Shot(spawnPosition);
         }
 
         public void Deactivate()
@@ -33,7 +31,7 @@ namespace GameScene.Entities.Player
             gameObject.SetActive(false);
         }
 
-        private async UniTask Shot(Transform spawnPosition)
+        public async UniTask Shot(Transform spawnPosition)
         {
             float angle = (spawnPosition.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));

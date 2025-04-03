@@ -66,7 +66,7 @@ namespace GameScene.Factories
         private void GetActionSmall(Asteroid asteroid)
         {
             _destroyedPosition = asteroid.ThisObject.transform;
-            asteroid.Activate(_destroyedPosition);
+            asteroid.Activate(_destroyedPosition.position);
         }
 
         private void ReturnAction(Asteroid asteroid)
