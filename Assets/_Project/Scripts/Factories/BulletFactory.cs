@@ -1,42 +1,38 @@
 using GameScene.Repositories;
 using GameScene.Entities.Player;
 using GameScene.Factories.ScriptableObjects;
-using UnityEngine;
 using GameScene.Level;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class BulletFactory : Factory
+    public class BulletFactory : Factory<BulletFactoryData, Bullet>
     {
-        private readonly PoolObjects<Bullet> _poolBullets;
-        private readonly GameStateController _gameStateController;
-        private BulletFactoryData _factoryData;
-        private PlayerUI _playerUi;
+        private readonly PlayerUI _playerUi;
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             IInstantiator instantiator,
             BulletFactoryData factoryData,
-            PlayerUI player) : base(transformParent, spawnTransform, instantiator)
+            GameStateController gameStateController,
+            PlayerUI player) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
         {
-            _factoryData = factoryData;
             _playerUi = player;
             
-            _poolBullets = new PoolObjects<Bullet>(Preload, 
+            PoolObjects = new PoolObjects<Bullet>(Preload, 
                 GetAction, 
                 ReturnAction, 
-                _factoryData.SizePool);        
+                Data.SizePool);
         }
         
-        public async void Spawn(Transform positionSpawn)
+        public void Spawn()
         {
-            _poolBullets.Get();
+            PoolObjects.Get();
         }
         
-          private Bullet Preload()
+        private Bullet Preload()
         {
-            Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(_factoryData.Prefab, TransformParent.transform);
+            Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(Data.Prefab, TransformParent.transform);
             bullet.Deactivate();
             return bullet;
         }
@@ -45,8 +41,6 @@ namespace GameScene.Factories
         {
             bullet.Activate(_playerUi.transform.position);
             await bullet.Shot(_playerUi.transform);
-        } 
-
-        private void ReturnAction(Bullet bullet) => bullet.Deactivate();
+        }
     }
 }

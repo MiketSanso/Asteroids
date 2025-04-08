@@ -16,12 +16,6 @@ namespace GameScene.Entities.UFOs
         {
             _playerUI = playerUI;
         }
-
-        public void Initialize(Ufo ufo, UfoData ufoData)
-        {
-            _ufoData = ufoData;
-            _ufo = ufo;
-        }
         
         private void Update()
         {
@@ -32,6 +26,12 @@ namespace GameScene.Entities.UFOs
 
                 transform.position += direction * _ufoData.Speed * Time.deltaTime;
             }
+        }
+
+        public void Initialize(Ufo ufo, UfoData ufoData)
+        {
+            _ufoData = ufoData;
+            _ufo = ufo;
         }
 
         public void Destroy()

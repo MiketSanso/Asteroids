@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using GameScene.Entities.Player;
-using GameScene.Interfaces;
 using Zenject;
 
 namespace GameScene.Level

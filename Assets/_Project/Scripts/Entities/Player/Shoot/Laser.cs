@@ -8,8 +8,8 @@ namespace GameScene.Entities.Player
 {
     public class Laser : IInitializable
     {
-        private LaserRenderer _laserRenderer;
-        private LaserData _laserData;
+        private readonly LaserRenderer _laserRenderer;
+        private readonly LaserData _laserData;
         private UniTaskCompletionSource _rechargeCompletionSource;
         
         public float TimeRechargeLaser { get; private set; }
@@ -24,33 +24,42 @@ namespace GameScene.Entities.Player
         public void Initialize()
         {
             _laserRenderer.LineRenderer.enabled = false;
-            RechargeLaser().Forget();
+            Recharge().Forget();
         }
         
-        public async void ShotLaser(Transform transformObject)
+        public async void Shot(Transform transformObject)
         {
             if (CountShotsLaser > 0)
             {
-                Vector2 direction = transformObject.up;
-
-                _laserRenderer.LineRenderer.SetPosition(0, transformObject.position);
-                _laserRenderer.LineRenderer.SetPosition(1, (Vector2)transformObject.position + direction * _laserData.LaserRange);
-                _laserRenderer.LineRenderer.enabled = true;
-
-                RaycastHit2D[] hits = new RaycastHit2D[10];
-                int hitCount = Physics2D.RaycastNonAlloc(transformObject.position, direction, hits,  _laserData.LaserRange);
-
-                Debug.DrawRay(transformObject.position, direction *  _laserData.LaserRange, Color.red, 0.5f);
-
-                for (int i = 0; i < hitCount; i++)
+                float timesShot = 0;
+                
+                do
                 {
-                    var hit = hits[i];
-                    if (hit.collider != null && hit.collider.gameObject.TryGetComponent(out IDestroyableEnemy enemy))
-                    {
-                        enemy.Destroy();
-                    }
-                }
+                    Vector2 direction = transformObject.up;
 
+                    _laserRenderer.LineRenderer.SetPosition(0, transformObject.position);
+                    _laserRenderer.LineRenderer.SetPosition(1, (Vector2)transformObject.position + direction * _laserData.LaserRange);
+                    _laserRenderer.LineRenderer.enabled = true;
+
+                    RaycastHit2D[] hits = new RaycastHit2D[10];
+                    int hitCount = Physics2D.RaycastNonAlloc(transformObject.position, direction, hits,  _laserData.LaserRange);
+
+                    Debug.DrawRay(transformObject.position, direction *  _laserData.LaserRange, Color.red, 0.5f);
+
+                    for (int i = 0; i < hitCount; i++)
+                    {
+                        var hit = hits[i];
+                        if (hit.collider != null && hit.collider.gameObject.TryGetComponent(out IDestroyableEnemy enemy))
+                        {
+                            enemy.Destroy();
+                        }
+                    }
+                    
+                    await UniTask.Delay(TimeSpan.FromSeconds(_laserData.StepTimeDamage));
+                    timesShot += _laserData.StepTimeDamage; 
+                } 
+                while (timesShot <= _laserData.TimeVisibleLaser);
+                
                 CountShotsLaser -= 1;
 
                 await DisableLine();
@@ -62,11 +71,11 @@ namespace GameScene.Entities.Player
             if (CountShotsLaser < _laserData.MaxCountLaserShoots &&
                 _rechargeCompletionSource?.Task.Status == UniTaskStatus.Succeeded)
             {
-                RechargeLaser().Forget();
+                Recharge().Forget();
             }
         }
         
-        private async UniTask RechargeLaser()
+        private async UniTask Recharge()
         {
             _rechargeCompletionSource = new UniTaskCompletionSource();
             TimeRechargeLaser =  _laserData.FixedTimeRechargeLaser;
@@ -74,18 +83,16 @@ namespace GameScene.Entities.Player
             {
                 await UniTask.Delay(TimeSpan.FromSeconds( _laserData.StepTimeRecharge));
                 TimeRechargeLaser -=  _laserData.StepTimeRecharge;
-                Mathf.Clamp(TimeRechargeLaser, 0,  _laserData.FixedTimeRechargeLaser);
             } while (TimeRechargeLaser > 0);
 
             CountShotsLaser++;
             _rechargeCompletionSource.TrySetResult();
             if (CountShotsLaser <  _laserData.MaxCountLaserShoots)
-                RechargeLaser();
+                Recharge().Forget();
         }
 
         private async UniTask DisableLine()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds( _laserData.TimeVisibleLaser));
             _laserRenderer.LineRenderer.enabled = false;
         }
     }

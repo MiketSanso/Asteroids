@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: LaserData
   m_EditorClassIdentifier: 
   <LaserRange>k__BackingField: 20
-  <TimeVisibleLaser>k__BackingField: 0.1
+  <TimeVisibleLaser>k__BackingField: 1
   <FixedTimeRechargeLaser>k__BackingField: 3
   <StepTimeRecharge>k__BackingField: 1
+  <StepTimeDamage>k__BackingField: 0.01
   <MaxCountLaserShoots>k__BackingField: 3

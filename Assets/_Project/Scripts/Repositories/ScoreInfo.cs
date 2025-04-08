@@ -1,4 +1,3 @@
-using System.Linq;
 using GameScene.Entities.Asteroid;
 using GameScene.Entities.UFOs;
 using GameScene.Factories;
@@ -30,17 +29,17 @@ namespace GameScene.Repositories
             _gameStateController.OnRestart += ResetScore;
             _gameStateController.OnCloseGame += Destroy;
             
-            foreach (Asteroid asteroid in _asteroidFactory.PoolAsteroids.Pool)
+            foreach (Asteroid asteroid in _asteroidFactory.PoolObjects.Pool)
             {
                 asteroid.OnDestroyed += AddScore;
             }
             
-            foreach (Asteroid asteroid in _asteroidFactory.PoolSmallAsteroids.Pool)
+            foreach (Asteroid asteroid in _asteroidFactory.PoolSmallObjects.Pool)
             {
                 asteroid.OnDestroyed += AddScore;
             }
             
-            foreach (Ufo ufo in _ufoFactory.PoolUfo.Pool)
+            foreach (Ufo ufo in _ufoFactory.PoolObjects.Pool)
             {
                 ufo.OnDestroyed += AddScore;
             }
@@ -51,17 +50,17 @@ namespace GameScene.Repositories
             _gameStateController.OnRestart -= ResetScore;
             _gameStateController.OnCloseGame -= Destroy;
             
-            foreach (Asteroid asteroid in _asteroidFactory.PoolAsteroids.Pool)
+            foreach (Asteroid asteroid in _asteroidFactory.PoolObjects.Pool)
             {
                 asteroid.OnDestroyed -= AddScore;
             }
             
-            foreach (Asteroid asteroid in _asteroidFactory.PoolSmallAsteroids.Pool)
+            foreach (Asteroid asteroid in _asteroidFactory.PoolSmallObjects.Pool)
             {
                 asteroid.OnDestroyed -= AddScore;
             }
             
-            foreach (Ufo ufo in _ufoFactory.PoolUfo.Pool)
+            foreach (Ufo ufo in _ufoFactory.PoolObjects.Pool)
             {
                 ufo.OnDestroyed -= AddScore;
             }

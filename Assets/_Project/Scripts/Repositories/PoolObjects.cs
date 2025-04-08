@@ -6,6 +6,7 @@ namespace GameScene.Repositories
 {
     public class PoolObjects<T>
     {
+        private readonly Func<T> _preloadFunc;
         private readonly Action<T> _getAction;
         private readonly Action<T> _returnAction;
         private List<T> _active = new List<T>();
@@ -14,6 +15,7 @@ namespace GameScene.Repositories
         
         public PoolObjects(Func<T> preloadFunc, Action<T> getAction, Action<T> returnAction, int preloadCount)
         {
+            _preloadFunc = preloadFunc;
             _getAction = getAction;
             _returnAction = returnAction;
 
@@ -29,7 +31,7 @@ namespace GameScene.Repositories
 
         public T Get()
         {
-            T item = Pool.Dequeue();
+            T item = Pool.Count > 0 ? Pool.Dequeue() : _preloadFunc();
             _getAction(item);
             _active.Add(item);
 

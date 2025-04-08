@@ -19,12 +19,12 @@ namespace GameScene.Entities.Player
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletFactory.Spawn(transformSpawn);
+                _bulletFactory.Spawn();
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                _laser.ShotLaser(transformSpawn);
+                _laser.Shot(transformSpawn);
             }
         }
 

@@ -1,25 +1,20 @@
+using GameScene.Interfaces;
 using UnityEngine;
 
 namespace GameScene.Entities.UFOs
 {
-    public class Ufo
+    public class Ufo : IPooledObject
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;
         
-        private GameObject _gameObject;
-        private UfoData _ufoData;
+        private readonly GameObject _gameObject;
+        private readonly UfoData _ufoData;
 
         public Ufo(UfoData ufoData, GameObject gameObject)
         {
             _ufoData = ufoData;
             _gameObject = gameObject;
-        }
-        
-        public void Destroy()
-        {
-             Deactivate();
-             OnDestroyed?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
         }
 
         public void Activate(Vector2 positionSpawn)
@@ -31,6 +26,12 @@ namespace GameScene.Entities.UFOs
         public void Deactivate()
         {
             _gameObject.SetActive(false);
+        }
+        
+        public void Destroy()
+        {
+            Deactivate();
+            OnDestroyed?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
         }
     }
 }

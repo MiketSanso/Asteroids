@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 
 namespace GameScene.Entities.Player
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : MonoBehaviour, IPooledObject
     {
         [SerializeField] private float _speed;
         [SerializeField] private float _timeDeactivate;
@@ -20,7 +20,7 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public async void Activate(Vector2 spawnPosition)
+        public void Activate(Vector2 spawnPosition)
         {
             transform.position = spawnPosition;
             gameObject.SetActive(true);

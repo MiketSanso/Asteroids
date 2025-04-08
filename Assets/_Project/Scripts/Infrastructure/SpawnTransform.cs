@@ -5,7 +5,7 @@ namespace GameScene.Level
 {
     public class SpawnTransform
     {
-        private SpawnPositionData _spawnPositionData;
+        private readonly SpawnPositionData _spawnPositionData;
 
         public SpawnTransform(SpawnPositionData spawnPositionData)
         {

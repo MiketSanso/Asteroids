@@ -21,18 +21,18 @@ namespace GameScene.Level
             _gameStateController = gameStateController;
             _scoreInfo = scoreInfo;
         }
+        
+        private void OnDestroy()
+        {
+            _restartButton.onClick.RemoveListener(Restart);
+            _gameStateController.OnFinish -= Activate;
+        }
 
         public void Initialize()
         {
             _restartButton.onClick.AddListener(Restart);
             _gameStateController.OnFinish += Activate;
             Deactivate();
-        }
-        
-        private void OnDestroy()
-        {
-            _restartButton.onClick.RemoveListener(Restart);
-            _gameStateController.OnFinish -= Activate;
         }
         
         private void Restart()
