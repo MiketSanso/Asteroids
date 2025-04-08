@@ -1,23 +1,19 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using GameScene.Interfaces;
 
 namespace GameScene.Repositories
 {
     public class PoolObjects<T>
     {
-        private readonly Func<T> _preloadFunc;
         private readonly Action<T> _getAction;
         private readonly Action<T> _returnAction;
         private List<T> _active = new List<T>();
 
         public Queue<T> Pool { get; private set; } = new Queue<T>();
-
-
+        
         public PoolObjects(Func<T> preloadFunc, Action<T> getAction, Action<T> returnAction, int preloadCount)
         {
-            _preloadFunc = preloadFunc;
             _getAction = getAction;
             _returnAction = returnAction;
 
@@ -33,7 +29,7 @@ namespace GameScene.Repositories
 
         public T Get()
         {
-            T item = Pool.Count > 0 ? Pool.Dequeue() : _preloadFunc();
+            T item = Pool.Dequeue();
             _getAction(item);
             _active.Add(item);
 

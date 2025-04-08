@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
@@ -13,18 +14,21 @@ namespace GameScene.Factories
 {
     public class UfoFactory : Factory, IInitializable
     {
-        public readonly PoolObjects<Ufo> PoolUfo;
+        public PoolObjects<Ufo> PoolUfo;
         
         private readonly UfoFactoryData _factoryData;
+        private readonly UfoData _ufoData;
         private readonly GameStateController _gameStateController;
         private CancellationTokenSource _tokenSource;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             UfoFactoryData factoryData,
+            UfoData ufoData,
             GameStateController gameStateController,
             IInstantiator instantiator) : base(transformParent, spawnTransform, instantiator)
         {
+            _ufoData = ufoData;
             _factoryData = factoryData;
             _gameStateController = gameStateController;
             
@@ -88,7 +92,9 @@ namespace GameScene.Factories
         
         private Ufo Preload()
         {
-            Ufo ufo = Instantiator.InstantiatePrefabForComponent<Ufo>(_factoryData.Prefab, TransformParent.transform);
+            UfoUI ufoUi = Instantiator.InstantiatePrefabForComponent<UfoUI>(_factoryData.Prefab, TransformParent.transform);
+            Ufo ufo = new Ufo(_ufoData, ufoUi.gameObject);
+            ufoUi.Initialize(ufo, _ufoData);
             ufo.Deactivate();
             return ufo;
         }

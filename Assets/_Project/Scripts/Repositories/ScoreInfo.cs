@@ -1,3 +1,4 @@
+using System.Linq;
 using GameScene.Entities.Asteroid;
 using GameScene.Entities.UFOs;
 using GameScene.Factories;
@@ -55,7 +56,7 @@ namespace GameScene.Repositories
                 asteroid.OnDestroyed -= AddScore;
             }
             
-            foreach (Asteroid asteroid in _asteroidFactory.PoolAsteroids.Pool)
+            foreach (Asteroid asteroid in _asteroidFactory.PoolSmallAsteroids.Pool)
             {
                 asteroid.OnDestroyed -= AddScore;
             }

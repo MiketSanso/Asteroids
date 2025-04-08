@@ -6,6 +6,11 @@ namespace GameScene.Level
     public class SpawnTransform
     {
         private SpawnPositionData _spawnPositionData;
+
+        public SpawnTransform(SpawnPositionData spawnPositionData)
+        {
+            _spawnPositionData = spawnPositionData;
+        }
         
         public Vector2 GetPosition()
         {

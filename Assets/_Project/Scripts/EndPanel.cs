@@ -6,7 +6,7 @@ using Zenject;
 
 namespace GameScene.Level
 {
-    public class EndPanel : MonoBehaviour, IInitializable
+    public class EndPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _panel;
         [SerializeField] private Button _restartButton;
