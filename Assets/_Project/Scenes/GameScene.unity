@@ -1747,7 +1747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b968f79406c9431593c8e30e30613616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <LineRenderer>k__BackingField: {fileID: 2025009552}
+  _lineRenderer: {fileID: 2025009552}
 --- !u!1 &2032101197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1826,7 +1826,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabGameCanvas: {fileID: 7484100039278485279, guid: 2f23d51a6f959f347833c0243fbcfb6d, type: 3}
-  _laserRenderer: {fileID: 2025009553}
   _player: {fileID: 23701574}
   _transformParent: {fileID: 415304348}
   _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}

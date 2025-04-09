@@ -26,8 +26,8 @@ namespace GameScene.Factories
             _ufoData = ufoData;
             
             PoolObjects = new PoolObjects<Ufo>(Preload, 
-                GetAction, 
-                ReturnAction, 
+                Get, 
+                Return, 
                 Data.SizePool);
         }
         
@@ -43,14 +43,14 @@ namespace GameScene.Factories
         
         private Ufo Preload()
         {
-            UfoUI ufoUi = Instantiator.InstantiatePrefabForComponent<UfoUI>(Data.Prefab, TransformParent.transform);
-            Ufo ufo = new Ufo(_ufoData, ufoUi.gameObject);
-            ufoUi.Initialize(ufo, _ufoData);
+            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(Data.Prefab, TransformParent.transform);
+            Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
+            ufoMovement.Initialize(ufo, _ufoData);
             ufo.Deactivate();
             return ufo;
         }
 
-        private void GetAction(Ufo ufo) => ufo.Activate(SpawnTransform.GetPosition());
+        private void Get(Ufo ufo) => ufo.Activate(SpawnTransform.GetPosition());
 
         private void Destroy()
         {

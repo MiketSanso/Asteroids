@@ -26,6 +26,6 @@ namespace GameScene.Factories
             Instantiator = instantiator;
         }
         
-        protected void ReturnAction(TObj bullet) => bullet.Deactivate();
+        protected void Return(TObj obj) => obj.Deactivate();
     }
 }

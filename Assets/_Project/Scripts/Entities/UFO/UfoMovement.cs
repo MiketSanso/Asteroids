@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
-    public class UfoUI : MonoBehaviour,  IDestroyableEnemy
+    public class UfoMovement : MonoBehaviour,  IDestroyableEnemy
     {
         private Ufo _ufo;
         private UfoData _ufoData;
@@ -39,7 +39,7 @@ namespace GameScene.Entities.UFOs
             if (_ufo != null)
                 _ufo.Destroy();
             else
-                Debug.LogError("У UfoUI отсутствует комонент Ufo!");
+                Debug.LogError("У UfoMovement отсутствует комонент Ufo!");
         }
     }
 }

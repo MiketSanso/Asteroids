@@ -20,8 +20,8 @@ namespace GameScene.Factories
             _playerUi = player;
             
             PoolObjects = new PoolObjects<Bullet>(Preload, 
-                GetAction, 
-                ReturnAction, 
+                Get, 
+                Return, 
                 Data.SizePool);
         }
         
@@ -37,7 +37,7 @@ namespace GameScene.Factories
             return bullet;
         }
 
-        private async void GetAction(Bullet bullet)
+        private async void Get(Bullet bullet)
         {
             bullet.Activate(_playerUi.transform.position);
             await bullet.Shot(_playerUi.transform);

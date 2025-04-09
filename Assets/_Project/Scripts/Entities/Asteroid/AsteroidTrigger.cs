@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidUI : MonoBehaviour, IDestroyableEnemy
+    public class AsteroidTrigger : MonoBehaviour, IDestroyableEnemy
     {
         private Asteroid _asteroid;
 

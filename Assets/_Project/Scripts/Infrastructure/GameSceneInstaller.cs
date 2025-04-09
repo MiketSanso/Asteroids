@@ -14,7 +14,6 @@ namespace GameScene.Level
     public class GameSceneInstaller : MonoInstaller
     {
         [SerializeField] private Canvas prefabGameCanvas;
-        [SerializeField] private LaserRenderer _laserRenderer;
         [SerializeField] private PlayerUI _player;
         [SerializeField] private TransformParent _transformParent;
         [SerializeField] private AsteroidFactoryData _asteroidFactoryData;
@@ -31,15 +30,13 @@ namespace GameScene.Level
             Container.Bind<EntryPoint>().AsSingle().WithArguments(prefabGameCanvas);
             Container.Bind<ScoreInfo>().AsSingle();
             Container.Bind<SpawnTransform>().AsSingle().WithArguments(_spawnPositionData);
-            Container.Bind<LaserRenderer>().FromInstance(_laserRenderer).AsSingle();
             Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData, _asteroidData, _asteroidDataSmall);
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData, _ufoData);
             Container.Bind<GameStateController>().AsSingle();
-            Container.Bind<IMovement>().To<KeyboardMovement>().AsSingle();
-            Container.Bind<IShoot>().To<KeyboardShoot>().AsSingle();
+            Container.Bind<IInputSystem>().To<KeyboardInput>().AsSingle();
             Container.Bind<Laser>().AsSingle().WithArguments(_laserData);   
             
             Container.Bind<IInitializable>().To<EntryPoint>().FromResolve(); 
