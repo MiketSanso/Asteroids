@@ -2,6 +2,6 @@ namespace GameScene.Interfaces
 {
     public interface IDestroyableEnemy
     {
-        void Destroy();
+        public void Destroy();
     }
 }

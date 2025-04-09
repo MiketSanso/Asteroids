@@ -25,17 +25,15 @@ namespace GameScene.Entities.Player
             transform.position = spawnPosition;
             gameObject.SetActive(true);
         }
-        
+
         public void Deactivate()
         {
             gameObject.SetActive(false);
         }
 
-        public async UniTask Shot(Transform transformSpawn)
+        public async UniTask Shot(Transform spawnPosition)
         {
-            Activate(transformSpawn.position);
-                    
-            float angle = (transformSpawn.eulerAngles.z + 90) * Mathf.Deg2Rad;
+            float angle = (spawnPosition.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             
             _rb.linearVelocity = direction * _speed;

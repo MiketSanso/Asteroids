@@ -1,37 +1,46 @@
 using GameScene.Repositories;
 using GameScene.Entities.Player;
 using GameScene.Factories.ScriptableObjects;
-using UnityEngine;
 using GameScene.Level;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class BulletFactory : Factory
+    public class BulletFactory : Factory<BulletFactoryData, Bullet>
     {
-        private readonly PoolObjects<Bullet> _poolBullets;
+        private readonly PlayerUI _playerUi;
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
+            IInstantiator instantiator,
             BulletFactoryData factoryData,
-            IInstantiator instantiator) : base(transformParent, spawnTransform)
+            GameStateController gameStateController,
+            PlayerUI player) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
         {
-            _poolBullets = new PoolObjects<Bullet>(factoryData.Prefab, factoryData.SizePool, TransformParent.transform, instantiator);
+            _playerUi = player;
+            
+            PoolObjects = new PoolObjects<Bullet>(Preload, 
+                Get, 
+                Return, 
+                Data.SizePool);
         }
         
-        public override void Destroy()
-        { }
-        
-        public async void SpawnBullet(Transform positionSpawn)
+        public void Spawn()
         {
-            foreach (Bullet bullet in _poolBullets.Objects)
-            {
-                if (!bullet.gameObject.activeSelf)
-                {
-                    await bullet.Shot(positionSpawn);
-                    break;
-                }
-            }
+            PoolObjects.Get();
+        }
+        
+        private Bullet Preload()
+        {
+            Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(Data.Prefab, TransformParent.transform);
+            bullet.Deactivate();
+            return bullet;
+        }
+
+        private async void Get(Bullet bullet)
+        {
+            bullet.Activate(_playerUi.transform.position);
+            await bullet.Shot(_playerUi.transform);
         }
     }
 }

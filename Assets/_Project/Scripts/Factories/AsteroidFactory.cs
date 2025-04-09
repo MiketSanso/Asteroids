@@ -7,75 +7,103 @@ using GameScene.Level;
 
 namespace GameScene.Factories
 {
-    public class AsteroidFactory : Factory
+    public class AsteroidFactory : Factory<AsteroidFactoryData, Asteroid>, IInitializable
     {
-        public readonly PoolObjects<AsteroidUI> PoolAsteroids;
-        public readonly PoolObjects<AsteroidUI> PoolSmallAsteroids;
+        public readonly PoolObjects<Asteroid> PoolSmallObjects;
         
         private int _destroyed;
-        private readonly int _countAsteroids;
-        private readonly GameStateController _gameStateController;
+        private readonly AsteroidData _asteroidData;
+        private readonly AsteroidData _asteroidDataSmall;
+        private Transform _destroyedPosition;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
+            IInstantiator instantiator,
             AsteroidFactoryData factoryData, 
             GameStateController gameStateController,
-            IInstantiator instantiator) : base(transformParent, spawnTransform)
+            AsteroidData asteroidData,
+            AsteroidData asteroidDataSmall) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
         {
-            _gameStateController = gameStateController;
-            _countAsteroids = factoryData.SizePool;
-
-            PoolAsteroids = new PoolObjects<AsteroidUI>(factoryData.Prefab, factoryData.SizePool, TransformParent.transform, instantiator);
-            PoolSmallAsteroids = new PoolObjects<AsteroidUI>(factoryData.SmallPrefab, factoryData.SizePool, TransformParent.transform, instantiator);
-
-            Initialize();
-            RestartFly();
+            _asteroidData = asteroidData;
+            _asteroidDataSmall = asteroidDataSmall;
+            
+            PoolObjects = new PoolObjects<Asteroid>(Preload, 
+                Get, 
+                Return, 
+                Data.SizePool);
+            
+            PoolSmallObjects = new PoolObjects<Asteroid>(PreloadSmall, 
+                GetSmall, 
+                Return, 
+                Data.SizePool * Data.countFragments);
         }
         
-        public override void Destroy()
+        public void Initialize()
         {
-            _gameStateController.OnRestart -= RestartFly;
-            _gameStateController.OnCloseGame -= Destroy;
+            GameStateController.OnRestart += RestartFly;
+            GameStateController.OnCloseGame += Destroy;
             
-            foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
-            {
-                asteroid.OnDestroyed -= ActivateSmallAsteroids;
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
-            }
-            
-            foreach (AsteroidUI asteroid in PoolSmallAsteroids.Objects)
-            {
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
-            }
+            RestartFly();
         }
 
-        private void Initialize()
+        private Asteroid Preload()
         {
-            _gameStateController.OnRestart += RestartFly;
-            _gameStateController.OnCloseGame += Destroy;
+            AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(Data.Prefab, TransformParent.transform);
+            Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
+            Asteroid asteroid = new Asteroid(_asteroidData, rb, asteroidTrigger.gameObject);
             
-            foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
+            asteroid.OnDestroyed += AddDestroyedAsteroid;
+            asteroid.OnDestroyed += ActivateSmall;
+            
+            asteroidTrigger.Initialize(asteroid);
+            asteroid.Deactivate();
+            return asteroid;
+        }
+        
+        private void Get(Asteroid asteroid) => asteroid.Activate(SpawnTransform.GetPosition());
+        
+        private Asteroid PreloadSmall()
+        {
+            AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(Data.SmallPrefab, TransformParent.transform);
+            Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
+            Asteroid asteroid = new Asteroid(_asteroidDataSmall, rb, asteroidTrigger.gameObject);
+            
+            asteroid.OnDestroyed += AddDestroyedAsteroid;
+            
+            asteroidTrigger.Initialize(asteroid);
+            asteroid.Deactivate();
+            return asteroid;
+        }
+        
+        private void GetSmall(Asteroid asteroid) => asteroid.Activate(_destroyedPosition.position);
+        
+        private void Destroy()
+        {
+            GameStateController.OnRestart -= RestartFly;
+            GameStateController.OnCloseGame -= Destroy;
+            
+            foreach (Asteroid asteroid in PoolObjects.Pool)
             {
-                asteroid.OnDestroyed += ActivateSmallAsteroids;
-                asteroid.OnDestroyed += AddDestroyedAsteroid;
+                asteroid.OnDestroyed -= AddDestroyedAsteroid;
+                asteroid.OnDestroyed -= ActivateSmall;
             }
             
-            foreach (AsteroidUI asteroid in PoolSmallAsteroids.Objects)
+            foreach (Asteroid asteroid in PoolSmallObjects.Pool)
             {
-                asteroid.OnDestroyed += AddDestroyedAsteroid;
+                asteroid.OnDestroyed -= AddDestroyedAsteroid;
             }
         }
         
         private void RestartFly()
         {
-            PoolAsteroids.DeactivateObjects();
-            PoolSmallAsteroids.DeactivateObjects();
+            PoolObjects.ReturnAll();
+            PoolSmallObjects.ReturnAll();
             
-            foreach (AsteroidUI asteroid in PoolAsteroids.Objects)
+            for (int i = 0; i < Data.SizePool; i++)
             {
-                asteroid.Activate(SpawnTransform.GetPosition());
+                PoolObjects.Get();
             }
-            
+
             _destroyed = 0;
         }
         
@@ -83,28 +111,19 @@ namespace GameScene.Factories
         {
             _destroyed++;
             
-            if (_destroyed == _countAsteroids * 3)
+            if (_destroyed == Data.SizePool * (1 + Data.countFragments))
             {
-                _destroyed = 0;
                 RestartFly();
             }
         }
         
-        private void ActivateSmallAsteroids(int scoreSize, Transform transform)
+        private void ActivateSmall(int scoreSize, Transform transform)
         {
-            int countActivatedAsteroids = 0;
+            _destroyedPosition = transform;
             
-            foreach (AsteroidUI asteroid in PoolSmallAsteroids.Objects)
+            for (int i = 0; i < Data.countFragments; i++)
             {
-                if (countActivatedAsteroids < 2 && !asteroid.gameObject.activeSelf)
-                {
-                    countActivatedAsteroids++;
-                    asteroid.Activate(transform.position);
-                }
-                else if (countActivatedAsteroids == 2)
-                {
-                    break;
-                }
+                PoolSmallObjects.Get();
             }
         }
     }

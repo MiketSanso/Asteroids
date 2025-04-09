@@ -1,12 +1,17 @@
+using GameScene.Level.ScriptableObjects;
 using UnityEngine;
 
 namespace GameScene.Level
 {
-    public class SpawnTransform : MonoBehaviour
+    public class SpawnTransform
     {
-        [SerializeField] private float _maxPositionX;
-        [SerializeField] private float _maxPositionY;
+        private readonly SpawnPositionData _spawnPositionData;
 
+        public SpawnTransform(SpawnPositionData spawnPositionData)
+        {
+            _spawnPositionData = spawnPositionData;
+        }
+        
         public Vector2 GetPosition()
         {
             Vector2 position;
@@ -18,18 +23,22 @@ namespace GameScene.Level
                 bool isRight = Random.Range(0, 2) == 1;
 
                 if (isRight)
-                    position = new Vector2(_maxPositionX, Random.Range(_maxPositionY, -_maxPositionY));
+                    position = new Vector2(_spawnPositionData.MaxPositionX, 
+                        Random.Range(_spawnPositionData.MinPositionY, _spawnPositionData.MaxPositionY));
                 else
-                    position = new Vector2(-_maxPositionX, Random.Range(_maxPositionY, -_maxPositionY));
+                    position = new Vector2(-_spawnPositionData.MaxPositionX, 
+                        Random.Range(_spawnPositionData.MinPositionY, _spawnPositionData.MaxPositionY));
             }
             else
             {
                 bool isUp = Random.Range(0, 2) == 1;
                 
                 if (isUp)
-                    position = new Vector2(Random.Range(_maxPositionX, -_maxPositionX), _maxPositionY);
+                    position = new Vector2(Random.Range(_spawnPositionData.MinPositionX, _spawnPositionData.MaxPositionX), 
+                        _spawnPositionData.MaxPositionY);
                 else
-                    position = new Vector2(Random.Range(_maxPositionX, -_maxPositionX), -_maxPositionY);
+                    position = new Vector2(Random.Range(_spawnPositionData.MinPositionX, _spawnPositionData.MaxPositionX), 
+                        -_spawnPositionData.MaxPositionY);
             }
 
             return position;

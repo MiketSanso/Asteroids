@@ -1,52 +1,37 @@
 using GameScene.Interfaces;
 using UnityEngine;
-using GameScene.Entities.Player;
-using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
-    public class Ufo : MonoBehaviour, IPooledObject, IDestroyableEnemy
+    public class Ufo : IPooledObject
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
         public event DestroyedEventHandler OnDestroyed;
         
-        [SerializeField] private float _speed;
-        [SerializeField] private int _scoreSize;
-        
-        private PlayerUI _playerUI;
+        private readonly GameObject _gameObject;
+        private readonly UfoData _ufoData;
 
-        [Inject]
-        private void Construct(PlayerUI playerUI)
+        public Ufo(UfoData ufoData, GameObject gameObject)
         {
-            _playerUI = playerUI;
-        }
-        
-        private void Update()
-        {
-            if (_playerUI.gameObject.activeSelf)
-            {
-                Vector3 direction = _playerUI.transform.position - transform.position;
-                direction.Normalize();
-
-                transform.position += direction * _speed * Time.deltaTime;
-            }
-        }
-
-        public void Destroy()
-        {
-             Deactivate();
-             OnDestroyed?.Invoke(_scoreSize, transform);
+            _ufoData = ufoData;
+            _gameObject = gameObject;
         }
 
         public void Activate(Vector2 positionSpawn)
         {
-            transform.position = positionSpawn;
-            gameObject.SetActive(true);
+            _gameObject.transform.position = positionSpawn;
+            _gameObject.SetActive(true);
         }
 
         public void Deactivate()
         {
-            gameObject.SetActive(false);
+            _gameObject.SetActive(false);
+        }
+        
+        public void Destroy()
+        {
+            Deactivate();
+            OnDestroyed?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
         }
     }
 }

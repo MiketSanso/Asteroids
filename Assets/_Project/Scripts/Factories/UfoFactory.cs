@@ -6,79 +6,86 @@ using Random = UnityEngine.Random;
 using GameScene.Level;
 using GameScene.Entities.UFOs;
 using GameScene.Factories.ScriptableObjects;
+using UnityEngine;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory
+    public class UfoFactory : Factory<UfoFactoryData, Ufo>, IInitializable
     {
-        public readonly PoolObjects<Ufo> PoolUfo;
-        
-        private readonly UfoFactoryData _factoryData;
-        private readonly GameStateController _gameStateController;
+        private readonly UfoData _ufoData;
         private CancellationTokenSource _tokenSource;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             UfoFactoryData factoryData,
+            UfoData ufoData,
             GameStateController gameStateController,
-            IInstantiator instantiator) : base(transformParent, spawnTransform)
+            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
         {
-            _factoryData = factoryData;
-            _gameStateController = gameStateController;
-            PoolUfo = new PoolObjects<Ufo>(_factoryData.Prefab, _factoryData.SizePool, TransformParent.transform, instantiator);
+            _ufoData = ufoData;
+            
+            PoolObjects = new PoolObjects<Ufo>(Preload, 
+                Get, 
+                Return, 
+                Data.SizePool);
+        }
+        
+        public void Initialize()
+        {
+            GameStateController.OnCloseGame += Destroy;
+            GameStateController.OnRestart += PoolObjects.ReturnAll;
+            GameStateController.OnRestart += StartSpawn;
+            GameStateController.OnFinish += StopSpawn;
 
-            Initialize();
-            StartSpawnUfo();
+            StartSpawn();
+        }
+        
+        private Ufo Preload()
+        {
+            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(Data.Prefab, TransformParent.transform);
+            Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
+            ufoMovement.Initialize(ufo, _ufoData);
+            ufo.Deactivate();
+            return ufo;
         }
 
-        public override void Destroy()
+        private void Get(Ufo ufo) => ufo.Activate(SpawnTransform.GetPosition());
+
+        private void Destroy()
         {
-            _gameStateController.OnCloseGame -= Destroy;
-            _gameStateController.OnRestart -= PoolUfo.DeactivateObjects;
-            _gameStateController.OnFinish -= StopSpawnUfo;
-            _gameStateController.OnRestart -= StartSpawnUfo;
+            GameStateController.OnCloseGame -= Destroy;
+            GameStateController.OnRestart -= PoolObjects.ReturnAll;
+            GameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnRestart -= StartSpawn;
         }
 
-        private void Initialize()
-        {
-            _gameStateController.OnCloseGame += Destroy;
-            _gameStateController.OnRestart += PoolUfo.DeactivateObjects;
-            _gameStateController.OnRestart += StartSpawnUfo;
-            _gameStateController.OnFinish += StopSpawnUfo;
-        }
-
-        private async void StartSpawnUfo()
+        private async void StartSpawn()
         {
             _tokenSource = new CancellationTokenSource();
-            await SpawnUfos();
+            await Spawn();
         }
 
-        private void StopSpawnUfo()
+        private void StopSpawn()
         {
             _tokenSource.Cancel();
         }
 
-        private async UniTask SpawnUfos()
+        private async UniTask Spawn()
         {
             try
             {
                 while (_tokenSource.IsCancellationRequested == false)
                 {
-                    float time = Random.Range(_factoryData.MinTimeSpawn, _factoryData.MaxTimeSpawn);
+                    float time = Random.Range(Data.MinTimeSpawn, Data.MaxTimeSpawn);
                     await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                    foreach (Ufo ufo in PoolUfo.Objects)
-                    {
-                        if (!ufo.gameObject.activeSelf)
-                        {
-                            ufo.Activate(SpawnTransform.GetPosition());
-                            break;
-                        }
-                    }
+                    PoolObjects.Get();
                 }
             }
             catch (OperationCanceledException)
-            { }
+            {
+                Debug.Log("Operation was cancelled!");
+            }
         }
-    }
+    } 
 }
