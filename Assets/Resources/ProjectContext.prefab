@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4545066751191966686
+--- !u!1 &2325066374605628338
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,60 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7201456352535042963}
-  - component: {fileID: 7742560920556250625}
+  - component: {fileID: 3071726945079072892}
+  - component: {fileID: 4824819571563480905}
+  m_Layer: 0
+  m_Name: Installer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3071726945079072892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325066374605628338}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.673288, y: 0.20310855, z: 403.22275}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1342809628153653606}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4824819571563480905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325066374605628338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74b170dad66047aaae61a8efd562a04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
+  _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
+  _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
+  _asteroidData: {fileID: 11400000, guid: f4a12d14a76a9d6448ae3576ac09a596, type: 2}
+  _asteroidDataSmall: {fileID: 11400000, guid: 5a3af436fd0739647bec637c1ccd4074, type: 2}
+  _laserData: {fileID: 11400000, guid: a1c538a4cfb8a6c4b8f2668b8b4ba674, type: 2}
+  _ufoData: {fileID: 11400000, guid: 89b081fc72f68fa40adfd8b7f6a17905, type: 2}
+  _spawnPositionData: {fileID: 11400000, guid: 87a6870677633984b8294e09377343d9, type: 2}
+--- !u!1 &5638922876749484331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1342809628153653606}
+  - component: {fileID: 1882841616114636020}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -17,35 +69,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7201456352535042963
+--- !u!4 &1342809628153653606
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4545066751191966686}
+  m_GameObject: {fileID: 5638922876749484331}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.673288, y: -0.20310855, z: -403.22275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3071726945079072892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7742560920556250625
+--- !u!114 &1882841616114636020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4545066751191966686}
+  m_GameObject: {fileID: 5638922876749484331}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4e6589720da476459dc6dd71624b071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 4824819571563480905}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0

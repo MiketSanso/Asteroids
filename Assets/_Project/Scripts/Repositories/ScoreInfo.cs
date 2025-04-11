@@ -13,20 +13,25 @@ namespace GameScene.Repositories
         private readonly UfoFactory _ufoFactory;
         private readonly GameStateController _gameStateController;
         
+        private readonly GameData _gameData;
+        
         public float Score { get; private set; }
         
         public ScoreInfo(AsteroidFactory asteroidFactory,
         UfoFactory ufoFactory,
-        GameStateController gameStateController)
+        GameStateController gameStateController,
+        GameData gameData)
         {
             _gameStateController = gameStateController;
             _asteroidFactory = asteroidFactory;
             _ufoFactory = ufoFactory;
+            _gameData = gameData;
         }
 
         public void Initialize()
         {
             _gameStateController.OnRestart += ResetScore;
+            _gameStateController.OnFinish += CheckScoreRecord;
             _gameStateController.OnCloseGame += Destroy;
             
             foreach (Asteroid asteroid in _asteroidFactory.PoolObjects.Pool)
@@ -48,6 +53,7 @@ namespace GameScene.Repositories
         private void Destroy()
         {
             _gameStateController.OnRestart -= ResetScore;
+            _gameStateController.OnFinish -= CheckScoreRecord;
             _gameStateController.OnCloseGame -= Destroy;
             
             foreach (Asteroid asteroid in _asteroidFactory.PoolObjects.Pool)
@@ -74,6 +80,15 @@ namespace GameScene.Repositories
         private void ResetScore()
         {
             Score = 0;
+        }
+        
+        private void CheckScoreRecord()
+        {
+            if (Score > _gameData.Data.MaxScore)
+            {
+                _gameData.Data.MaxScore = Score;
+                _gameData.Save();
+            }
         }
     }
 }

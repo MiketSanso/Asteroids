@@ -1,4 +1,5 @@
 using System;
+using GameScene.Repositories;
 
 namespace GameScene.Level
 {
@@ -7,7 +8,7 @@ namespace GameScene.Level
         public event Action OnRestart;
         public event Action OnFinish;
         public event Action OnCloseGame;
-
+        
         public void CloseGame()
         {
             OnCloseGame?.Invoke();
