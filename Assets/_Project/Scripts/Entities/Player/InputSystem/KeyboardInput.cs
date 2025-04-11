@@ -6,8 +6,8 @@ namespace GameScene.Entities.Player
 {
     public class KeyboardInput : IInputSystem
     {
-        private MovementController _movement;
-        private ShootController _shoot;
+        private readonly MovementController _movement;
+        private readonly ShootController _shoot;
 
         public KeyboardInput(IInstantiator instantiator)
         {
