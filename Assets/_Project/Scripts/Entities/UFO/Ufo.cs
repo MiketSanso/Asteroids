@@ -6,7 +6,7 @@ namespace GameScene.Entities.UFOs
     public class Ufo : IPooledObject
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
-        public event DestroyedEventHandler OnDestroyed;
+        public event DestroyedEventHandler OnDestroy;
         
         private readonly GameObject _gameObject;
         private readonly UfoData _ufoData;
@@ -31,7 +31,7 @@ namespace GameScene.Entities.UFOs
         public void Destroy()
         {
             Deactivate();
-            OnDestroyed?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
+            OnDestroy?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
         }
     }
 }

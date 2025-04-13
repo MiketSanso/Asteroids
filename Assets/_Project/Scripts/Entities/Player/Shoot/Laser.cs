@@ -14,12 +14,14 @@ namespace GameScene.Entities.Player
         
         private readonly LaserData _laserData;
         private UniTaskCompletionSource _rechargeCompletionSource;
+        private IAnalyticSystem _analyticSystem;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
 
-        public Laser(LaserData laserData)
+        public Laser(LaserData laserData, IAnalyticSystem analyticSystem)
         {
+            _analyticSystem = analyticSystem;
             _laserData = laserData;
         }
         
@@ -32,6 +34,7 @@ namespace GameScene.Entities.Player
         {
             if (CountShotsLaser > 0)
             {
+                _analyticSystem.UseLaser();
                 float timesShot = 0;
                 
                 do

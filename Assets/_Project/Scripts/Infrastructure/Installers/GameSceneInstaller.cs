@@ -12,7 +12,6 @@ namespace GameScene.Level
 {
     public class GameSceneInstaller : MonoInstaller
     {
-        [SerializeField] private Canvas prefabGameCanvas;
         [SerializeField] private PlayerUI _player;
         [SerializeField] private TransformParent _transformParent;
         [SerializeField] private AsteroidData _asteroidData;
@@ -25,7 +24,7 @@ namespace GameScene.Level
         public override void InstallBindings()
         {
             Container.Bind<AsteroidFactory>().AsSingle().WithArguments(_asteroidFactoryData, _asteroidData, _asteroidDataSmall);
-            Container.Bind<EntryPoint>().AsSingle().WithArguments(prefabGameCanvas);
+            Container.Bind<EntryPoint>().AsSingle();
             Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);

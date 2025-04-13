@@ -1,4 +1,5 @@
 using System;
+using GameSystem;
 using System.Threading;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
@@ -6,13 +7,16 @@ using Random = UnityEngine.Random;
 using GameScene.Level;
 using GameScene.Entities.UFOs;
 using GameScene.Factories.ScriptableObjects;
+using GameScene.Interfaces;
 using UnityEngine;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory<UfoFactoryData, Ufo>, IInitializable
+    public class UfoFactory : Factory<UfoFactoryData, Ufo, UfoMovement>, IInitializable
     {
+        private const string UfoKey = "Ufo";
+
         private readonly UfoData _ufoData;
         private CancellationTokenSource _tokenSource;
         
@@ -21,7 +25,9 @@ namespace GameScene.Factories
             UfoFactoryData factoryData,
             UfoData ufoData,
             GameStateController gameStateController,
-            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
+            IAnalyticSystem analyticSystem,
+            LoadPrefab<UfoMovement> loadPrefab,
+            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
         {
             _ufoData = ufoData;
             
@@ -41,16 +47,27 @@ namespace GameScene.Factories
             StartSpawn();
         }
         
-        private Ufo Preload()
+        private async UniTask<Ufo> Preload()
         {
-            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(Data.Prefab, TransformParent.transform);
+            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
+                await LoadPrefab.LoadPrefabFromAddressable(UfoKey), 
+                TransformParent.transform);
             Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
+            ufo.OnDestroy += DestroyUfo;
             ufoMovement.Initialize(ufo, _ufoData);
             ufo.Deactivate();
             return ufo;
         }
 
-        private void Get(Ufo ufo) => ufo.Activate(SpawnTransform.GetPosition());
+        private void Get(Ufo ufo)
+        {
+            ufo.Activate(SpawnTransform.GetPosition());
+        }
+
+        private void DestroyUfo(int scoreSize, Transform transform)
+        {
+            AnalyticSystem.AddDestroyedUfo();
+        }
 
         private void Destroy()
         {
@@ -63,7 +80,7 @@ namespace GameScene.Factories
         private async void StartSpawn()
         {
             _tokenSource = new CancellationTokenSource();
-            await Spawn();
+            Spawn().Forget();
         }
 
         private void StopSpawn()

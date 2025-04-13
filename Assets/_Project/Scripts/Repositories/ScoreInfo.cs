@@ -46,7 +46,7 @@ namespace GameScene.Repositories
             
             foreach (Ufo ufo in _ufoFactory.PoolObjects.Pool)
             {
-                ufo.OnDestroyed += AddScore;
+                ufo.OnDestroy += AddScore;
             }
         }
         
@@ -68,7 +68,7 @@ namespace GameScene.Repositories
             
             foreach (Ufo ufo in _ufoFactory.PoolObjects.Pool)
             {
-                ufo.OnDestroyed -= AddScore;
+                ufo.OnDestroy -= AddScore;
             }
         }
         

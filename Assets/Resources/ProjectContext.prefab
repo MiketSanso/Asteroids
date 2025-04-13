@@ -44,14 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b170dad66047aaae61a8efd562a04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
-  _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
-  _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
-  _asteroidData: {fileID: 11400000, guid: f4a12d14a76a9d6448ae3576ac09a596, type: 2}
-  _asteroidDataSmall: {fileID: 11400000, guid: 5a3af436fd0739647bec637c1ccd4074, type: 2}
   _laserData: {fileID: 11400000, guid: a1c538a4cfb8a6c4b8f2668b8b4ba674, type: 2}
-  _ufoData: {fileID: 11400000, guid: 89b081fc72f68fa40adfd8b7f6a17905, type: 2}
   _spawnPositionData: {fileID: 11400000, guid: 87a6870677633984b8294e09377343d9, type: 2}
+  _gameStateController: {fileID: 7857798445441237331}
 --- !u!1 &5638922876749484331
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,6 +78,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3071726945079072892}
+  - {fileID: 8734729505052778480}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1882841616114636020
@@ -114,3 +110,47 @@ MonoBehaviour:
       _missingHandlerDefaultResponse: 2
       _requireStrictUnsubscribe: 0
       _defaultAsyncTickPriority: 1
+--- !u!1 &7257722216544068277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8734729505052778480}
+  - component: {fileID: 7857798445441237331}
+  m_Layer: 0
+  m_Name: GameStateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8734729505052778480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7257722216544068277}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1342809628153653606}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7857798445441237331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7257722216544068277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac5a346f27e2436cbf69deb3cbe1d317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,25 +1,31 @@
 using UnityEngine;
 using Zenject;
 using GameScene.Entities.Player;
+using GameScene.Interfaces;
 using GameScene.Level;
 using GameScene.Repositories;
 using GameScene.Level.ScriptableObjects;
 
-namespace GameScene.Bootstrap
+namespace GameSystem
 {
     public class BootstrapInstaller : MonoInstaller
     {
         [SerializeField] private LaserData _laserData;
         [SerializeField] private SpawnPositionData _spawnPositionData;
+        [SerializeField] private GameStateController _gameStateController;
         
         public override void InstallBindings()
         {
+            Container.Bind<UnloadAssets>().AsSingle();
+            Container.Bind(typeof(LoadPrefab<>)).AsSingle();
             Container.Bind<GameData>().AsSingle();
             Container.Bind<SpawnTransform>().AsSingle().WithArguments(_spawnPositionData);
-            Container.Bind<GameStateController>().AsSingle();
+            Container.Bind<GameStateController>().FromInstance(_gameStateController).AsSingle();
+            Container.Bind<IAnalyticSystem>().To<FirebaseAnalytic>().AsSingle();
             Container.Bind<Laser>().AsSingle().WithArguments(_laserData);   
             
             Container.Bind<IInitializable>().To<GameData>().FromResolve(); 
+            Container.Bind<IInitializable>().To<IAnalyticSystem>().FromResolve(); 
             Container.Bind<IInitializable>().To<Laser>().FromResolve(); 
         }
     }

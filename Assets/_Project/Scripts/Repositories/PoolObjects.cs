@@ -1,19 +1,20 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace GameScene.Repositories
 {
     public class PoolObjects<T>
     {
-        private readonly Func<T> _preloadFunc;
+        private readonly Func<UniTask<T>> _preloadFunc;
         private readonly Action<T> _getAction;
         private readonly Action<T> _returnAction;
         private List<T> _active = new List<T>();
 
         public Queue<T> Pool { get; private set; } = new Queue<T>();
         
-        public PoolObjects(Func<T> preloadFunc, Action<T> getAction, Action<T> returnAction, int preloadCount)
+        public PoolObjects(Func<UniTask<T>> preloadFunc, Action<T> getAction, Action<T> returnAction, int preloadCount)
         {
             _preloadFunc = preloadFunc;
             _getAction = getAction;
@@ -24,14 +25,21 @@ namespace GameScene.Repositories
                 Debug.LogError("Preload function is null");
                 return;
             }
-            
-            for (int i = 0; i < preloadCount; i++)
-                Return(preloadFunc());
+
+            Preload(preloadCount).Forget();
         }
 
-        public T Get()
+        private async UniTask Preload(int count)
         {
-            T item = Pool.Count > 0 ? Pool.Dequeue() : _preloadFunc();
+            for (int i = 0; i < count; i++)
+            {
+                T item = await _preloadFunc();
+                Return(item);
+            }
+        }
+        public async UniTask<T> Get()
+        {
+            T item = Pool.Count > 0 ? Pool.Dequeue() : await _preloadFunc();
             _getAction(item);
             _active.Add(item);
 

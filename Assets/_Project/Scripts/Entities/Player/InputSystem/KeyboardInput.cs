@@ -1,33 +1,38 @@
+using System;
+using GameScene.Factories;
 using GameScene.Interfaces;
 using UnityEngine;
-using Zenject;
 
 namespace GameScene.Entities.Player
 {
     public class KeyboardInput : IInputSystem
     {
-        private readonly MovementController _movement;
-        private readonly ShootController _shoot;
-
-        public KeyboardInput(IInstantiator instantiator)
-        {
-            _movement = new MovementController();
-            _shoot = instantiator.Instantiate<ShootController>();
-        }
+        public event Action OnShotBullet;
         
+        private readonly MovementController _movement;
+        private readonly BulletFactory _bulletFactory;
+        private readonly Laser _laser;
+
+        public KeyboardInput(BulletFactory bulletFactory, Laser laser)
+        {
+            _bulletFactory = bulletFactory;
+            _laser = laser;
+            _movement = new MovementController();
+        }
+
         public void Shot(Transform transformSpawn)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _shoot.ShotBullet(transformSpawn);
+                _bulletFactory.Respawn();
+                OnShotBullet?.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                _shoot.ShotLaser(transformSpawn);
+                _laser.Shot(transformSpawn);
+                _laser.StartRecharge();
             }
-            
-            _shoot.CheckLaserShot();
         }
         
         public void Move(PlayerMovement playerMovement)

@@ -1,0 +1,4 @@
+repository "Asteroids@Malakson_Maltrikson@cloud"
+  path "/"
+    br "/main"
+    co "/main"
