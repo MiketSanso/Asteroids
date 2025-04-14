@@ -29,13 +29,14 @@ namespace GameScene.Level
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData, _ufoData);
-            Container.Bind<ScoreInfo>().AsSingle();
+            Container.Bind<ScoreRepository>().AsSingle();
             Container.Bind<IInputSystem>().To<KeyboardInput>().AsSingle();
             
-            Container.Bind<IInitializable>().To<ScoreInfo>().FromResolve(); 
             Container.Bind<IInitializable>().To<UfoFactory>().FromResolve(); 
             Container.Bind<IInitializable>().To<AsteroidFactory>().FromResolve(); 
             Container.Bind<IInitializable>().To<EntryPoint>().FromResolve(); 
+            Container.Bind<IInitializable>().To<ScoreRepository>().FromResolve(); 
+
         }
     }
 }

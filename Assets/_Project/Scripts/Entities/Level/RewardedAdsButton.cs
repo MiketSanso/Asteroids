@@ -4,20 +4,14 @@ using UnityEngine.Advertisements;
  
 public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    [SerializeField] Button _showAdButton;
+    [SerializeField] Button _button;
     [SerializeField] string _androidAdUnitId = "Rewarded_Android";
     string _adUnitId = null;
  
-    void Awake()
-    {   
-        _adUnitId = _androidAdUnitId;
-        _showAdButton.interactable = false;
-        Advertisement.Load(_androidAdUnitId, this);
-    }
- 
-    public void LoadAd()
+    private void Start()
     {
-        Debug.Log("Loading Ad: " + _adUnitId);
+        _adUnitId = _androidAdUnitId;
+        _button.interactable = false;
         Advertisement.Load(_adUnitId, this);
     }
     
@@ -27,40 +21,31 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
  
         if (adUnitId.Equals(_adUnitId))
         {
-            _showAdButton.onClick.AddListener(ShowAd);
-            _showAdButton.interactable = true;
+            _button.onClick.AddListener(ShowAd);
+            _button.interactable = true;
         }
     }
-    
+
+    public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
+    { }
+
     public void ShowAd()
     {
-        _showAdButton.interactable = false;
+        _button.interactable = false;
         Advertisement.Show(_adUnitId, this);
+        Advertisement.Load(_adUnitId, this);
     }
-    
-    public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
-    {
-        if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
-        {
-            Debug.Log("Unity Ads Rewarded Ad Completed");
-        }
-    }
-    
-    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
-    {
-        Debug.Log($"Error loading Ad Unit {adUnitId}: {error.ToString()} - {message}");
-    }
- 
-    public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
-    {
-        Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
-    }
- 
-    public void OnUnityAdsShowStart(string adUnitId) { }
-    public void OnUnityAdsShowClick(string adUnitId) { }
  
     void OnDestroy()
     {
-        _showAdButton.onClick.RemoveAllListeners();
+        _button.onClick.RemoveAllListeners();
     }
+
+    public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) { }
+
+    public void OnUnityAdsShowStart(string placementId) { }
+
+    public void OnUnityAdsShowClick(string placementId) { }
+
+    public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) { }
 }

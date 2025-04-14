@@ -19,6 +19,7 @@ namespace GameScene.Factories
 
         private readonly UfoData _ufoData;
         private CancellationTokenSource _tokenSource;
+        private ScoreRepository _scoreRepository;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
@@ -27,8 +28,10 @@ namespace GameScene.Factories
             GameStateController gameStateController,
             IAnalyticSystem analyticSystem,
             LoadPrefab<UfoMovement> loadPrefab,
-            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
+            IInstantiator instantiator,
+            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
         {
+            _scoreRepository = scoreRepository;
             _ufoData = ufoData;
             
             PoolObjects = new PoolObjects<Ufo>(Preload, 
@@ -53,7 +56,10 @@ namespace GameScene.Factories
                 await LoadPrefab.LoadPrefabFromAddressable(UfoKey), 
                 TransformParent.transform);
             Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
+            
             ufo.OnDestroy += DestroyUfo;
+            ufo.OnDestroy += _scoreRepository.AddScore;
+            
             ufoMovement.Initialize(ufo, _ufoData);
             ufo.Deactivate();
             return ufo;
@@ -75,9 +81,15 @@ namespace GameScene.Factories
             GameStateController.OnRestart -= PoolObjects.ReturnAll;
             GameStateController.OnFinish -= StopSpawn;
             GameStateController.OnRestart -= StartSpawn;
+            
+            foreach (Ufo ufo in PoolObjects.Pool)
+            {
+                ufo.OnDestroy -= DestroyUfo;
+                ufo.OnDestroy -= _scoreRepository.AddScore;
+            }
         }
 
-        private async void StartSpawn()
+        private void StartSpawn()
         {
             _tokenSource = new CancellationTokenSource();
             Spawn().Forget();

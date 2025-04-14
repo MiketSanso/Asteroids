@@ -21,6 +21,7 @@ namespace GameScene.Factories
         private readonly AsteroidData _asteroidData;
         private readonly AsteroidData _asteroidDataSmall;
         private Transform _destroyedPosition;
+        private ScoreRepository _scoreRepository;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
@@ -30,10 +31,12 @@ namespace GameScene.Factories
             AsteroidData asteroidData,
             AsteroidData asteroidDataSmall,
             LoadPrefab<AsteroidTrigger> loadPrefab,
-            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
+            IInstantiator instantiator,
+            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
         {
             _asteroidData = asteroidData;
             _asteroidDataSmall = asteroidDataSmall;
+            _scoreRepository = scoreRepository;
             
             
             PoolObjects = new PoolObjects<Asteroid>(Preload, 
@@ -63,8 +66,9 @@ namespace GameScene.Factories
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
             Asteroid asteroid = new Asteroid(_asteroidData, rb, asteroidTrigger.gameObject);
             
-            asteroid.OnDestroyed += AddDestroyedAsteroid;
-            asteroid.OnDestroyed += ActivateSmall;
+            asteroid.OnDestroy += AddDestroyAsteroid;
+            asteroid.OnDestroy += ActivateSmall;
+            asteroid.OnDestroy += _scoreRepository.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();
@@ -77,10 +81,13 @@ namespace GameScene.Factories
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
                 await LoadPrefab.LoadPrefabFromAddressable(AsteroidSmallKey), 
-                TransformParent.transform);            Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
+                TransformParent.transform);            
+            
+            Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
             Asteroid asteroid = new Asteroid(_asteroidDataSmall, rb, asteroidTrigger.gameObject);
             
-            asteroid.OnDestroyed += AddDestroyedAsteroid;
+            asteroid.OnDestroy += AddDestroyAsteroid;
+            asteroid.OnDestroy += _scoreRepository.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();
@@ -96,13 +103,13 @@ namespace GameScene.Factories
             
             foreach (Asteroid asteroid in PoolObjects.Pool)
             {
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
-                asteroid.OnDestroyed -= ActivateSmall;
+                asteroid.OnDestroy -= AddDestroyAsteroid;
+                asteroid.OnDestroy -= ActivateSmall;
             }
             
             foreach (Asteroid asteroid in PoolSmallObjects.Pool)
             {
-                asteroid.OnDestroyed -= AddDestroyedAsteroid;
+                asteroid.OnDestroy -= AddDestroyAsteroid;
             }
         }
         
@@ -119,7 +126,7 @@ namespace GameScene.Factories
             _destroyed = 0;
         }
         
-        private void AddDestroyedAsteroid(int scoreSize, Transform transform)
+        private void AddDestroyAsteroid(int scoreSize, Transform transform)
         {
             _destroyed++;
             AnalyticSystem.AddDestroyedAsteroid();

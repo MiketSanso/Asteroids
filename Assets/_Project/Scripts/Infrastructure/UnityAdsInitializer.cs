@@ -24,11 +24,6 @@ namespace GameSystem
             Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
         }
 
-        public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
-        {
-            Debug.LogError($"LOAD FAILED: {error} - {message}");
-        }
-
         private void InitializeAds()
         {
             Advertisement.debugMode = _testMode;

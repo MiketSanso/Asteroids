@@ -389,7 +389,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 415304346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e01db724c70d4990bbd208b7d3e8da26, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b6b6d3f2d9ee3f4da4f92e70fb64227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028
@@ -1825,17 +1825,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2935bd450602c4d469b1363e2b56333a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabGameCanvas: {fileID: 7484100039278485279, guid: 2f23d51a6f959f347833c0243fbcfb6d, type: 3}
   _player: {fileID: 23701574}
   _transformParent: {fileID: 415304348}
-  _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
-  _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
-  _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
   _asteroidData: {fileID: 11400000, guid: f4a12d14a76a9d6448ae3576ac09a596, type: 2}
   _asteroidDataSmall: {fileID: 11400000, guid: 5a3af436fd0739647bec637c1ccd4074, type: 2}
-  _laserData: {fileID: 11400000, guid: a1c538a4cfb8a6c4b8f2668b8b4ba674, type: 2}
+  _asteroidFactoryData: {fileID: 11400000, guid: 63212ba4243d58e44a5f04c5dabcf204, type: 2}
+  _bulletFactoryData: {fileID: 11400000, guid: 83b746221e795084384e95a948870542, type: 2}
   _ufoData: {fileID: 11400000, guid: 89b081fc72f68fa40adfd8b7f6a17905, type: 2}
-  _spawnPositionData: {fileID: 11400000, guid: 87a6870677633984b8294e09377343d9, type: 2}
+  _ufoFactoryData: {fileID: 11400000, guid: 6825662bfe02fa247a5599dd500ae856, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

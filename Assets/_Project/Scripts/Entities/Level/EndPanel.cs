@@ -12,14 +12,14 @@ namespace GameScene.Level
         [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _text;
         
-        private ScoreInfo _scoreInfo;
+        private ScoreRepository _scoreRepository;
         private GameStateController _gameStateController;
         
         [Inject]
-        private void Construct(GameStateController gameStateController, ScoreInfo scoreInfo)
+        private void Construct(GameStateController gameStateController, ScoreRepository scoreRepository)
         {
             _gameStateController = gameStateController;
-            _scoreInfo = scoreInfo;
+            _scoreRepository = scoreRepository;
         }
         
         public void Initialize()
@@ -44,7 +44,7 @@ namespace GameScene.Level
         private void Activate()
         {
             _panel.SetActive(true);
-            _text.text = _scoreInfo.Score.ToString();
+            _text.text = _scoreRepository.Score.ToString();
         }
 
         private void Deactivate()

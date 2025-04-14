@@ -7,7 +7,7 @@ namespace GameScene.Entities.Asteroid
     public class Asteroid : IPooledObject
     {
         public delegate void DestroyedEventHandler(int scoreSize, Transform transform);
-        public event DestroyedEventHandler OnDestroyed;
+        public event DestroyedEventHandler OnDestroy;
 
         private readonly GameObject _gameObject;
         private readonly AsteroidData _asteroidData;
@@ -40,7 +40,7 @@ namespace GameScene.Entities.Asteroid
         
         public void Destroy(GameObject destroyedObject)
         {
-            OnDestroyed?.Invoke(_asteroidData.ScoreSize, destroyedObject.transform);
+            OnDestroy?.Invoke(_asteroidData.ScoreSize, destroyedObject.transform);
             Deactivate();
         }
     }
