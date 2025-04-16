@@ -6,20 +6,21 @@ namespace GameScene.Level
 {
     public class InterstitialAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
     {
-        private const string interstitialAdUnitId = "Interstitial_Android";
+        private const string INTERSTITIAL_AD_UNIT_ID = "Interstitial_Android";
         
         [SerializeField] private Button _button;
+        
         private IUnityAdsLoadListener _unityAdsLoadListenerImplementation;
 
         private void Start()
         {
             _button.onClick.AddListener(ShowInterstitialAd);
-            Advertisement.Load(interstitialAdUnitId, this);
+            Advertisement.Load(INTERSTITIAL_AD_UNIT_ID, this);
         }
         
         public void ShowInterstitialAd()
         {
-            Advertisement.Show(interstitialAdUnitId, this);
+            Advertisement.Show(INTERSTITIAL_AD_UNIT_ID, this);
         }
         
         void OnDestroy()

@@ -6,6 +6,11 @@ namespace GameScene.Level
 {
     public class GameStateController : MonoBehaviour
     {
+        public event Action OnRestart;
+        public event Action OnFinish;
+        public event Action OnStartGame;
+        public event Action OnCloseGame;
+        
         private IEnumerator Start()
         {
             yield return null;
@@ -16,11 +21,6 @@ namespace GameScene.Level
         {
             OnCloseGame?.Invoke();
         }
-
-        public event Action OnRestart;
-        public event Action OnFinish;
-        public event Action OnStartGame;
-        public event Action OnCloseGame;
 
         public void RestartGame()
         {

@@ -7,10 +7,11 @@ namespace GameScene.Repositories
 {
     public class PoolObjects<T>
     {
+        private List<T> _active = new List<T>();
+        
         private readonly Func<UniTask<T>> _preloadFunc;
         private readonly Action<T> _getAction;
         private readonly Action<T> _returnAction;
-        private List<T> _active = new List<T>();
 
         public Queue<T> Pool { get; private set; } = new Queue<T>();
         

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameScene.Entities.Player
 {
-    public class KeyboardInput : IInputSystem
+    public class KeyboardInput : IInputService
     {
         public event Action OnShotBullet;
         

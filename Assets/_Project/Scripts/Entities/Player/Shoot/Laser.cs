@@ -12,16 +12,17 @@ namespace GameScene.Entities.Player
         public event DeactivateEventHandler OnActivateLaser;
         public event Action OnDeactivateLaser;
         
-        private readonly LaserData _laserData;
         private UniTaskCompletionSource _rechargeCompletionSource;
-        private IAnalyticSystem _analyticSystem;
+        private IAnalyticService _analyticService;
+        
+        private readonly LaserData _laserData;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
 
-        public Laser(LaserData laserData, IAnalyticSystem analyticSystem)
+        public Laser(LaserData laserData, IAnalyticService analyticService)
         {
-            _analyticSystem = analyticSystem;
+            _analyticService = analyticService;
             _laserData = laserData;
         }
         
@@ -34,7 +35,7 @@ namespace GameScene.Entities.Player
         {
             if (CountShotsLaser > 0)
             {
-                _analyticSystem.UseLaser();
+                _analyticService.UseLaser();
                 float timesShot = 0;
                 
                 do

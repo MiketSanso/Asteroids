@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameScene.Interfaces
 {
-    public interface IInputSystem
+    public interface IInputService
     {
         public void Shot(Transform transformSpawn);
 

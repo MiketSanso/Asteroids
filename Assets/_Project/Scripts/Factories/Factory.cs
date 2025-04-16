@@ -19,14 +19,14 @@ namespace GameScene.Factories
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
         protected readonly GameStateController GameStateController;
-        protected IAnalyticSystem AnalyticSystem;
+        protected IAnalyticService AnalyticService;
         protected LoadPrefab<TSpawnObj> LoadPrefab;
         
         protected Factory(TData data, 
             GameStateController gameStateController, 
             TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            IAnalyticSystem analyticSystem, 
+            IAnalyticService analyticService, 
             LoadPrefab<TSpawnObj> loadPrefab,
             IInstantiator instantiator)
         {
@@ -34,7 +34,7 @@ namespace GameScene.Factories
             Data = data;
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
-            AnalyticSystem = analyticSystem;
+            AnalyticService = analyticService;
             LoadPrefab = loadPrefab;
             Instantiator = instantiator;
         }

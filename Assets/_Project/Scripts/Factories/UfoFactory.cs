@@ -15,21 +15,22 @@ namespace GameScene.Factories
 {
     public class UfoFactory : Factory<UfoFactoryData, Ufo, UfoMovement>, IInitializable
     {
-        private const string UfoKey = "Ufo";
+        private const string UFO_KEY = "Ufo";
 
-        private readonly UfoData _ufoData;
         private CancellationTokenSource _tokenSource;
         private ScoreRepository _scoreRepository;
+        
+        private readonly UfoData _ufoData;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             UfoFactoryData factoryData,
             UfoData ufoData,
             GameStateController gameStateController,
-            IAnalyticSystem analyticSystem,
+            IAnalyticService analyticService,
             LoadPrefab<UfoMovement> loadPrefab,
             IInstantiator instantiator,
-            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
+            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator)
         {
             _scoreRepository = scoreRepository;
             _ufoData = ufoData;
@@ -53,7 +54,7 @@ namespace GameScene.Factories
         private async UniTask<Ufo> Preload()
         {
             UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
-                await LoadPrefab.LoadPrefabFromAddressable(UfoKey), 
+                await LoadPrefab.LoadPrefabFromAddressable(UFO_KEY), 
                 TransformParent.transform);
             Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
             
@@ -72,7 +73,7 @@ namespace GameScene.Factories
 
         private void DestroyUfo(int scoreSize, Transform transform)
         {
-            AnalyticSystem.AddDestroyedUfo();
+            AnalyticService.AddDestroyedUfo();
         }
 
         private void Destroy()

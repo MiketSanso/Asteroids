@@ -11,7 +11,7 @@ namespace GameScene.Factories
 {
     public class BulletFactory : Factory<BulletFactoryData, Bullet, Bullet>
     {
-        private const string BulletKey = "Bullet";
+        private const string BULLET_KEY = "Bullet";
         
         private readonly PlayerUI _playerUi;
         
@@ -20,9 +20,9 @@ namespace GameScene.Factories
             BulletFactoryData factoryData,
             GameStateController gameStateController,
             PlayerUI player,
-            IAnalyticSystem analyticSystem, 
+            IAnalyticService analyticService, 
             LoadPrefab<Bullet> loadPrefab,
-            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
+            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator)
         {
             _playerUi = player;
             
@@ -40,7 +40,7 @@ namespace GameScene.Factories
         private async UniTask<Bullet> Preload()
         {
             Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(
-                await LoadPrefab.LoadPrefabFromAddressable(BulletKey), 
+                await LoadPrefab.LoadPrefabFromAddressable(BULLET_KEY), 
                 TransformParent.transform);
             bullet.Deactivate();
             return bullet;
@@ -50,7 +50,7 @@ namespace GameScene.Factories
         {
             bullet.Activate(_playerUi.transform.position);
             await bullet.Shot(_playerUi.transform);
-            AnalyticSystem.AddBulletShot();
+            AnalyticService.AddBulletShot();
         }
     }
 }

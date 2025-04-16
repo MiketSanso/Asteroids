@@ -34,16 +34,16 @@ namespace GameScene.Entities.Player
             }
         }
         
+        public void Activate()
+        {
+            gameObject.SetActive(true);
+            transform.position = Vector3.zero;
+        }
+        
         private void Deactivate()
         {
             _gameStateController.FinishGame();
             gameObject.SetActive(false);
-        }
-
-        private void Activate()
-        {
-            gameObject.SetActive(true);
-            transform.position = Vector3.zero;
         }
     }
 }

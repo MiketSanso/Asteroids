@@ -21,11 +21,11 @@ namespace GameSystem
             Container.Bind<GameData>().AsSingle();
             Container.Bind<SpawnTransform>().AsSingle().WithArguments(_spawnPositionData);
             Container.Bind<GameStateController>().FromInstance(_gameStateController).AsSingle();
-            Container.Bind<IAnalyticSystem>().To<FirebaseAnalytic>().AsSingle();
+            Container.Bind<IAnalyticService>().To<FirebaseAnalytic>().AsSingle();
             Container.Bind<Laser>().AsSingle().WithArguments(_laserData);   
             
             Container.Bind<IInitializable>().To<GameData>().FromResolve(); 
-            Container.Bind<IInitializable>().To<IAnalyticSystem>().FromResolve(); 
+            Container.Bind<IInitializable>().To<IAnalyticService>().FromResolve(); 
             Container.Bind<IInitializable>().To<Laser>().FromResolve(); 
         }
     }

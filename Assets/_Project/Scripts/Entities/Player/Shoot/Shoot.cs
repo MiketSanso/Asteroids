@@ -8,17 +8,17 @@ namespace GameScene.Entities.Player
     {
         [SerializeField] private Transform _transformSpawn;
         
-        private IInputSystem _inputSystem;
+        private IInputService _inputService;
 
         [Inject]
-        private void Construct(IInputSystem inputSystem)
+        private void Construct(IInputService inputService)
         {
-            _inputSystem = inputSystem;
+            _inputService = inputService;
         }
 
         private void Update()
         {
-            _inputSystem.Shot(_transformSpawn);
+            _inputService.Shot(_transformSpawn);
         }
     }
 }

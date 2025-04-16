@@ -30,7 +30,7 @@ namespace GameScene.Level
             Container.Bind<BulletFactory>().AsSingle().WithArguments(_bulletFactoryData);
             Container.Bind<UfoFactory>().AsSingle().WithArguments(_ufoFactoryData, _ufoData);
             Container.Bind<ScoreRepository>().AsSingle();
-            Container.Bind<IInputSystem>().To<KeyboardInput>().AsSingle();
+            Container.Bind<IInputService>().To<KeyboardInput>().AsSingle();
             
             Container.Bind<IInitializable>().To<UfoFactory>().FromResolve(); 
             Container.Bind<IInitializable>().To<AsteroidFactory>().FromResolve(); 

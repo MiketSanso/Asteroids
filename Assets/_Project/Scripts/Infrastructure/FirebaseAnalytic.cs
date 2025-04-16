@@ -7,12 +7,13 @@ using UnityEngine;
 
 namespace GameSystem
 {
-    public class FirebaseAnalytic : IAnalyticSystem
+    public class FirebaseAnalytic : IAnalyticService
     {
         private int _countBulletShots;
         private int _countLaserShots;
         private int _countDestroyedAsteroids;
         private int _countDestroyedUfo;
+        
         private readonly Laser _laser;
         private readonly AsteroidFactory _asteroidFactory;
         private readonly UfoFactory _ufoFactory;

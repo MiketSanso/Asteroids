@@ -35,6 +35,11 @@ namespace GameScene.Level
             _gameStateController.OnFinish -= Activate;
         }
         
+        public void Deactivate()
+        {
+            _panel.SetActive(false);
+        }
+        
         private void Restart()
         {
             _gameStateController.RestartGame();
@@ -45,11 +50,6 @@ namespace GameScene.Level
         {
             _panel.SetActive(true);
             _text.text = _scoreRepository.Score.ToString();
-        }
-
-        private void Deactivate()
-        {
-            _panel.SetActive(false);
         }
     }
 }

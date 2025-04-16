@@ -12,27 +12,28 @@ namespace GameScene.Factories
 {
     public class AsteroidFactory : Factory<AsteroidFactoryData, Asteroid, AsteroidTrigger>, IInitializable
     {
-        private const string AsteroidKey = "Asteroid";
-        private const string AsteroidSmallKey = "AsteroidSmall";
+        private const string ASTEROID_KEY = "Asteroid";
+        private const string ASTEROID_SMALL_KEY = "AsteroidSmall";
         
         public readonly PoolObjects<Asteroid> PoolSmallObjects;
         
         private int _destroyed;
+        private Transform _destroyedPosition;
+        
         private readonly AsteroidData _asteroidData;
         private readonly AsteroidData _asteroidDataSmall;
-        private Transform _destroyedPosition;
-        private ScoreRepository _scoreRepository;
+        private readonly ScoreRepository _scoreRepository;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
-            IAnalyticSystem analyticSystem,
+            IAnalyticService analyticService,
             AsteroidFactoryData factoryData, 
             GameStateController gameStateController,
             AsteroidData asteroidData,
             AsteroidData asteroidDataSmall,
             LoadPrefab<AsteroidTrigger> loadPrefab,
             IInstantiator instantiator,
-            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticSystem, loadPrefab, instantiator)
+            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator)
         {
             _asteroidData = asteroidData;
             _asteroidDataSmall = asteroidDataSmall;
@@ -57,11 +58,24 @@ namespace GameScene.Factories
             
             RestartFly();
         }
+        
+        public void RestartFly()
+        {
+            PoolObjects.ReturnAll();
+            PoolSmallObjects.ReturnAll();
+            
+            for (int i = 0; i < Data.SizePool; i++)
+            {
+                PoolObjects.Get();
+            }
+
+            _destroyed = 0;
+        }
 
         private async UniTask<Asteroid> Preload()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await LoadPrefab.LoadPrefabFromAddressable(AsteroidKey), 
+                await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_KEY), 
                 TransformParent.transform);
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
             Asteroid asteroid = new Asteroid(_asteroidData, rb, asteroidTrigger.gameObject);
@@ -80,7 +94,7 @@ namespace GameScene.Factories
         private async UniTask<Asteroid> PreloadSmall()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await LoadPrefab.LoadPrefabFromAddressable(AsteroidSmallKey), 
+                await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
                 TransformParent.transform);            
             
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
@@ -113,23 +127,10 @@ namespace GameScene.Factories
             }
         }
         
-        private void RestartFly()
-        {
-            PoolObjects.ReturnAll();
-            PoolSmallObjects.ReturnAll();
-            
-            for (int i = 0; i < Data.SizePool; i++)
-            {
-                PoolObjects.Get();
-            }
-
-            _destroyed = 0;
-        }
-        
         private void AddDestroyAsteroid(int scoreSize, Transform transform)
         {
             _destroyed++;
-            AnalyticSystem.AddDestroyedAsteroid();
+            AnalyticService.AddDestroyedAsteroid();
             
             if (_destroyed == Data.SizePool * (1 + Data.countFragments))
             {
