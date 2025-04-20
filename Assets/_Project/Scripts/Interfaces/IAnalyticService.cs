@@ -1,8 +1,9 @@
+using System;
 using Zenject;
 
 namespace GameScene.Interfaces
 {
-    public interface IAnalyticService : IInitializable
+    public interface IAnalyticService : IInitializable, IDisposable
     {
         public void AddBulletShot();
         

@@ -9,7 +9,6 @@ namespace GameScene.Level
     public class EndPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _panel;
-        [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _text;
         
         private ScoreRepository _scoreRepository;
@@ -24,26 +23,20 @@ namespace GameScene.Level
         
         public void Initialize()
         {
-            _restartButton.onClick.AddListener(Restart);
             _gameStateController.OnFinish += Activate;
+            _gameStateController.OnRestart += Deactivate;
             Deactivate();
         }
         
         private void OnDestroy()
         {
-            _restartButton.onClick.RemoveListener(Restart);
             _gameStateController.OnFinish -= Activate;
+            _gameStateController.OnRestart -= Deactivate;
         }
         
         public void Deactivate()
         {
             _panel.SetActive(false);
-        }
-        
-        private void Restart()
-        {
-            _gameStateController.RestartGame();
-            Deactivate();
         }
 
         private void Activate()

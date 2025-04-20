@@ -1,6 +1,8 @@
+using _Project.Scripts.Infrastructure;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
+using Zenject;
 
 namespace GameScene.Level
 {
@@ -9,8 +11,18 @@ namespace GameScene.Level
         private const string INTERSTITIAL_AD_UNIT_ID = "Interstitial_Android";
         
         [SerializeField] private Button _button;
+        [SerializeField] private EndPanel _endPanel;
         
         private IUnityAdsLoadListener _unityAdsLoadListenerImplementation;
+        private GameStateController _gameStateController;
+        private SaveService _saveService;
+        
+        [Inject]
+        private void Construct(GameStateController gameStateController, SaveService saveService)
+        {
+            _gameStateController = gameStateController;
+            _saveService = saveService;
+        }
 
         private void Start()
         {
@@ -18,12 +30,7 @@ namespace GameScene.Level
             Advertisement.Load(INTERSTITIAL_AD_UNIT_ID, this);
         }
         
-        public void ShowInterstitialAd()
-        {
-            Advertisement.Show(INTERSTITIAL_AD_UNIT_ID, this);
-        }
-        
-        void OnDestroy()
+        private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();
         }
@@ -38,6 +45,26 @@ namespace GameScene.Level
 
         public void OnUnityAdsShowClick(string placementId) { }
 
-        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) { }
+        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
+        {
+            ShowComplete();
+        }
+        
+        private void ShowInterstitialAd()
+        {
+            if (!_saveService.Data.IsAdsOff)
+            {
+                Advertisement.Show(INTERSTITIAL_AD_UNIT_ID, this);
+            }
+            else
+            {
+                ShowComplete();
+            }
+        }
+        
+        private void ShowComplete()
+        {
+            _gameStateController.RestartGame();
+        }
     }
 }

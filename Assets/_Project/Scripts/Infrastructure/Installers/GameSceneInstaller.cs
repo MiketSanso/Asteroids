@@ -1,3 +1,4 @@
+using System;
 using GameScene.Entities.Asteroid;
 using GameScene.Entities.Player;
 using GameScene.Entities.UFOs;
@@ -36,7 +37,10 @@ namespace GameScene.Level
             Container.Bind<IInitializable>().To<AsteroidFactory>().FromResolve(); 
             Container.Bind<IInitializable>().To<EntryPoint>().FromResolve(); 
             Container.Bind<IInitializable>().To<ScoreRepository>().FromResolve(); 
-
+            
+            Container.Bind<IDisposable>().To<UfoFactory>().FromResolve(); 
+            Container.Bind<IDisposable>().To<AsteroidFactory>().FromResolve(); 
+            Container.Bind<IDisposable>().To<ScoreRepository>().FromResolve(); 
         }
     }
 }

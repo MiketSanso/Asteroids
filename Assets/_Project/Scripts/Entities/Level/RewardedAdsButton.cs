@@ -1,4 +1,5 @@
 using GameScene.Entities.Player;
+using GameScene.Entities.UFOs;
 using GameScene.Factories;
 using GameScene.Level;
 using UnityEngine;
@@ -16,14 +17,19 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     private GameStateController _gameStateController;
     private PlayerUI _playerUI;
     private AsteroidFactory _asteroidFactory;
+    private UfoFactory _ufoFactory;
     private string _adUnitId = null;
 
     [Inject]
-    private void Construct(PlayerUI playerUI, AsteroidFactory asteroidFactory, GameStateController gameStateController)
+    private void Construct(PlayerUI playerUI, 
+        AsteroidFactory asteroidFactory, 
+        GameStateController gameStateController, 
+        UfoFactory ufoFactory)
     {
         _playerUI = playerUI;
         _asteroidFactory = asteroidFactory;
         _gameStateController = gameStateController;
+        _ufoFactory = ufoFactory;
     }
     
     private void Start()
@@ -43,8 +49,6 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        Debug.Log("Ad Loaded: " + adUnitId);
- 
         if (adUnitId.Equals(_adUnitId))
         {
             _button.onClick.AddListener(ShowAd);
@@ -65,6 +69,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         _playerUI.Activate();
         _asteroidFactory.RestartFly();
         _endPanel.Deactivate();
+        _ufoFactory.StartSpawn();
     }
     
     private void ShowAd()

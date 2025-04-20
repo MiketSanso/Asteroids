@@ -1,9 +1,11 @@
+using System;
 using Firebase.Analytics;
 using GameScene.Entities.Player;
 using GameScene.Factories;
 using GameScene.Interfaces;
 using GameScene.Level;
 using UnityEngine;
+using Zenject;
 
 namespace GameSystem
 {
@@ -28,14 +30,12 @@ namespace GameSystem
         {
             _gameStateController.OnStartGame += StartGame;
             _gameStateController.OnFinish += EndGame;
-            _gameStateController.OnCloseGame += Destroy;
         }
 
-        private void Destroy()
+        public void Dispose()
         {
             _gameStateController.OnStartGame -= StartGame;
             _gameStateController.OnFinish -= EndGame;
-            _gameStateController.OnCloseGame -= Destroy;
         }
         
         public void AddBulletShot() => _countBulletShots++;
@@ -61,7 +61,6 @@ namespace GameSystem
     
         public void UseLaser()
         {
-            Debug.Log("UseLaser");
             _countBulletShots++;
             FirebaseAnalytics.LogEvent("use_laser");
         }

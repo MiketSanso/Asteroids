@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
 using GameScene.Level;
@@ -6,7 +7,7 @@ using Zenject;
 
 namespace GameScene.Repositories
 {
-    public class ScoreRepository : IInitializable
+    public class ScoreRepository : IInitializable, IDisposable
     {
         private readonly GameStateController _gameStateController;
         private readonly SaveService _saveDataSevice;
@@ -25,18 +26,16 @@ namespace GameScene.Repositories
             SubscribeForObjects().Forget();
         }
 
+        public void Dispose()
+        {
+            _gameStateController.OnRestart -= ResetScore;
+            _gameStateController.OnFinish -= CheckScoreRecord;
+        }
+
         private async UniTask SubscribeForObjects()
         {
             _gameStateController.OnRestart += ResetScore;
             _gameStateController.OnFinish += CheckScoreRecord;
-            _gameStateController.OnCloseGame += Destroy;
-        }
-        
-        private void Destroy()
-        {
-            _gameStateController.OnRestart -= ResetScore;
-            _gameStateController.OnFinish -= CheckScoreRecord;
-            _gameStateController.OnCloseGame -= Destroy;
         }
         
         public void AddScore(int scoreSize, Transform transform)

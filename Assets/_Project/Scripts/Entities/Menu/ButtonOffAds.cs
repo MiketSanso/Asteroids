@@ -1,38 +1,62 @@
+using _Project.Scripts.Infrastructure;
+using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
+using Zenject;
 
 public class ButtonOffAds : MonoBehaviour, IStoreListener
 {
     public const string NO_ABS_PRODUCT_ID = "com.yourcompany.yourgame.noads";
 
     public Button noAdsButton;
-    public Text statusText;
+    public TMP_Text statusText;
     
     private IStoreController storeController;
-    private IExtensionProvider extensions;
+    private SaveService _saveService;
+
+    [Inject]
+    private void Construct(SaveService saveService)
+    {
+        _saveService = saveService;
+    }
     
     private void Start()
     {
+        noAdsButton.onClick.AddListener(BuyNoAds);
         InitializePurchasing();
         UpdateUI();
     }
-    
-    private void InitializePurchasing()
+
+    private void OnDestroy()
     {
-        var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-        builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
+        noAdsButton.onClick.RemoveAllListeners();
+    }
+    
+    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
+    {
+        if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
+        {
+            _saveService.Data.IsAdsOff = true;
+            _saveService.Save();
+            UpdateUI();
+            statusText.text = "Реклама отключена! Спасибо!";
+        }
         
-        UnityPurchasing.Initialize(this, builder);
+        return PurchaseProcessingResult.Complete;
+    }
+    
+    public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
+    {
+        statusText.text = "Ошибка покупки: " + failureReason;
     }
     
     public void OnInitialized(IStoreController controller, IExtensionProvider extension)
     {
         storeController = controller;
-        extensions = extension;
-        statusText.text = "Магазин готов";
     }
-
+    
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         statusText.text = "Ошибка инициализации: " + error;
@@ -42,8 +66,16 @@ public class ButtonOffAds : MonoBehaviour, IStoreListener
     {
         statusText.text = "Ошибка инициализации: " + error;
     }
+    
+    private void InitializePurchasing()
+    {
+        var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+        builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
+        
+        UnityPurchasing.Initialize(this, builder);
+    }
 
-    public void BuyNoAds()
+    private void BuyNoAds()
     {
         Product product = storeController.products.WithID(NO_ABS_PRODUCT_ID);
         
@@ -57,27 +89,8 @@ public class ButtonOffAds : MonoBehaviour, IStoreListener
         }
     }
     
-    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
+    private void UpdateUI()
     {
-        if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
-        {
-            // Сохраняем факт покупки
-            PlayerPrefs.SetInt("NoAdsPurchased", 1);
-            UpdateUI();
-            statusText.text = "Реклама отключена! Спасибо!";
-        }
-        
-        return PurchaseProcessingResult.Complete;
-    }
-    
-    public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
-    {
-        statusText.text = "Ошибка покупки: " + failureReason;
-    }
-    
-    void UpdateUI()
-    {
-        bool noAdsPurchased = PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1;
-        noAdsButton.interactable = !noAdsPurchased;
+        noAdsButton.interactable = !_saveService.Data.IsAdsOff;
     }
 }

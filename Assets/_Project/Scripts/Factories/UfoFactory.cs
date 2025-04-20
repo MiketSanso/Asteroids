@@ -13,7 +13,7 @@ using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory<UfoFactoryData, Ufo, UfoMovement>, IInitializable
+    public class UfoFactory : Factory<UfoFactoryData, Ufo, UfoMovement>, IInitializable, IDisposable
     {
         private const string UFO_KEY = "Ufo";
 
@@ -43,12 +43,24 @@ namespace GameScene.Factories
         
         public void Initialize()
         {
-            GameStateController.OnCloseGame += Destroy;
-            GameStateController.OnRestart += PoolObjects.ReturnAll;
             GameStateController.OnRestart += StartSpawn;
             GameStateController.OnFinish += StopSpawn;
 
             StartSpawn();
+        }
+        
+        public void Dispose()
+        {
+            GameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnRestart -= StartSpawn;
+            
+            foreach (Ufo ufo in PoolObjects.Pool)
+            {
+                ufo.OnDestroy -= DestroyUfo;
+                ufo.OnDestroy -= _scoreRepository.AddScore;
+            }
+            
+            PoolObjects.Pool.Clear();
         }
         
         private async UniTask<Ufo> Preload()
@@ -76,22 +88,9 @@ namespace GameScene.Factories
             AnalyticService.AddDestroyedUfo();
         }
 
-        private void Destroy()
+        public void StartSpawn()
         {
-            GameStateController.OnCloseGame -= Destroy;
-            GameStateController.OnRestart -= PoolObjects.ReturnAll;
-            GameStateController.OnFinish -= StopSpawn;
-            GameStateController.OnRestart -= StartSpawn;
-            
-            foreach (Ufo ufo in PoolObjects.Pool)
-            {
-                ufo.OnDestroy -= DestroyUfo;
-                ufo.OnDestroy -= _scoreRepository.AddScore;
-            }
-        }
-
-        private void StartSpawn()
-        {
+            PoolObjects.ReturnAll();
             _tokenSource = new CancellationTokenSource();
             Spawn().Forget();
         }

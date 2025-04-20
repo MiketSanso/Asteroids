@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using GameSystem;
 using GameScene.Repositories;
@@ -10,7 +11,7 @@ using GameScene.Level;
 
 namespace GameScene.Factories
 {
-    public class AsteroidFactory : Factory<AsteroidFactoryData, Asteroid, AsteroidTrigger>, IInitializable
+    public class AsteroidFactory : Factory<AsteroidFactoryData, Asteroid, AsteroidTrigger>, IInitializable, IDisposable
     {
         private const string ASTEROID_KEY = "Asteroid";
         private const string ASTEROID_SMALL_KEY = "AsteroidSmall";
@@ -39,7 +40,6 @@ namespace GameScene.Factories
             _asteroidDataSmall = asteroidDataSmall;
             _scoreRepository = scoreRepository;
             
-            
             PoolObjects = new PoolObjects<Asteroid>(Preload, 
                 Get, 
                 Return, 
@@ -54,9 +54,29 @@ namespace GameScene.Factories
         public void Initialize()
         {
             GameStateController.OnRestart += RestartFly;
-            GameStateController.OnCloseGame += Destroy;
             
             RestartFly();
+        }
+        
+        public void Dispose()
+        {
+            Debug.Log("Отписка");
+            GameStateController.OnRestart -= RestartFly;
+            
+            foreach (Asteroid asteroid in PoolObjects.Pool)
+            {
+                asteroid.OnDestroy -= AddDestroyAsteroid;
+                asteroid.OnDestroy -= ActivateSmall;
+                asteroid.OnDestroy -= _scoreRepository.AddScore;
+            }
+            
+            foreach (Asteroid asteroid in PoolSmallObjects.Pool)
+            {
+                asteroid.OnDestroy -= AddDestroyAsteroid;
+                asteroid.OnDestroy -= _scoreRepository.AddScore;
+            }
+            
+            PoolObjects.Pool.Clear();
         }
         
         public void RestartFly()
@@ -74,6 +94,8 @@ namespace GameScene.Factories
 
         private async UniTask<Asteroid> Preload()
         {
+            Debug.Log("Подписка Большой Шар");
+
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
                 await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_KEY), 
                 TransformParent.transform);
@@ -93,6 +115,8 @@ namespace GameScene.Factories
         
         private async UniTask<Asteroid> PreloadSmall()
         {
+            Debug.Log("Подписка Малый Шар");
+            
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
                 await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
                 TransformParent.transform);            
@@ -109,23 +133,6 @@ namespace GameScene.Factories
         }
         
         private void GetSmall(Asteroid asteroid) => asteroid.Activate(_destroyedPosition.position);
-        
-        private void Destroy()
-        {
-            GameStateController.OnRestart -= RestartFly;
-            GameStateController.OnCloseGame -= Destroy;
-            
-            foreach (Asteroid asteroid in PoolObjects.Pool)
-            {
-                asteroid.OnDestroy -= AddDestroyAsteroid;
-                asteroid.OnDestroy -= ActivateSmall;
-            }
-            
-            foreach (Asteroid asteroid in PoolSmallObjects.Pool)
-            {
-                asteroid.OnDestroy -= AddDestroyAsteroid;
-            }
-        }
         
         private void AddDestroyAsteroid(int scoreSize, Transform transform)
         {
