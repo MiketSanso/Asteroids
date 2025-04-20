@@ -1,6 +1,5 @@
+using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
-using GameScene.Entities.Asteroid;
-using GameScene.Entities.UFOs;
 using GameScene.Level;
 using UnityEngine;
 using Zenject;
@@ -10,15 +9,15 @@ namespace GameScene.Repositories
     public class ScoreRepository : IInitializable
     {
         private readonly GameStateController _gameStateController;
-        private readonly GameData _gameData;
+        private readonly SaveService _saveDataSevice;
         
         public float Score { get; private set; }
         
         public ScoreRepository(GameStateController gameStateController,
-        GameData gameData)
+            SaveService gameData)
         {
             _gameStateController = gameStateController;
-            _gameData = gameData;
+            _saveDataSevice = gameData;
         }
 
         public void Initialize()
@@ -52,10 +51,10 @@ namespace GameScene.Repositories
         
         private void CheckScoreRecord()
         {
-            if (Score > _gameData.Data.MaxScore)
+            if (Score > _saveDataSevice.Data.MaxScore)
             {
-                _gameData.Data.MaxScore = Score;
-                _gameData.Save();
+                _saveDataSevice.Data.MaxScore = Score;
+                _saveDataSevice.Save();
             }
         }
     }

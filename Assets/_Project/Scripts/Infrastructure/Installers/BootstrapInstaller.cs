@@ -1,3 +1,4 @@
+using _Project.Scripts.Infrastructure;
 using UnityEngine;
 using Zenject;
 using GameScene.Entities.Player;
@@ -16,6 +17,7 @@ namespace GameSystem
         
         public override void InstallBindings()
         {
+            Container.Bind<SaveService>().To<PrefsSave>().AsSingle();
             Container.Bind<UnloadAssets>().AsSingle();
             Container.Bind(typeof(LoadPrefab<>)).AsSingle();
             Container.Bind<GameData>().AsSingle();
@@ -24,7 +26,7 @@ namespace GameSystem
             Container.Bind<IAnalyticService>().To<FirebaseAnalytic>().AsSingle();
             Container.Bind<Laser>().AsSingle().WithArguments(_laserData);   
             
-            Container.Bind<IInitializable>().To<GameData>().FromResolve(); 
+            Container.Bind<IInitializable>().To<SaveService>().FromResolve(); 
             Container.Bind<IInitializable>().To<IAnalyticService>().FromResolve(); 
             Container.Bind<IInitializable>().To<Laser>().FromResolve(); 
         }
