@@ -1,11 +1,8 @@
-using System;
 using Firebase.Analytics;
 using GameScene.Entities.Player;
 using GameScene.Factories;
 using GameScene.Interfaces;
 using GameScene.Level;
-using UnityEngine;
-using Zenject;
 
 namespace GameSystem
 {

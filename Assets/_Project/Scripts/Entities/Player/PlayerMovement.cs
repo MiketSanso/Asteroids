@@ -19,7 +19,7 @@ namespace GameScene.Entities.Player
             _inputService = inputService;
         }
         
-        private void Update()
+        private void FixedUpdate()
         {
             _inputService.Move(this);
         }

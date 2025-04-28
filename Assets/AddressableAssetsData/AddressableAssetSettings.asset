@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 3e86c68e76bc1a34ab421201a90e0faa
   m_currentHash:
     serializedVersion: 2
-    Hash: 11a7ecd28bf74f4b7b257010a31da8f8
+    Hash: cb282a9261ba739646dfb28d1e68f594
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
       - m_Id: 5ef861c323c1ea540a84be67b91f278c
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 7015a3cc6618daa42b6666ac49a63b3f
-        m_Value: <undefined>
+        m_Value: 'https://storage.yandexcloud.net/asteroids/[BuildTarget]'
       - m_Id: 7adddfd06bb13de4b90d9129bd4e72e5
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: f5b7abe9445106f42a8a77a10f7293fe

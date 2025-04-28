@@ -1,6 +1,5 @@
 using _Project.Scripts.Infrastructure;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
