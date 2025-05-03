@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
+using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
+using GameScene.Configs;
 using GameScene.Interfaces;
 using Zenject;
 
@@ -8,6 +10,8 @@ namespace GameScene.Entities.Player
 {
     public class Laser : IInitializable
     {
+        private string LASER_CONFIG = "LaserConfig";
+        
         public delegate void DeactivateEventHandler(Vector2 firstPosition, Vector2 secondPosition);
         public event DeactivateEventHandler OnActivateLaser;
         public event Action OnDeactivateLaser;
@@ -15,30 +19,35 @@ namespace GameScene.Entities.Player
         private UniTaskCompletionSource _rechargeCompletionSource;
         private IAnalyticService _analyticService;
         
-        private readonly LaserData _laserData;
+        private LaserConfig _laserData;
+        private readonly ConfigSaveService _configSaveService;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
 
-        public Laser(LaserData laserData, IAnalyticService analyticService)
+        public Laser(ConfigSaveService configSaveService, IAnalyticService analyticService)
         {
+            _configSaveService = configSaveService;
             _analyticService = analyticService;
-            _laserData = laserData;
         }
         
-        public void Initialize()
+        public async void Initialize()
         {
-            Recharge().Forget();
+            _laserData = await _configSaveService.Load<LaserConfig>(LASER_CONFIG);
+            
+            await Recharge();
         }
         
         public async void Shot(Transform transformObject)
         {
             if (CountShotsLaser > 0)
             {
+                CountShotsLaser -= 1;
+
                 _analyticService.UseLaser();
                 float timesShot = 0;
                 
-                do
+                while (timesShot <= _laserData.TimeVisibleLaser)
                 {
                     Vector2 direction = transformObject.up;
                     
@@ -61,9 +70,6 @@ namespace GameScene.Entities.Player
                     await UniTask.Delay(TimeSpan.FromSeconds(_laserData.StepTimeDamage));
                     timesShot += _laserData.StepTimeDamage; 
                 } 
-                while (timesShot <= _laserData.TimeVisibleLaser);
-                
-                CountShotsLaser -= 1;
 
                 OnDeactivateLaser?.Invoke();
             }
@@ -82,11 +88,12 @@ namespace GameScene.Entities.Player
         {
             _rechargeCompletionSource = new UniTaskCompletionSource();
             TimeRechargeLaser =  _laserData.FixedTimeRechargeLaser;
-            do
+            
+            while (TimeRechargeLaser > 0)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds( _laserData.StepTimeRecharge));
                 TimeRechargeLaser -=  _laserData.StepTimeRecharge;
-            } while (TimeRechargeLaser > 0);
+            }
 
             CountShotsLaser++;
             _rechargeCompletionSource.TrySetResult();

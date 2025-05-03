@@ -1,5 +1,7 @@
+using _Project.Scripts.Infrastructure;
 using GameScene.Interfaces;
 using UnityEngine;
+using GameScene.Configs;
 
 namespace GameScene.Entities.UFOs
 {
@@ -9,11 +11,11 @@ namespace GameScene.Entities.UFOs
         public event DestroyedEventHandler OnDestroy;
         
         private readonly GameObject _gameObject;
-        private readonly UfoData _ufoData;
+        private readonly UfoConfig _ufoConfig;
 
-        public Ufo(UfoData ufoData, GameObject gameObject)
+        public Ufo(UfoConfig ufoConfig, GameObject gameObject)
         {
-            _ufoData = ufoData;
+            _ufoConfig = ufoConfig;
             _gameObject = gameObject;
         }
 
@@ -31,7 +33,7 @@ namespace GameScene.Entities.UFOs
         public void Destroy()
         {
             Deactivate();
-            OnDestroy?.Invoke(_ufoData.ScoreSize, _gameObject.transform);
+            OnDestroy?.Invoke(_ufoConfig.ScoreSize, _gameObject.transform);
         }
     }
 }

@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -38,7 +39,7 @@ public class ButtonOffAds : MonoBehaviour, IStoreListener
         if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
         {
             _saveService.Data.IsAdsOff = true;
-            _saveService.Save();
+            _saveService.Save().Forget();
             UpdateUI();
             statusText.text = "Реклама отключена! Спасибо!";
         }

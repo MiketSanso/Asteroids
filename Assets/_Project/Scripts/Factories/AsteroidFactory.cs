@@ -1,44 +1,54 @@
 using System;
+using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
 using GameSystem;
 using GameScene.Repositories;
 using UnityEngine;
 using GameScene.Entities.Asteroid;
-using GameScene.Factories.ScriptableObjects;
+using GameScene.Configs;
 using GameScene.Interfaces;
 using Zenject;
 using GameScene.Level;
 
 namespace GameScene.Factories
 {
-    public class AsteroidFactory : Factory<AsteroidFactoryData, Asteroid, AsteroidTrigger>, IInitializable, IDisposable
+    public class AsteroidFactory : Factory<AsteroidFactoryConfig, Asteroid, AsteroidTrigger>, IInitializable, IDisposable
     {
         private const string ASTEROID_KEY = "Asteroid";
         private const string ASTEROID_SMALL_KEY = "AsteroidSmall";
-        
-        public readonly PoolObjects<Asteroid> PoolSmallObjects;
+        private const string SMALL_ASTEROID_CONFIG = "SmallAsteroidConfig";
+        private const string ASTEROID_CONFIG = "AsteroidConfig";
+        private const string FACTORY_CONFIG = "AsteroidFactoryConfig";
         
         private int _destroyed;
         private Transform _destroyedPosition;
-        
-        private readonly AsteroidData _asteroidData;
-        private readonly AsteroidData _asteroidDataSmall;
+       
+        private AsteroidConfig _asteroidData;
+        private AsteroidConfig _asteroidDataSmall;
+        private PoolObjects<Asteroid> PoolSmallObjects;
         private readonly ScoreRepository _scoreRepository;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             IAnalyticService analyticService,
-            AsteroidFactoryData factoryData, 
             GameStateController gameStateController,
-            AsteroidData asteroidData,
-            AsteroidData asteroidDataSmall,
             LoadPrefab<AsteroidTrigger> loadPrefab,
+            LoadPrefab<Texture2D> loadSprite,
             IInstantiator instantiator,
-            ScoreRepository scoreRepository) : base(factoryData, gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator)
+            ScoreRepository scoreRepository,
+            ConfigSaveService configSaveService,
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, loadSprite, instantiator, configSaveService, musicService)
         {
-            _asteroidData = asteroidData;
-            _asteroidDataSmall = asteroidDataSmall;
             _scoreRepository = scoreRepository;
+        }
+
+        public async void Initialize()
+        {
+            GameStateController.OnRestart += RestartFly;
+
+            _asteroidData = await ConfigSaveService.Load<AsteroidConfig>(ASTEROID_CONFIG);
+            _asteroidDataSmall = await ConfigSaveService.Load<AsteroidConfig>(SMALL_ASTEROID_CONFIG);
+            Data = await ConfigSaveService.Load<AsteroidFactoryConfig>(FACTORY_CONFIG);
             
             PoolObjects = new PoolObjects<Asteroid>(Preload, 
                 Get, 
@@ -48,19 +58,13 @@ namespace GameScene.Factories
             PoolSmallObjects = new PoolObjects<Asteroid>(PreloadSmall, 
                 GetSmall, 
                 Return, 
-                Data.SizePool * Data.countFragments);
-        }
-
-        public void Initialize()
-        {
-            GameStateController.OnRestart += RestartFly;
+                Data.SizePool * Data.CountFragments);
             
             RestartFly();
         }
         
         public void Dispose()
         {
-            Debug.Log("Отписка");
             GameStateController.OnRestart -= RestartFly;
             
             foreach (Asteroid asteroid in PoolObjects.Pool)
@@ -94,11 +98,10 @@ namespace GameScene.Factories
 
         private async UniTask<Asteroid> Preload()
         {
-            Debug.Log("Подписка Большой Шар");
-
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
                 await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_KEY), 
                 TransformParent.transform);
+            
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
             Asteroid asteroid = new Asteroid(_asteroidData, rb, asteroidTrigger.gameObject);
             
@@ -115,8 +118,6 @@ namespace GameScene.Factories
         
         private async UniTask<Asteroid> PreloadSmall()
         {
-            Debug.Log("Подписка Малый Шар");
-            
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
                 await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
                 TransformParent.transform);            
@@ -136,10 +137,11 @@ namespace GameScene.Factories
         
         private void AddDestroyAsteroid(int scoreSize, Transform transform)
         {
+            MusicService.DestroyObject();
             _destroyed++;
             AnalyticService.AddDestroyedAsteroid();
             
-            if (_destroyed == Data.SizePool * (1 + Data.countFragments))
+            if (_destroyed == Data.SizePool * (1 + Data.CountFragments))
             {
                 RestartFly();
             }
@@ -149,7 +151,7 @@ namespace GameScene.Factories
         {
             _destroyedPosition = transform;
             
-            for (int i = 0; i < Data.countFragments; i++)
+            for (int i = 0; i < Data.CountFragments; i++)
             {
                 PoolSmallObjects.Get();
             }

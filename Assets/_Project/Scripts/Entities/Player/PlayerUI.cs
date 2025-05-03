@@ -1,6 +1,7 @@
 using UnityEngine;
 using GameScene.Interfaces;
 using GameScene.Level;
+using GameSystem;
 using Zenject;
 
 namespace GameScene.Entities.Player
@@ -8,14 +9,16 @@ namespace GameScene.Entities.Player
     public class PlayerUI : MonoBehaviour
     {
         private GameStateController _gameStateController;
+        private LoadPrefab<Sprite> _loadSprite;
 
         [Inject]
-        private void Construct(GameStateController gameStateController)
+        private void Construct(GameStateController gameStateController, LoadPrefab<Sprite> loadSprite)
         {
             _gameStateController = gameStateController;
+            _loadSprite = loadSprite;
         }
         
-        private void Start()
+        private async void Start()
         {
             _gameStateController.OnRestart += Activate;
         }

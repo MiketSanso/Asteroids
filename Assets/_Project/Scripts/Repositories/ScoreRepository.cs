@@ -53,7 +53,7 @@ namespace GameScene.Repositories
             if (Score > _saveDataSevice.Data.MaxScore)
             {
                 _saveDataSevice.Data.MaxScore = Score;
-                _saveDataSevice.Save();
+                _saveDataSevice.Save().Forget();
             }
         }
     }

@@ -1,17 +1,33 @@
-using GameScene.Level.ScriptableObjects;
+using _Project.Scripts.Infrastructure;
+using Cysharp.Threading.Tasks;
+using GameScene.Configs;
 using UnityEngine;
+using Zenject;
 
 namespace GameScene.Level
 {
-    public class SpawnTransform
+    public class SpawnTransform : IInitializable
     {
-        private readonly SpawnPositionData _spawnPositionData;
+        private const string SPAWN_TRANSFORM_CONFIG = "SpawnPositionConfig";
+        
+        private SpawnPositionConfig _spawnPositionData;
+        private readonly ConfigSaveService _configSaveService;
 
-        public SpawnTransform(SpawnPositionData spawnPositionData)
+        public SpawnTransform(ConfigSaveService configSaveService)
         {
-            _spawnPositionData = spawnPositionData;
+            _configSaveService = configSaveService;
         }
 
+        public async void Initialize()
+        {
+            _spawnPositionData = await _configSaveService.Load<SpawnPositionConfig>(SPAWN_TRANSFORM_CONFIG);
+            
+            while (_spawnPositionData == null)
+            {
+                await UniTask.DelayFrame(1);
+            }
+        }
+        
         public Vector2 GetPosition()
         {
             Vector2 position;

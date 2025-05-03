@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -10,35 +9,53 @@ namespace GameSystem
     public class LoadPrefab<T> where T : Object
     {
         private UnloadAssets _unloadAssets;
-        
+
         public LoadPrefab(UnloadAssets unloadAssets)
         {
             _unloadAssets = unloadAssets;
         }
-        
+
         public async UniTask<T> LoadPrefabFromAddressable(string prefabAdress)
         {
-            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(prefabAdress);
-            await handle.Task;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
+            if (typeof(T) == typeof(AudioClip))
             {
-                T component = handle.Result.GameObject().GetComponent<T>();
-                if (component != null)
+                var audioClipHandle = Addressables.LoadAssetAsync<AudioClip>(prefabAdress);
+                await audioClipHandle.Task;
+
+                if (audioClipHandle.Status == AsyncOperationStatus.Succeeded)
                 {
-                    _unloadAssets.AddAsyncOperationHandleForUnload(handle);
-                    return component;
+                    return (T)(object)audioClipHandle.Result;
                 }
                 else
                 {
-                    Debug.LogError("Prefab is load, but dont have a need component");
+                    Debug.LogError($"Не удалось загрузить AudioClip: {prefabAdress}");
+                    return default;
                 }
             }
             else
             {
-                Debug.LogError("Failed to load prefab: " + handle.Status);
+                var gameObjectHandle = Addressables.LoadAssetAsync<GameObject>(prefabAdress);
+                await gameObjectHandle.Task;
+
+                if (gameObjectHandle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    var component = gameObjectHandle.Result.GetComponent<T>();
+                    if (component != null)
+                    {
+                        return component;
+                    }
+                    else
+                    {
+                        Debug.LogError($"На объекте нет компонента типа {typeof(T)}");
+                        return default;
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"Не удалось загрузить GameObject: {prefabAdress}");
+                    return default;
+                }
             }
-            return null;
         }
     }
 }

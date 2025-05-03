@@ -21,17 +21,17 @@ namespace GameScene.Level
             _scoreRepository = scoreRepository;
         }
         
+        private void OnDestroy()
+        {
+            _gameStateController.OnFinish -= Activate;
+            _gameStateController.OnRestart -= Deactivate;
+        }
+        
         public void Initialize()
         {
             _gameStateController.OnFinish += Activate;
             _gameStateController.OnRestart += Deactivate;
             Deactivate();
-        }
-        
-        private void OnDestroy()
-        {
-            _gameStateController.OnFinish -= Activate;
-            _gameStateController.OnRestart -= Deactivate;
         }
         
         public void Deactivate()

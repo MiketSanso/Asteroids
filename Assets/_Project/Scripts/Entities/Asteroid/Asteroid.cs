@@ -1,3 +1,5 @@
+using _Project.Scripts.Infrastructure;
+using GameScene.Configs;
 using GameScene.Interfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,10 +12,11 @@ namespace GameScene.Entities.Asteroid
         public event DestroyedEventHandler OnDestroy;
 
         private readonly GameObject _gameObject;
-        private readonly AsteroidData _asteroidData;
+        private readonly AsteroidConfig _asteroidData;
         private readonly Rigidbody2D _rb;
+        private readonly MusicService _musicService;
         
-        public Asteroid(AsteroidData asteroidData,
+        public Asteroid(AsteroidConfig asteroidData,
         Rigidbody2D rb,
         GameObject gameObject)
         {
@@ -27,8 +30,8 @@ namespace GameScene.Entities.Asteroid
             _gameObject.SetActive(true);
             _gameObject.transform.position = transformSpawn;
             
-            float velocityX = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);
-            float velocityY = Random.Range(_asteroidData.Velocity.x - _asteroidData.SprayVelocity, _asteroidData.Velocity.x + _asteroidData.SprayVelocity);
+            float velocityX = Random.Range(-1 * _asteroidData.SprayVelocity, 1 * _asteroidData.SprayVelocity);
+            float velocityY = Random.Range(-1 * _asteroidData.SprayVelocity, 1 * _asteroidData.SprayVelocity);
             Vector2 newVelocity = new Vector2(velocityX, velocityY);
             _rb.linearVelocity = newVelocity;
         }
