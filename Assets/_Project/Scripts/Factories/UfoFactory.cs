@@ -1,69 +1,104 @@
 using System;
+using GameSystem;
 using System.Threading;
+using _Project.Scripts.Infrastructure;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using GameScene.Level;
 using GameScene.Entities.UFOs;
-using GameScene.Factories.ScriptableObjects;
+using GameScene.Configs;
+using GameScene.Interfaces;
 using UnityEngine;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory<UfoFactoryData, Ufo>, IInitializable
+    public class UfoFactory : Factory<UfoFactoryConfig, Ufo, UfoMovement>, IInitializable, IDisposable
     {
-        private readonly UfoData _ufoData;
+        private const string UFO_KEY = "Ufo";
+        private const string FACTORY_CONFIG = "UfoFactoryConfig";
+        private const string UFO_CONFIG = "UfoConfig";
+
+        private UfoConfig _ufoConfig;
         private CancellationTokenSource _tokenSource;
+        private ScoreRepository _scoreRepository;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            UfoFactoryData factoryData,
-            UfoData ufoData,
             GameStateController gameStateController,
-            IInstantiator instantiator) : base(factoryData, gameStateController, transformParent, spawnTransform, instantiator)
+            IAnalyticService analyticService,
+            LoadPrefab<UfoMovement> loadPrefab,
+            LoadPrefab<Texture2D> loadSprite,
+            IInstantiator instantiator,
+            ScoreRepository scoreRepository,
+            ConfigSaveService configSaveService,
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, loadSprite, instantiator, configSaveService, musicService)
         {
-            _ufoData = ufoData;
+            _scoreRepository = scoreRepository;
+        }
+        
+        public async void Initialize()
+        {
+            Data = await ConfigSaveService.Load<UfoFactoryConfig>(FACTORY_CONFIG);
+            _ufoConfig = await ConfigSaveService.Load<UfoConfig>(UFO_CONFIG);
             
             PoolObjects = new PoolObjects<Ufo>(Preload, 
                 Get, 
                 Return, 
                 Data.SizePool);
-        }
-        
-        public void Initialize()
-        {
-            GameStateController.OnCloseGame += Destroy;
-            GameStateController.OnRestart += PoolObjects.ReturnAll;
+            
             GameStateController.OnRestart += StartSpawn;
             GameStateController.OnFinish += StopSpawn;
-
+            
             StartSpawn();
         }
         
-        private Ufo Preload()
+        public void Dispose()
         {
-            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(Data.Prefab, TransformParent.transform);
-            Ufo ufo = new Ufo(_ufoData, ufoMovement.gameObject);
-            ufoMovement.Initialize(ufo, _ufoData);
+            GameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnRestart -= StartSpawn;
+            
+            foreach (Ufo ufo in PoolObjects.Pool)
+            {
+                ufo.OnDestroy -= DestroyUfo;
+                ufo.OnDestroy -= _scoreRepository.AddScore;
+            }
+            
+            PoolObjects.Pool.Clear();
+        }
+        
+        private async UniTask<Ufo> Preload()
+        {
+            UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
+                await LoadPrefab.LoadPrefabFromAddressable(UFO_KEY), 
+                TransformParent.transform);
+            Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
+            
+            ufo.OnDestroy += DestroyUfo;
+            ufo.OnDestroy += _scoreRepository.AddScore;
+            
+            ufoMovement.Initialize(ufo, _ufoConfig);
             ufo.Deactivate();
             return ufo;
         }
 
-        private void Get(Ufo ufo) => ufo.Activate(SpawnTransform.GetPosition());
-
-        private void Destroy()
+        private void Get(Ufo ufo)
         {
-            GameStateController.OnCloseGame -= Destroy;
-            GameStateController.OnRestart -= PoolObjects.ReturnAll;
-            GameStateController.OnFinish -= StopSpawn;
-            GameStateController.OnRestart -= StartSpawn;
+            ufo.Activate(SpawnTransform.GetPosition());
         }
 
-        private async void StartSpawn()
+        private void DestroyUfo(int scoreSize, Transform transform)
         {
+            MusicService.DestroyObject();
+            AnalyticService.AddDestroyedUfo();
+        }
+
+        public void StartSpawn()
+        {
+            PoolObjects.ReturnAll();
             _tokenSource = new CancellationTokenSource();
-            await Spawn();
+            Spawn().Forget();
         }
 
         private void StopSpawn()

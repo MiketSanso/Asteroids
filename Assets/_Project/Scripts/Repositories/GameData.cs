@@ -1,37 +1,11 @@
-using UnityEngine;
-using Zenject;
+using System;
 
 namespace GameScene.Repositories
 {
-    public class GameData : IInitializable
+    public class GameData
     {
-        public Data Data;
-    
-        public void Initialize()
-        {           
-            Data = new Data();
-            Load();
-        }
-
-        public void Save()
-        {
-            string jsonKey = JsonUtility.ToJson(Data);
-            PlayerPrefs.SetString("keySave", jsonKey);
-            PlayerPrefs.Save();
-        }
-    
-        private void Load()
-        {
-            if (PlayerPrefs.HasKey("keySave"))
-            {
-                string jsonKey = PlayerPrefs.GetString("keySave");
-                Data = JsonUtility.FromJson<Data>(jsonKey);
-            }
-        }
-    }
-    
-    public class Data
-    {
-        public float MaxScore = 0;
+        public DateTime SaveTime;
+        public bool IsAdsOff;
+        public float MaxScore;
     }
 }

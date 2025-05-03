@@ -1,24 +1,26 @@
 using System;
-using GameScene.Repositories;
+using System.Collections;
+using UnityEngine;
 
 namespace GameScene.Level
 {
-    public class GameStateController
+    public class GameStateController : MonoBehaviour
     {
         public event Action OnRestart;
         public event Action OnFinish;
-        public event Action OnCloseGame;
+        public event Action OnStartGame;
         
-        public void CloseGame()
+        private IEnumerator Start()
         {
-            OnCloseGame?.Invoke();
+            yield return null;
+            OnStartGame?.Invoke();
         }
-        
+
         public void RestartGame()
         {
             OnRestart?.Invoke();
         }
-        
+
         public void FinishGame()
         {
             OnFinish?.Invoke();

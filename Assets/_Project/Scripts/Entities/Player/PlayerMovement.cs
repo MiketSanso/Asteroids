@@ -6,7 +6,7 @@ namespace GameScene.Entities.Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-        private IInputSystem _inputSystem;
+        private IInputService _inputService;
         
         [field: SerializeField] public float SpeedRotation { get; private set; }
         [field: SerializeField] public float SpeedMove { get; private set; }
@@ -14,14 +14,14 @@ namespace GameScene.Entities.Player
         [field: SerializeField] public float MaxSpeed { get; private set; }
 
         [Inject]
-        private void Construct(IInputSystem inputSystem)
+        private void Construct(IInputService inputService)
         {
-            _inputSystem = inputSystem;
+            _inputService = inputService;
         }
         
-        private void Update()
+        private void FixedUpdate()
         {
-            _inputSystem.Move(this);
+            _inputService.Move(this);
         }
     }    
 }

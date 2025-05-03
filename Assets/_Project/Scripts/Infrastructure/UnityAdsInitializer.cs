@@ -1,0 +1,33 @@
+using UnityEngine;
+using UnityEngine.Advertisements;
+
+namespace GameSystem
+{
+    public class UnityAdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
+    {
+        private string _androidGameId = "5833054";
+        private bool _testMode = true;
+        private string _gameId;
+
+        public void Awake()
+        {
+            InitializeAds();
+        }
+
+        public void OnInitializationComplete()
+        {
+            Debug.Log("Unity Ads initialization complete.");
+        }
+
+        public void OnInitializationFailed(UnityAdsInitializationError error, string message)
+        {
+            Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+        }
+
+        private void InitializeAds()
+        {
+            Advertisement.debugMode = _testMode;
+            Advertisement.Initialize(_androidGameId, _testMode, this);
+        }
+    }
+}

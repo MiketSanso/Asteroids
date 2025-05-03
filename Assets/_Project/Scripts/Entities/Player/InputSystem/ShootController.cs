@@ -16,7 +16,7 @@ namespace GameScene.Entities.Player
         
         public void ShotBullet(Transform transformSpawn)
         {
-            _bulletFactory.Spawn();
+            _bulletFactory.Respawn();
         }
         
         public void ShotLaser(Transform transformSpawn)

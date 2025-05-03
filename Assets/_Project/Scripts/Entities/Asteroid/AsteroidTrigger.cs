@@ -7,14 +7,14 @@ namespace GameScene.Entities.Asteroid
     {
         private Asteroid _asteroid;
 
-        public void Initialize(Asteroid asteroid)
-        {
-            _asteroid = asteroid;
-        }
-        
         public void Destroy()
         {
             _asteroid.Destroy(gameObject);
+        }
+
+        public void Initialize(Asteroid asteroid)
+        {
+            _asteroid = asteroid;
         }
     }
 }

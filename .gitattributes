@@ -1,0 +1,8 @@
+# Firebase и большие файлы
+Assets/Firebase/Plugins/** filter=lfs diff=lfs merge=lfs -text
+Assets/StreamingAssets/** filter=lfs diff=lfs merge=lfs -text
+*.aab filter=lfs diff=lfs merge=lfs -text
+*.apk filter=lfs diff=lfs merge=lfs -text
+*.unitypackage filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+Assets/Firebase/Plugins/*.dll filter=lfs diff=lfs merge=lfs -text
