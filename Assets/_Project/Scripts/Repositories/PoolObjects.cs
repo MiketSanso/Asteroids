@@ -7,8 +7,7 @@ namespace GameScene.Repositories
 {
     public class PoolObjects<T>
     {
-        private List<T> _active = new List<T>();
-        
+        private readonly List<T> _active = new List<T>();
         private readonly Func<UniTask<T>> _preloadFunc;
         private readonly Action<T> _getAction;
         private readonly Action<T> _returnAction;
@@ -29,15 +28,7 @@ namespace GameScene.Repositories
 
             Preload(preloadCount).Forget();
         }
-
-        private async UniTask Preload(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                T item = await _preloadFunc();
-                Return(item);
-            }
-        }
+        
         public async UniTask<T> Get()
         {
             T item = Pool.Count > 0 ? Pool.Dequeue() : await _preloadFunc();
@@ -47,17 +38,26 @@ namespace GameScene.Repositories
             return item;
         }
 
-        public void Return(T item)
+        public void ReturnAll()
+        {
+            foreach (T item in _active.ToArray())
+                Return(item);
+        }
+        
+        private void Return(T item)
         {
             _returnAction(item);
             Pool.Enqueue(item);
             _active.Remove(item);
         }
-
-        public void ReturnAll()
+        
+        private async UniTask Preload(int count)
         {
-            foreach (T item in _active.ToArray())
+            for (int i = 0; i < count; i++)
+            {
+                T item = await _preloadFunc();
                 Return(item);
+            }
         }
     }
 }

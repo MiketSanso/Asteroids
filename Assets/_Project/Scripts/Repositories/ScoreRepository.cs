@@ -10,7 +10,7 @@ namespace GameScene.Repositories
     public class ScoreRepository : IInitializable, IDisposable
     {
         private readonly GameStateController _gameStateController;
-        private readonly SaveService _saveDataSevice;
+        private readonly SaveService _saveDataService;
         
         public float Score { get; private set; }
         
@@ -18,7 +18,7 @@ namespace GameScene.Repositories
             SaveService gameData)
         {
             _gameStateController = gameStateController;
-            _saveDataSevice = gameData;
+            _saveDataService = gameData;
         }
 
         public void Initialize()
@@ -31,16 +31,16 @@ namespace GameScene.Repositories
             _gameStateController.OnRestart -= ResetScore;
             _gameStateController.OnFinish -= CheckScoreRecord;
         }
-
-        private async UniTask SubscribeForObjects()
-        {
-            _gameStateController.OnRestart += ResetScore;
-            _gameStateController.OnFinish += CheckScoreRecord;
-        }
         
         public void AddScore(int scoreSize, Transform transform)
         {
             Score += scoreSize;
+        }
+        
+        private async UniTask SubscribeForObjects()
+        {
+            _gameStateController.OnRestart += ResetScore;
+            _gameStateController.OnFinish += CheckScoreRecord;
         }
 
         private void ResetScore()
@@ -50,10 +50,10 @@ namespace GameScene.Repositories
         
         private void CheckScoreRecord()
         {
-            if (Score > _saveDataSevice.Data.MaxScore)
+            if (Score > _saveDataService.Data.MaxScore)
             {
-                _saveDataSevice.Data.MaxScore = Score;
-                _saveDataSevice.Save().Forget();
+                _saveDataService.Data.MaxScore = Score;
+                _saveDataService.Save().Forget();
             }
         }
     }

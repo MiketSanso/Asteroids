@@ -1,5 +1,4 @@
 using GameScene.Entities.Player;
-using GameScene.Entities.UFOs;
 using GameScene.Factories;
 using GameScene.Level;
 using UnityEngine;
@@ -11,14 +10,14 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
 {
     private const string ANDROID_AD_UNIT_ID = "Rewarded_Android";
     
-    [SerializeField] Button _button;
+    [SerializeField] private Button _button;
     [SerializeField] private EndPanel _endPanel;
     
     private GameStateController _gameStateController;
     private PlayerUI _playerUI;
     private AsteroidFactory _asteroidFactory;
     private UfoFactory _ufoFactory;
-    private string _adUnitId = null;
+    private string _adUnitId;
 
     [Inject]
     private void Construct(PlayerUI playerUI, 
@@ -44,7 +43,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     private void OnDestroy()
     {
         _gameStateController.OnRestart -= LoadAds;
-        _button.onClick.RemoveAllListeners();
+        _button.onClick.RemoveListener(ShowAd);
     }
     
     public void OnUnityAdsAdLoaded(string adUnitId)

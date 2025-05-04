@@ -1,4 +1,3 @@
-using _Project.Scripts.Infrastructure;
 using GameScene.Interfaces;
 using UnityEngine;
 using GameScene.Configs;

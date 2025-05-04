@@ -9,8 +9,9 @@ namespace GameScene.Level
         private const string CANVAS_KEY = "Canvas";
 
         private Canvas _prefabGameCanvas;
-        private LoadPrefab<Canvas> _loadPrefab;
         private IInstantiator Instantiator;
+        
+        private readonly LoadPrefab<Canvas> _loadPrefab;
 
         public EntryPoint(LoadPrefab<Canvas> loadPrefab, IInstantiator instantiator)
         {

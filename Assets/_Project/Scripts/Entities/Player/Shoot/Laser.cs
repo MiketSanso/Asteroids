@@ -17,9 +17,9 @@ namespace GameScene.Entities.Player
         public event Action OnDeactivateLaser;
         
         private UniTaskCompletionSource _rechargeCompletionSource;
-        private IAnalyticService _analyticService;
-        
         private LaserConfig _laserData;
+        
+        private readonly IAnalyticService _analyticService;
         private readonly ConfigSaveService _configSaveService;
         
         public float TimeRechargeLaser { get; private set; }

@@ -25,13 +25,13 @@ namespace GameSystem
 
         public void Initialize()
         {
-            _gameStateController.OnStartGame += StartGame;
+            _gameStateController.OnStart += Start;
             _gameStateController.OnFinish += EndGame;
         }
 
         public void Dispose()
         {
-            _gameStateController.OnStartGame -= StartGame;
+            _gameStateController.OnStart -= Start;
             _gameStateController.OnFinish -= EndGame;
         }
         
@@ -40,13 +40,19 @@ namespace GameSystem
         public void AddDestroyedAsteroid() => _countBulletShots++;
         
         public void AddDestroyedUfo() => _countBulletShots++;
+    
+        public void UseLaser()
+        {
+            _countBulletShots++;
+            FirebaseAnalytics.LogEvent("use_laser");
+        }
         
-        public void StartGame()
+        private void Start()
         {
             FirebaseAnalytics.LogEvent("start_game");
         }
 
-        public void EndGame()
+        private void EndGame()
         {
             FirebaseAnalytics.LogEvent("end_game",
                 new Parameter("count_bullet_shots", _countBulletShots),
@@ -54,12 +60,6 @@ namespace GameSystem
                 new Parameter("count_destroyed_asteroids", _countDestroyedAsteroids),
                 new Parameter("count_destroyed_ufo", _countDestroyedUfo)
             );
-        }
-    
-        public void UseLaser()
-        {
-            _countBulletShots++;
-            FirebaseAnalytics.LogEvent("use_laser");
         }
     }
 }

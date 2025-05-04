@@ -32,7 +32,7 @@ namespace GameScene.Level
         
         private void OnDestroy()
         {
-            _button.onClick.RemoveAllListeners();
+            _button.onClick.RemoveListener(ShowInterstitialAd);
         }
 
         public void OnUnityAdsAdLoaded(string placementId) { }

@@ -1,5 +1,4 @@
 using System;
-using GameScene.Factories;
 using GameScene.Interfaces;
 using UnityEngine;
 
@@ -7,44 +6,34 @@ namespace GameScene.Entities.Player
 {
     public class KeyboardInput : IInputService
     {
-        public event Action OnShotBullet;
+        public event Action OnCanShotLaser;
+        public event Action OnCanShotBullet;
+        public event Action OnCanRotate;
+        public event Action OnCanMove;
         
-        private readonly MovementController _movement;
-        private readonly BulletFactory _bulletFactory;
-        private readonly Laser _laser;
-
-        public KeyboardInput(BulletFactory bulletFactory, Laser laser)
-        {
-            _bulletFactory = bulletFactory;
-            _laser = laser;
-            _movement = new MovementController();
-        }
-
-        public void Shot(Transform transformSpawn)
+        public void Shot()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletFactory.Respawn();
-                OnShotBullet?.Invoke();
+                OnCanShotBullet?.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                _laser.Shot(transformSpawn);
-                _laser.StartRecharge();
+                OnCanShotLaser?.Invoke();
             }
         }
         
-        public void Move(PlayerMovement playerMovement)
+        public void Move()
         {
             if (Input.GetButton("Horizontal"))
             {
-                _movement.Rotate(playerMovement);
+                OnCanRotate?.Invoke();
             }
 
             if (Input.GetKey(KeyCode.W))
             {
-                _movement.Move(playerMovement);
+                OnCanMove?.Invoke();
             }
         }
     }

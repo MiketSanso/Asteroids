@@ -22,18 +22,18 @@ namespace GameScene.Factories
 
         private UfoConfig _ufoConfig;
         private CancellationTokenSource _tokenSource;
-        private ScoreRepository _scoreRepository;
+        
+        private readonly ScoreRepository _scoreRepository;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
             GameStateController gameStateController,
             IAnalyticService analyticService,
             LoadPrefab<UfoMovement> loadPrefab,
-            LoadPrefab<Texture2D> loadSprite,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
             ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, loadSprite, instantiator, configSaveService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
         {
             _scoreRepository = scoreRepository;
         }

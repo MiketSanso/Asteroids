@@ -13,13 +13,12 @@ namespace GameScene.Factories
         where TTechObj : IPooledObject
         where TSpawnObj : MonoBehaviour
     {
-        public PoolObjects<TTechObj> PoolObjects;
-        
+        protected PoolObjects<TTechObj> PoolObjects;
         protected TData Data;
-        protected IAnalyticService AnalyticService;
-        protected LoadPrefab<TSpawnObj> LoadPrefab;
-        protected LoadPrefab<Texture2D> LoadSprite;
-        protected ConfigSaveService ConfigSaveService;
+        
+        protected readonly IAnalyticService AnalyticService;
+        protected readonly LoadPrefab<TSpawnObj> LoadPrefab;
+        protected readonly ConfigSaveService ConfigSaveService;
         protected readonly IInstantiator Instantiator;
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
@@ -31,7 +30,6 @@ namespace GameScene.Factories
             SpawnTransform spawnTransform,
             IAnalyticService analyticService, 
             LoadPrefab<TSpawnObj> loadPrefab,
-            LoadPrefab<Texture2D> loadSprite,
             IInstantiator instantiator,
             ConfigSaveService configSaveService,
             MusicService musicService)
@@ -41,7 +39,6 @@ namespace GameScene.Factories
             TransformParent = transformParent;
             AnalyticService = analyticService;
             LoadPrefab = loadPrefab;
-            LoadSprite = loadSprite;
             Instantiator = instantiator;
             ConfigSaveService = configSaveService;
             MusicService = musicService;

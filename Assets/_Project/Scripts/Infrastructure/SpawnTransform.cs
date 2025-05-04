@@ -11,6 +11,7 @@ namespace GameScene.Level
         private const string SPAWN_TRANSFORM_CONFIG = "SpawnPositionConfig";
         
         private SpawnPositionConfig _spawnPositionData;
+        
         private readonly ConfigSaveService _configSaveService;
 
         public SpawnTransform(ConfigSaveService configSaveService)

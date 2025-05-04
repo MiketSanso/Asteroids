@@ -7,7 +7,6 @@ using GameScene.Interfaces;
 using GameScene.Level;
 using Zenject;
 using GameSystem;
-using UnityEngine;
 
 namespace GameScene.Factories
 {
@@ -24,10 +23,9 @@ namespace GameScene.Factories
             PlayerUI player,
             IAnalyticService analyticService, 
             LoadPrefab<Bullet> loadPrefab,
-            LoadPrefab<Texture2D> loadSprite,
             IInstantiator instantiator,
             ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, loadSprite, instantiator, configSaveService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
         {
             _playerUi = player;
         }
@@ -57,11 +55,11 @@ namespace GameScene.Factories
             return bullet;
         }
 
-        private async void Get(Bullet bullet)
+        private void Get(Bullet bullet)
         {
             MusicService.Shot();
             bullet.Activate(_playerUi.transform.position);
-            await bullet.Shot(_playerUi.transform);
+            bullet.Shot(_playerUi.transform).Forget();
             AnalyticService.AddBulletShot();
         }
     }
