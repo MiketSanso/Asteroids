@@ -1,30 +1,44 @@
 using UnityEngine;
 using GameScene.Interfaces;
 using GameScene.Level;
-using GameSystem;
 using Zenject;
 
 namespace GameScene.Entities.Player
 {
     public class PlayerUI : MonoBehaviour
     {
+        [SerializeField] private Rigidbody2D _rb;
+        [SerializeField] private Transform _transformSpawn;
+        
         private GameStateController _gameStateController;
-        private LoadPrefab<Sprite> _loadSprite;
+        private IInputService _inputService;
+        private PlayerController _playerController;
+        private IInstantiator _instantiator;
 
         [Inject]
-        private void Construct(GameStateController gameStateController, LoadPrefab<Sprite> loadSprite)
+        private void Construct(GameStateController gameStateController, IInputService inputService, IInstantiator instantiator)
         {
             _gameStateController = gameStateController;
-            _loadSprite = loadSprite;
+            _inputService = inputService;
+            _instantiator = instantiator;
         }
         
-        private async void Start()
+        private void Start()
         {
+            _playerController = _instantiator.Instantiate<PlayerController>(); 
+            _playerController.Initialize(_rb, this, _transformSpawn);
             _gameStateController.OnRestart += Activate;
+        }
+        
+        private void Update()
+        {
+            _inputService.Move();
+            _inputService.Shot();
         }
         
         private void OnDestroy()
         {
+            _playerController.Destroy();
             _gameStateController.OnRestart -= Activate;
         }
         

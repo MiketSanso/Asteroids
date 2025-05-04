@@ -26,6 +26,7 @@ namespace GameScene.Factories
         private AsteroidConfig _asteroidData;
         private AsteroidConfig _asteroidDataSmall;
         private PoolObjects<Asteroid> PoolSmallObjects;
+        
         private readonly ScoreRepository _scoreRepository;
         
         public AsteroidFactory(TransformParent transformParent, 
@@ -33,11 +34,10 @@ namespace GameScene.Factories
             IAnalyticService analyticService,
             GameStateController gameStateController,
             LoadPrefab<AsteroidTrigger> loadPrefab,
-            LoadPrefab<Texture2D> loadSprite,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
             ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, loadSprite, instantiator, configSaveService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
         {
             _scoreRepository = scoreRepository;
         }

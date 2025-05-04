@@ -15,26 +15,27 @@ namespace GameSystem
             _unloadAssets = unloadAssets;
         }
 
-        public async UniTask<T> LoadPrefabFromAddressable(string prefabAdress)
+        public async UniTask<T> LoadPrefabFromAddressable(string prefabAddress)
         {
             if (typeof(T) == typeof(AudioClip))
             {
-                var audioClipHandle = Addressables.LoadAssetAsync<AudioClip>(prefabAdress);
+                var audioClipHandle = Addressables.LoadAssetAsync<AudioClip>(prefabAddress);
                 await audioClipHandle.Task;
 
                 if (audioClipHandle.Status == AsyncOperationStatus.Succeeded)
                 {
+                    _unloadAssets.AddUnloadElement(audioClipHandle);
                     return (T)(object)audioClipHandle.Result;
                 }
                 else
                 {
-                    Debug.LogError($"Не удалось загрузить AudioClip: {prefabAdress}");
-                    return default;
+                    Debug.LogError($"Не удалось загрузить AudioClip: {prefabAddress}");
+                    return null;
                 }
             }
             else
             {
-                var gameObjectHandle = Addressables.LoadAssetAsync<GameObject>(prefabAdress);
+                var gameObjectHandle = Addressables.LoadAssetAsync<GameObject>(prefabAddress);
                 await gameObjectHandle.Task;
 
                 if (gameObjectHandle.Status == AsyncOperationStatus.Succeeded)
@@ -42,18 +43,19 @@ namespace GameSystem
                     var component = gameObjectHandle.Result.GetComponent<T>();
                     if (component != null)
                     {
+                        _unloadAssets.AddUnloadElement(gameObjectHandle);
                         return component;
                     }
                     else
                     {
                         Debug.LogError($"На объекте нет компонента типа {typeof(T)}");
-                        return default;
+                        return null;
                     }
                 }
                 else
                 {
-                    Debug.LogError($"Не удалось загрузить GameObject: {prefabAdress}");
-                    return default;
+                    Debug.LogError($"Не удалось загрузить GameObject: {prefabAddress}");
+                    return null;
                 }
             }
         }

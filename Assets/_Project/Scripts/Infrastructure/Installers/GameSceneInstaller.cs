@@ -17,12 +17,12 @@ namespace GameScene.Level
         {
             Container.Bind<AsteroidFactory>().AsSingle();
             Container.Bind<EntryPoint>().AsSingle();
-            Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.Bind<BulletFactory>().AsSingle();
             Container.Bind<UfoFactory>().AsSingle();
             Container.Bind<ScoreRepository>().AsSingle();
             Container.Bind<IInputService>().To<KeyboardInput>().AsSingle();
+            Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
             
             Container.Bind<IInitializable>().To<UfoFactory>().FromResolve(); 
             Container.Bind<IInitializable>().To<AsteroidFactory>().FromResolve(); 

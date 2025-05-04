@@ -5,11 +5,12 @@ namespace GameSystem
 {
     public class UnityAdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {
-        private string _androidGameId = "5833054";
-        private bool _testMode = true;
         private string _gameId;
+        
+        private readonly string _androidGameId = "5833054";
+        private readonly bool _testMode = true;
 
-        public void Awake()
+        private void Awake()
         {
             InitializeAds();
         }

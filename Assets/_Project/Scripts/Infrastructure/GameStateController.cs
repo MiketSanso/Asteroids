@@ -8,12 +8,18 @@ namespace GameScene.Level
     {
         public event Action OnRestart;
         public event Action OnFinish;
-        public event Action OnStartGame;
+        public event Action OnStart;
+        public event Action OnClose;
         
         private IEnumerator Start()
         {
             yield return null;
-            OnStartGame?.Invoke();
+            OnStart?.Invoke();
+        }
+
+        private void OnCloseGame()
+        {
+            OnClose?.Invoke();
         }
 
         public void RestartGame()

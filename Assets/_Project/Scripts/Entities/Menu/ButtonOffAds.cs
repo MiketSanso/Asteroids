@@ -8,7 +8,7 @@ using Zenject;
 
 public class ButtonOffAds : MonoBehaviour, IStoreListener
 {
-    public const string NO_ABS_PRODUCT_ID = "com.yourcompany.yourgame.noads";
+    private const string NO_ABS_PRODUCT_ID = "com.yourcompany.yourgame.noads";
 
     public Button noAdsButton;
     public TMP_Text statusText;
@@ -31,7 +31,7 @@ public class ButtonOffAds : MonoBehaviour, IStoreListener
 
     private void OnDestroy()
     {
-        noAdsButton.onClick.RemoveAllListeners();
+        noAdsButton.onClick.RemoveListener(BuyNoAds);
     }
     
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)

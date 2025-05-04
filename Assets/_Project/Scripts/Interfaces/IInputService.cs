@@ -1,12 +1,17 @@
-using GameScene.Entities.Player;
+using System;
 using UnityEngine;
 
 namespace GameScene.Interfaces
 {
     public interface IInputService
     {
-        public void Shot(Transform transformSpawn);
+        public event Action OnCanShotLaser;
+        public event Action OnCanShotBullet;
+        public event Action OnCanRotate;
+        public event Action OnCanMove;
+        
+        public void Shot();
 
-        public void Move(PlayerMovement playerMovement);
+        public void Move();
     }
 }

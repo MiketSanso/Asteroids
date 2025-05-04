@@ -1,26 +1,41 @@
 using System.Collections.Generic;
+using GameScene.Level;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Zenject;
 
 namespace GameSystem
 {
-    public class UnloadAssets
+    public class UnloadAssets : IInitializable
     {
-        private static List<AsyncOperationHandle> objectsForUnload = new List<AsyncOperationHandle>();
+        private List<AsyncOperationHandle> _objectsForUnload;
 
-        public void AddAsyncOperationHandleForUnload(AsyncOperationHandle operationHandle)
+        private readonly GameStateController _gameStateController;
+
+        public UnloadAssets(GameStateController gameStateController)
         {
-            objectsForUnload.Add(operationHandle);
+            _gameStateController = gameStateController;
         }
 
-        public void UnloadAsset()
+        public void Initialize()
         {
-            for (int a = 0; a < objectsForUnload.Count; a++)
+            _objectsForUnload = new List<AsyncOperationHandle>();
+            _gameStateController.OnClose += UnloadAllAssets;
+        }
+        
+        public void AddUnloadElement(AsyncOperationHandle operationHandle)
+        {
+            _objectsForUnload.Add(operationHandle);
+        }
+
+        private void UnloadAllAssets()
+        {
+            foreach (AsyncOperationHandle objectForUnload in _objectsForUnload)
             {
-                Addressables.Release(objectsForUnload[a]);
+                Addressables.Release(objectForUnload);
             }
 
-            objectsForUnload.Clear();
+            _objectsForUnload.Clear();
         }
     }
 }
