@@ -2,9 +2,8 @@ using Firebase.Analytics;
 using GameScene.Entities.Player;
 using GameScene.Factories;
 using GameScene.Interfaces;
-using GameScene.Level;
 
-namespace GameSystem
+namespace GameScene.Infrastructure
 {
     public class FirebaseAnalytic : IAnalyticService
     {

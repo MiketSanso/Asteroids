@@ -6,7 +6,7 @@ using GameScene.Repositories;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure.DataSaveSystem
 {
     public class CloudSave : SaveService
     {

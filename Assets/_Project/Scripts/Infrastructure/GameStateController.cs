@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace GameScene.Level
+namespace GameScene.Infrastructure
 {
     public class GameStateController : MonoBehaviour
     {

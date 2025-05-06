@@ -1,8 +1,8 @@
-using GameSystem;
+using GameSystem.Infrastructure.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure
 {
     public class MusicService : MonoBehaviour
     {

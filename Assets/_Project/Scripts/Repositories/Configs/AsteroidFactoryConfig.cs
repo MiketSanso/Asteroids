@@ -1,6 +1,6 @@
 using System;
 
-namespace GameScene.Configs
+namespace GameScene.Repositories.Configs
 {
     [Serializable]
     public class AsteroidFactoryConfig : Config

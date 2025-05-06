@@ -1,6 +1,6 @@
+using GameScene.Infrastructure;
 using UnityEngine;
 using GameScene.Interfaces;
-using GameScene.Level;
 using Zenject;
 
 namespace GameScene.Entities.Player

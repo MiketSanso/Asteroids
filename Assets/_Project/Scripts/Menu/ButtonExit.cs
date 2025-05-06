@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Entities.Menu
+namespace GameScene.Menu
 {
     public class ButtonExit : MonoBehaviour
     {

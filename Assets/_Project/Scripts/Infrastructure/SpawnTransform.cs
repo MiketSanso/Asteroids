@@ -1,10 +1,10 @@
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
-using GameScene.Configs;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using UnityEngine;
 using Zenject;
 
-namespace GameScene.Level
+namespace GameScene.Infrastructure
 {
     public class SpawnTransform : IInitializable
     {

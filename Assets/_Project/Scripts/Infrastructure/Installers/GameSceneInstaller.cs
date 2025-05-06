@@ -5,8 +5,9 @@ using GameScene.Interfaces;
 using GameScene.Repositories;
 using UnityEngine;
 using Zenject;
+using GameScene.Level;
 
-namespace GameScene.Level
+namespace GameSystem.Infrastructure.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {

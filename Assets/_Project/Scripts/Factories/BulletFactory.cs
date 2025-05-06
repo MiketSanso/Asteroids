@@ -1,12 +1,13 @@
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
 using GameScene.Repositories;
 using GameScene.Entities.Player;
-using GameScene.Configs;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using GameScene.Level;
 using Zenject;
-using GameSystem;
+using GameSystem.Infrastructure.LoadAssetSystem;
 
 namespace GameScene.Factories
 {

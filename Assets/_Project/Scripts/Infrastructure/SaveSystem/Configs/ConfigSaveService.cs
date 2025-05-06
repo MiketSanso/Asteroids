@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
-using GameScene.Configs;
+using GameScene.Repositories.Configs;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure.ConfigSaveSystem
 {
     public abstract class ConfigSaveService
     {

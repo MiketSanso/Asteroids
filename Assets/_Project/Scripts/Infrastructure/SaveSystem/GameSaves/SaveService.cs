@@ -3,7 +3,7 @@ using GameScene.Interfaces;
 using GameScene.Repositories;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure.DataSaveSystem
 {
     public abstract class SaveService : IInitializable
     {

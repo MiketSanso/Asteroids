@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GameSystem
+namespace GameScene.Infrastructure
 {
     public class Bootstrap : MonoBehaviour
     {

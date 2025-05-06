@@ -1,14 +1,15 @@
 using System;
-using GameSystem;
 using System.Threading;
-using _Project.Scripts.Infrastructure;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using GameScene.Level;
 using GameScene.Entities.UFOs;
-using GameScene.Configs;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
+using GameSystem.Infrastructure.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 

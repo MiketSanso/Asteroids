@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-namespace GameSystem
+namespace GameScene.Infrastructure
 {
     public class UnityAdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {

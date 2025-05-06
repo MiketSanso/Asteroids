@@ -1,14 +1,15 @@
 using System;
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
-using GameSystem;
 using GameScene.Repositories;
 using UnityEngine;
 using GameScene.Entities.Asteroid;
-using GameScene.Configs;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using Zenject;
 using GameScene.Level;
+using GameSystem.Infrastructure.LoadAssetSystem;
 
 namespace GameScene.Factories
 {

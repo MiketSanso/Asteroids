@@ -1,6 +1,6 @@
 using GameScene.Interfaces;
 using UnityEngine;
-using GameScene.Configs;
+using GameScene.Repositories.Configs;
 
 namespace GameScene.Entities.UFOs
 {
