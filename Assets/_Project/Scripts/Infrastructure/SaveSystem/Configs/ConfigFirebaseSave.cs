@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
 using UnityEngine;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure.ConfigSaveSystem
 {
     public class ConfigFirebaseSave : ConfigSaveService
     {

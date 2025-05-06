@@ -1,4 +1,4 @@
-using GameSystem;
+using GameSystem.Infrastructure.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 

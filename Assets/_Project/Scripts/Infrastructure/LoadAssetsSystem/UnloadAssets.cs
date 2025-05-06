@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using GameScene.Level;
+using GameScene.Infrastructure;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Zenject;
 
-namespace GameSystem
+namespace GameSystem.Infrastructure.LoadAssetSystem
 {
     public class UnloadAssets : IInitializable
     {

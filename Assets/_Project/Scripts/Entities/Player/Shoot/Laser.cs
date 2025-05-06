@@ -1,8 +1,8 @@
 using UnityEngine;
 using System;
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
-using GameScene.Configs;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using Zenject;
 

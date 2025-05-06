@@ -1,5 +1,5 @@
-using _Project.Scripts.Infrastructure;
-using GameScene.Configs;
+using GameScene.Infrastructure;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;

@@ -1,9 +1,10 @@
-using _Project.Scripts.Infrastructure;
-using GameScene.Configs;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using GameScene.Level;
 using GameScene.Repositories;
-using GameSystem;
+using GameSystem.Infrastructure.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 

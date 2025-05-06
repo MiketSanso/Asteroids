@@ -1,7 +1,6 @@
-using System;
-using _Project.Scripts.Infrastructure;
-using GameScene.Configs;
+using GameScene.Repositories.Configs;
 using GameScene.Factories;
+using GameScene.Infrastructure.ConfigSaveSystem;
 using GameScene.Interfaces;
 using UnityEngine;
 

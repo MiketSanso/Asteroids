@@ -1,13 +1,15 @@
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using GameScene.Entities.Player;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Infrastructure.DataSaveSystem;
 using GameScene.Interfaces;
-using GameScene.Level;
 using GameScene.Repositories;
+using GameSystem.Infrastructure.LoadAssetSystem;
 
-namespace GameSystem
+namespace GameSystem.Infrastructure.Installers
 {
     public class BootstrapInstaller : MonoInstaller
     {

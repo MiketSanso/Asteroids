@@ -1,7 +1,7 @@
 using System;
-using _Project.Scripts.Infrastructure;
 using Cysharp.Threading.Tasks;
-using GameScene.Level;
+using GameScene.Infrastructure;
+using GameScene.Infrastructure.DataSaveSystem;
 using UnityEngine;
 using Zenject;
 

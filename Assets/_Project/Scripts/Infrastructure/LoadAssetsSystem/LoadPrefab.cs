@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
-namespace GameSystem
+namespace GameSystem.Infrastructure.LoadAssetSystem
 {
     public class LoadPrefab<T> where T : Object
     {

@@ -3,7 +3,7 @@ using GameScene.Interfaces;
 using GameScene.Repositories;
 using UnityEngine;
 
-namespace _Project.Scripts.Infrastructure
+namespace GameScene.Infrastructure.DataSaveSystem
 {
     public class PrefsLocalSave : ILocalSaveService
     {
