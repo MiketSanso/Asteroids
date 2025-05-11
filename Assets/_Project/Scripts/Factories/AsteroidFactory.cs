@@ -3,13 +3,13 @@ using Cysharp.Threading.Tasks;
 using GameScene.Repositories;
 using UnityEngine;
 using GameScene.Entities.Asteroid;
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Common;
 using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
 using Zenject;
-using GameScene.Level;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameScene.Game;
+using GameSystem.Common.LoadAssetSystem;
+using GameScene.Common.ConfigSaveSystem;
 
 namespace GameScene.Factories
 {
@@ -34,22 +34,23 @@ namespace GameScene.Factories
             SpawnTransform spawnTransform, 
             IAnalyticService analyticService,
             GameStateController gameStateController,
-            LoadPrefab<AsteroidTrigger> loadPrefab,
+            PrefabLoader<AsteroidTrigger> prefabLoader,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
-            ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
+            ConfigLoadService configLoadService,
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreRepository = scoreRepository;
         }
 
         public async void Initialize()
         {
+            GameStateController.OnResume += RestartFly;
             GameStateController.OnRestart += RestartFly;
 
-            _asteroidData = await ConfigSaveService.Load<AsteroidConfig>(ASTEROID_CONFIG);
-            _asteroidDataSmall = await ConfigSaveService.Load<AsteroidConfig>(SMALL_ASTEROID_CONFIG);
-            Data = await ConfigSaveService.Load<AsteroidFactoryConfig>(FACTORY_CONFIG);
+            _asteroidData = await ConfigLoadService.Load<AsteroidConfig>(ASTEROID_CONFIG);
+            _asteroidDataSmall = await ConfigLoadService.Load<AsteroidConfig>(SMALL_ASTEROID_CONFIG);
+            Data = await ConfigLoadService.Load<AsteroidFactoryConfig>(FACTORY_CONFIG);
             
             PoolObjects = new PoolObjects<Asteroid>(Preload, 
                 Get, 
@@ -66,6 +67,7 @@ namespace GameScene.Factories
         
         public void Dispose()
         {
+            GameStateController.OnResume -= RestartFly;
             GameStateController.OnRestart -= RestartFly;
             
             foreach (Asteroid asteroid in PoolObjects.Pool)
@@ -100,7 +102,7 @@ namespace GameScene.Factories
         private async UniTask<Asteroid> Preload()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_KEY), 
+                await PrefabLoader.LoadPrefabFromAddressable(ASTEROID_KEY), 
                 TransformParent.transform);
             
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
@@ -120,7 +122,7 @@ namespace GameScene.Factories
         private async UniTask<Asteroid> PreloadSmall()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await LoadPrefab.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
+                await PrefabLoader.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
                 TransformParent.transform);            
             
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();

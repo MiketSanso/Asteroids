@@ -3,13 +3,13 @@ using System.Threading;
 using GameScene.Repositories;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
-using GameScene.Level;
+using GameScene.Game;
 using GameScene.Entities.UFOs;
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Common;
+using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 
@@ -30,19 +30,19 @@ namespace GameScene.Factories
             SpawnTransform spawnTransform,
             GameStateController gameStateController,
             IAnalyticService analyticService,
-            LoadPrefab<UfoMovement> loadPrefab,
+            PrefabLoader<UfoMovement> prefabLoader,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
-            ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
+            ConfigLoadService configLoadService,
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreRepository = scoreRepository;
         }
         
         public async void Initialize()
         {
-            Data = await ConfigSaveService.Load<UfoFactoryConfig>(FACTORY_CONFIG);
-            _ufoConfig = await ConfigSaveService.Load<UfoConfig>(UFO_CONFIG);
+            Data = await ConfigLoadService.Load<UfoFactoryConfig>(FACTORY_CONFIG);
+            _ufoConfig = await ConfigLoadService.Load<UfoConfig>(UFO_CONFIG);
             
             PoolObjects = new PoolObjects<Ufo>(Preload, 
                 Get, 
@@ -50,6 +50,7 @@ namespace GameScene.Factories
                 Data.SizePool);
             
             GameStateController.OnRestart += StartSpawn;
+            GameStateController.OnResume += StartSpawn;
             GameStateController.OnFinish += StopSpawn;
             
             StartSpawn();
@@ -58,6 +59,7 @@ namespace GameScene.Factories
         public void Dispose()
         {
             GameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnResume -= StartSpawn;
             GameStateController.OnRestart -= StartSpawn;
             
             foreach (Ufo ufo in PoolObjects.Pool)
@@ -72,7 +74,7 @@ namespace GameScene.Factories
         private async UniTask<Ufo> Preload()
         {
             UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
-                await LoadPrefab.LoadPrefabFromAddressable(UFO_KEY), 
+                await PrefabLoader.LoadPrefabFromAddressable(UFO_KEY), 
                 TransformParent.transform);
             Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
             

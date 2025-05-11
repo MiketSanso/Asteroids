@@ -1,13 +1,13 @@
 using Cysharp.Threading.Tasks;
 using GameScene.Repositories;
 using GameScene.Entities.Player;
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Common;
+using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
-using GameScene.Level;
+using GameScene.Game;
 using Zenject;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameSystem.Common.LoadAssetSystem;
 
 namespace GameScene.Factories
 {
@@ -23,17 +23,17 @@ namespace GameScene.Factories
             GameStateController gameStateController,
             PlayerUI player,
             IAnalyticService analyticService, 
-            LoadPrefab<Bullet> loadPrefab,
+            PrefabLoader<Bullet> prefabLoader,
             IInstantiator instantiator,
-            ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
+            ConfigLoadService configLoadService,
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
         {
             _playerUi = player;
         }
 
         public async void Initialize()
         {
-            Data = await ConfigSaveService.Load<BulletFactoryConfig>(FACTORY_CONFIG);
+            Data = await ConfigLoadService.Load<BulletFactoryConfig>(FACTORY_CONFIG);
             
             PoolObjects = new PoolObjects<Bullet>(Preload, 
                 Get, 
@@ -49,7 +49,7 @@ namespace GameScene.Factories
         private async UniTask<Bullet> Preload()
         {
             Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(
-                await LoadPrefab.LoadPrefabFromAddressable(BULLET_KEY), 
+                await PrefabLoader.LoadPrefabFromAddressable(BULLET_KEY), 
                 TransformParent.transform);
             
             bullet.Deactivate();

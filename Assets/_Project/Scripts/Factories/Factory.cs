@@ -1,10 +1,10 @@
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
+using GameScene.Common;
+using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
 using GameScene.Interfaces;
-using GameScene.Level;
+using GameScene.Game;
 using GameScene.Repositories;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 
@@ -18,8 +18,8 @@ namespace GameScene.Factories
         protected TData Data;
         
         protected readonly IAnalyticService AnalyticService;
-        protected readonly LoadPrefab<TSpawnObj> LoadPrefab;
-        protected readonly ConfigSaveService ConfigSaveService;
+        protected readonly PrefabLoader<TSpawnObj> PrefabLoader;
+        protected readonly ConfigLoadService ConfigLoadService;
         protected readonly IInstantiator Instantiator;
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
@@ -30,18 +30,18 @@ namespace GameScene.Factories
             TransformParent transformParent, 
             SpawnTransform spawnTransform,
             IAnalyticService analyticService, 
-            LoadPrefab<TSpawnObj> loadPrefab,
+            PrefabLoader<TSpawnObj> prefabLoader,
             IInstantiator instantiator,
-            ConfigSaveService configSaveService,
+            ConfigLoadService configLoadService,
             MusicService musicService)
         {
             GameStateController = gameStateController;
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
             AnalyticService = analyticService;
-            LoadPrefab = loadPrefab;
+            PrefabLoader = prefabLoader;
             Instantiator = instantiator;
-            ConfigSaveService = configSaveService;
+            ConfigLoadService = configLoadService;
             MusicService = musicService;
         }
         
