@@ -1,6 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using GameScene.Interfaces;
+using GameScene.Common;
 using UnityEngine;
 
 namespace GameScene.Entities.Player

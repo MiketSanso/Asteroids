@@ -3,7 +3,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
+using GameScene.Common;
 using Zenject;
 
 namespace GameScene.Entities.Player

@@ -1,11 +1,10 @@
 using System;
-using GameScene.Interfaces;
 using GameScene.Repositories;
 using UnityEngine;
 
 namespace GameScene.Common.DataSaveSystem
 {
-    public class PrefsLocalSave : ILocalSaveService
+    public class PrefsSave : ILocalSaveService
     {
         public void Save(GameData data)
         {
@@ -23,7 +22,7 @@ namespace GameScene.Common.DataSaveSystem
                 return JsonUtility.FromJson<GameData>(jsonKey);
             }
 
-            return new GameData();
+            return null;
         }
     }
 }

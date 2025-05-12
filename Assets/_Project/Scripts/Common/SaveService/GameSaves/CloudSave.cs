@@ -1,38 +1,33 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GameScene.Interfaces;
 using GameScene.Repositories;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
 namespace GameScene.Common.DataSaveSystem
 {
-    public class CloudSave : SaveService
+    public class CloudSave : IGlobalSaveService
     {
-        protected CloudSave(ILocalSaveService localSaveService) : base(localSaveService)
-        { } 
-        
-        public override async UniTask Save()
+        public async UniTask<bool> Save(GameData gameData)
         {
             try
             {
-                Data.SaveTime = DateTime.Now;
-                string jsonKey = JsonUtility.ToJson(Data);
+                gameData.SaveTime = DateTime.Now;
+                string jsonKey = JsonUtility.ToJson(gameData);
                 var data = new Dictionary<string, object> { { "GameData", jsonKey } };
                 await CloudSaveService.Instance.Data.ForceSaveAsync(data);
+                return true;
             }
             catch (Exception e)
             {
                 Debug.LogWarning("Не удалось сохранить сейв на удалённый сервер: " + e.Message);
-
-                LocalSaveService.Save(Data);
+                return false;
             }
         }
     
-        protected override async UniTask Load()
+        public async UniTask<GameData> Load()
         {
-            GameData localSave = LocalSaveService.Load();
             GameData serverSave = null;
             
             try
@@ -44,19 +39,8 @@ namespace GameScene.Common.DataSaveSystem
             {
                 Debug.LogWarning("Не удалось загрузить серверный сейв: " + e.Message);
             }
-
-            if (localSave == null)
-            {
-                Data = serverSave;
-            }
-            else if (serverSave == null)
-            {
-                Data = localSave;
-            }
-            else
-            {
-                Data = (serverSave.SaveTime > localSave.SaveTime) ? serverSave : localSave;
-            }
+            
+            return serverSave;
         }
     }
 }

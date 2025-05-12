@@ -1,7 +1,7 @@
 using System;
 using Zenject;
 
-namespace GameScene.Interfaces
+namespace GameScene.Common
 {
     public interface IAnalyticService : IInitializable, IDisposable
     {

@@ -6,16 +6,16 @@ using Object = UnityEngine.Object;
 
 namespace GameSystem.Common.LoadAssetSystem
 {
-    public class PrefabLoader<T> where T : Object
+    public class AddressablePrefabLoader<T> where T : Object
     {
         private UnloadAssets _unloadAssets;
 
-        public PrefabLoader(UnloadAssets unloadAssets)
+        public AddressablePrefabLoader(UnloadAssets unloadAssets)
         {
             _unloadAssets = unloadAssets;
         }
 
-        public async UniTask<T> LoadPrefabFromAddressable(string prefabAddress)
+        public async UniTask<T> Load(string prefabAddress)
         {
             if (typeof(T) == typeof(AudioClip))
             {
@@ -27,11 +27,6 @@ namespace GameSystem.Common.LoadAssetSystem
                     _unloadAssets.AddUnloadElement(audioClipHandle);
                     return (T)(object)audioClipHandle.Result;
                 }
-                else
-                {
-                    Debug.LogError($"Не удалось загрузить AudioClip: {prefabAddress}");
-                    return null;
-                }
             }
             else
             {
@@ -41,23 +36,13 @@ namespace GameSystem.Common.LoadAssetSystem
                 if (gameObjectHandle.Status == AsyncOperationStatus.Succeeded)
                 {
                     var component = gameObjectHandle.Result.GetComponent<T>();
-                    if (component != null)
-                    {
-                        _unloadAssets.AddUnloadElement(gameObjectHandle);
-                        return component;
-                    }
-                    else
-                    {
-                        Debug.LogError($"На объекте нет компонента типа {typeof(T)}");
-                        return null;
-                    }
-                }
-                else
-                {
-                    Debug.LogError($"Не удалось загрузить GameObject: {prefabAddress}");
-                    return null;
+
+                    _unloadAssets.AddUnloadElement(gameObjectHandle);
+                    return component;
                 }
             }
+            
+            return null;
         }
     }
 }

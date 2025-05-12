@@ -1,7 +1,6 @@
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
 using GameScene.Game;
 using GameScene.Repositories;
 using GameSystem.Common.LoadAssetSystem;
@@ -18,7 +17,7 @@ namespace GameScene.Factories
         protected TData Data;
         
         protected readonly IAnalyticService AnalyticService;
-        protected readonly PrefabLoader<TSpawnObj> PrefabLoader;
+        protected readonly AddressablePrefabLoader<TSpawnObj> AddressablePrefabLoader;
         protected readonly ConfigLoadService ConfigLoadService;
         protected readonly IInstantiator Instantiator;
         protected readonly SpawnTransform SpawnTransform;
@@ -30,7 +29,7 @@ namespace GameScene.Factories
             TransformParent transformParent, 
             SpawnTransform spawnTransform,
             IAnalyticService analyticService, 
-            PrefabLoader<TSpawnObj> prefabLoader,
+            AddressablePrefabLoader<TSpawnObj> addressablePrefabLoader,
             IInstantiator instantiator,
             ConfigLoadService configLoadService,
             MusicService musicService)
@@ -39,7 +38,7 @@ namespace GameScene.Factories
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
             AnalyticService = analyticService;
-            PrefabLoader = prefabLoader;
+            AddressablePrefabLoader = addressablePrefabLoader;
             Instantiator = instantiator;
             ConfigLoadService = configLoadService;
             MusicService = musicService;

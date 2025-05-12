@@ -18,7 +18,7 @@ namespace GameScene.Common
             OnStart?.Invoke();
         }
 
-        private void OnCloseGame()
+        private void OnDestroy()
         {
             OnClose?.Invoke();
         }

@@ -1,4 +1,4 @@
-using GameScene.Interfaces;
+using GameScene.Common;
 using UnityEngine;
 using GameScene.Repositories.Configs;
 

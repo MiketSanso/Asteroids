@@ -1,4 +1,4 @@
-namespace GameScene.Interfaces
+namespace GameScene.Common
 {
     public interface IPooledObject
     {

@@ -8,7 +8,6 @@ using GameScene.Entities.UFOs;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
 using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
@@ -30,11 +29,11 @@ namespace GameScene.Factories
             SpawnTransform spawnTransform,
             GameStateController gameStateController,
             IAnalyticService analyticService,
-            PrefabLoader<UfoMovement> prefabLoader,
+            AddressablePrefabLoader<UfoMovement> addressablePrefabLoader,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
             ConfigLoadService configLoadService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreRepository = scoreRepository;
         }
@@ -74,7 +73,7 @@ namespace GameScene.Factories
         private async UniTask<Ufo> Preload()
         {
             UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
-                await PrefabLoader.LoadPrefabFromAddressable(UFO_KEY), 
+                await AddressablePrefabLoader.Load(UFO_KEY), 
                 TransformParent.transform);
             Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
             

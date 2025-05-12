@@ -1,6 +1,5 @@
 using GameScene.Common;
 using UnityEngine;
-using GameScene.Interfaces;
 using Zenject;
 
 namespace GameScene.Entities.Player

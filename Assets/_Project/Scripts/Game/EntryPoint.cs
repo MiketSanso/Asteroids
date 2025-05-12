@@ -11,18 +11,18 @@ namespace GameScene.Game
         private Canvas _prefabGameCanvas;
         private IInstantiator Instantiator;
         
-        private readonly PrefabLoader<Canvas> _loadPrefab;
+        private readonly AddressablePrefabLoader<Canvas> _loadAddressablePrefab;
 
-        public EntryPoint(PrefabLoader<Canvas> loadPrefab, IInstantiator instantiator)
+        public EntryPoint(AddressablePrefabLoader<Canvas> loadAddressablePrefab, IInstantiator instantiator)
         {
-            _loadPrefab = loadPrefab;
+            _loadAddressablePrefab = loadAddressablePrefab;
             Instantiator = instantiator;
         }
 
         public async void Initialize()
         {
             Canvas canvas = Instantiator.InstantiatePrefabForComponent<Canvas>(
-                await _loadPrefab.LoadPrefabFromAddressable(CANVAS_KEY));
+                await _loadAddressablePrefab.Load(CANVAS_KEY));
             canvas.worldCamera = Camera.main;
             
             if (!canvas.TryGetComponent(out EndPanel endPanel))

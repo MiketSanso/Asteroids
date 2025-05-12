@@ -1,6 +1,6 @@
 using GameScene.Repositories.Configs;
 using GameScene.Entities.Player;
-using GameScene.Interfaces;
+using GameScene.Common;
 using UnityEngine;
 using Zenject;
 

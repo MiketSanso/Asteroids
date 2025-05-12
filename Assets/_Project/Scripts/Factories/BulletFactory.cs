@@ -4,7 +4,6 @@ using GameScene.Entities.Player;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
 using GameScene.Game;
 using Zenject;
 using GameSystem.Common.LoadAssetSystem;
@@ -23,10 +22,10 @@ namespace GameScene.Factories
             GameStateController gameStateController,
             PlayerUI player,
             IAnalyticService analyticService, 
-            PrefabLoader<Bullet> prefabLoader,
+            AddressablePrefabLoader<Bullet> addressablePrefabLoader,
             IInstantiator instantiator,
             ConfigLoadService configLoadService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _playerUi = player;
         }
@@ -49,7 +48,7 @@ namespace GameScene.Factories
         private async UniTask<Bullet> Preload()
         {
             Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(
-                await PrefabLoader.LoadPrefabFromAddressable(BULLET_KEY), 
+                await AddressablePrefabLoader.Load(BULLET_KEY), 
                 TransformParent.transform);
             
             bullet.Deactivate();

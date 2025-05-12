@@ -5,7 +5,6 @@ using UnityEngine;
 using GameScene.Entities.Asteroid;
 using GameScene.Common;
 using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
 using Zenject;
 using GameScene.Game;
 using GameSystem.Common.LoadAssetSystem;
@@ -34,11 +33,11 @@ namespace GameScene.Factories
             SpawnTransform spawnTransform, 
             IAnalyticService analyticService,
             GameStateController gameStateController,
-            PrefabLoader<AsteroidTrigger> prefabLoader,
+            AddressablePrefabLoader<AsteroidTrigger> addressablePrefabLoader,
             IInstantiator instantiator,
             ScoreRepository scoreRepository,
             ConfigLoadService configLoadService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, prefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreRepository = scoreRepository;
         }
@@ -102,7 +101,7 @@ namespace GameScene.Factories
         private async UniTask<Asteroid> Preload()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await PrefabLoader.LoadPrefabFromAddressable(ASTEROID_KEY), 
+                await AddressablePrefabLoader.Load(ASTEROID_KEY), 
                 TransformParent.transform);
             
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();
@@ -122,7 +121,7 @@ namespace GameScene.Factories
         private async UniTask<Asteroid> PreloadSmall()
         {
             AsteroidTrigger asteroidTrigger = Instantiator.InstantiatePrefabForComponent<AsteroidTrigger>(
-                await PrefabLoader.LoadPrefabFromAddressable(ASTEROID_SMALL_KEY), 
+                await AddressablePrefabLoader.Load(ASTEROID_SMALL_KEY), 
                 TransformParent.transform);            
             
             Rigidbody2D rb = asteroidTrigger.GetComponent<Rigidbody2D>();

@@ -1,5 +1,4 @@
 using System;
-using Cysharp.Threading.Tasks;
 using GameScene.Common.DataSaveSystem;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -38,7 +37,7 @@ namespace GameScene.Common
             if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
             {
                 _saveService.Data.IsAdsOff = true;
-                _saveService.Save().Forget();
+                _saveService.Save();
                 OnDisableAds?.Invoke();
                 OnSendInfo?.Invoke("Реклама отключена! Спасибо!");
             }

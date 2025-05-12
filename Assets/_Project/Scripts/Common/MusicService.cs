@@ -15,10 +15,10 @@ namespace GameScene.Common
         
         private AudioClip _destroySound;
         private AudioClip _shotSound;
-        private PrefabLoader<AudioClip> _sound;
+        private AddressablePrefabLoader<AudioClip> _sound;
 
         [Inject]
-        private void Construct(PrefabLoader<AudioClip> sound)
+        private void Construct(AddressablePrefabLoader<AudioClip> sound)
         {
             _sound = sound;
         }
@@ -42,9 +42,9 @@ namespace GameScene.Common
 
         private async UniTask LoadMusic()
         {
-            AudioClip mainMusic = await _sound.LoadPrefabFromAddressable(MAIN_MUSIC);
-            _destroySound = await _sound.LoadPrefabFromAddressable(DESTROY_SOUND);
-            _shotSound = await _sound.LoadPrefabFromAddressable(SHOT_SOUND);
+            AudioClip mainMusic = await _sound.Load(MAIN_MUSIC);
+            _destroySound = await _sound.Load(DESTROY_SOUND);
+            _shotSound = await _sound.Load(SHOT_SOUND);
             
             if (mainMusic != null)
             {

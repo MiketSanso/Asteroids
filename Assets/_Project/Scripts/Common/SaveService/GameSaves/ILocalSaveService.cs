@@ -1,10 +1,11 @@
 using GameScene.Repositories;
 
-namespace GameScene.Interfaces
+namespace GameScene.Common.DataSaveSystem
 {
     public interface ILocalSaveService
     {
-        public void Save(GameData data);
+        public void Save(GameData gameData);
+        
         public GameData Load();
     }
 }
