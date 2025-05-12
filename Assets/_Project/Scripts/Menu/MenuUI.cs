@@ -14,7 +14,7 @@ namespace  GameScene.Menu
 {
     public class MenuUI : MonoBehaviour
     {
-        private const string SHOP_CONFIG = "ShopConfig";
+        private const string SHOP_CONFIG = "AnimateShopConfig";
         
         [SerializeField] private TMP_Text _statusText;
         [SerializeField] private Button _buttonNoAds;
