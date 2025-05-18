@@ -149,13 +149,13 @@ namespace GameScene.Factories
             }
         }
         
-        private void ActivateSmall(int scoreSize, Transform transform)
+        private async void ActivateSmall(int scoreSize, Transform transform)
         {
             _destroyedPosition = transform;
             
             for (int i = 0; i < Data.CountFragments; i++)
             {
-                _poolSmallObjects.Get().Forget();
+                await _poolSmallObjects.Get();
             }
         }
     }

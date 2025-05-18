@@ -117,7 +117,7 @@ namespace GameScene.Factories
                 {
                     float time = Random.Range(Data.MinTimeSpawn, Data.MaxTimeSpawn);
                     await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                    PoolObjects.Get().Forget();
+                    await PoolObjects.Get();
                 }
             }
             catch (OperationCanceledException)

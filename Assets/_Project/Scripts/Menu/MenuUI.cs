@@ -77,9 +77,9 @@ namespace  GameScene.Menu
             _buttonNoAds.interactable = !_dataPresenter.GetAdsState();
         }
 
-        private void ChangeText(string textMessage)
+        private async void ChangeText(string textMessage)
         {
-            UpdateTextInfo(textMessage).Forget();
+            await UpdateTextInfo(textMessage);
         }
 
         private async UniTask UpdateTextInfo(string textMessage)

@@ -41,9 +41,9 @@ namespace GameScene.Factories
                 Data.SizePool);
         }
         
-        public void Respawn()
+        public async void Respawn()
         {
-            PoolObjects.Get().Forget();
+            await PoolObjects.Get();
         }
         
         private async UniTask<Bullet> Preload()
@@ -56,11 +56,11 @@ namespace GameScene.Factories
             return bullet;
         }
 
-        private void Get(Bullet bullet)
+        private async void Get(Bullet bullet)
         {
             MusicService.Shot();
             bullet.Activate(_playerUi.transform.position);
-            bullet.Shot(_playerUi.transform).Forget();
+            await bullet.Shot(_playerUi.transform);
             AnalyticService.AddBulletShot();
         }
     }
