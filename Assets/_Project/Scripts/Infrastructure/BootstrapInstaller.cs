@@ -1,4 +1,3 @@
-using _Project.Scripts.Game.Data;
 using UnityEngine;
 using Zenject;
 using GameScene.Entities.Player;

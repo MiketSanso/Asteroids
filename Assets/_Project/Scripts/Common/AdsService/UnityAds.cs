@@ -1,5 +1,4 @@
-using _Project.Scripts.Game.Data;
-using GameScene.Common.DataSaveSystem;
+using GameScene.Models;
 using UnityEngine.Advertisements;
 
 namespace GameScene.Common

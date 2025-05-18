@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using GameScene.Common.DataSaveSystem;
 using GameScene.Models;
 
-namespace _Project.Scripts.Game.Data
+namespace GameScene.Models
 {
     public class DataService
     {

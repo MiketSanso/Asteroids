@@ -1,6 +1,4 @@
-using _Project.Scripts.Game.Data;
-
-namespace GameScene.Common.DataSaveSystem
+namespace GameScene.Models
 {
     public class DataPresenter
     {
