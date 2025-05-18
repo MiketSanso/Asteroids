@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b170dad66047aaae61a8efd562a04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameStateController: {fileID: 7857798445441237331}
+  gameEventBus: {fileID: 7857798445441237331}
   _musicService: {fileID: 8145174320396342926}
 --- !u!1 &2381329565451260173
 GameObject:

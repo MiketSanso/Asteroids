@@ -327,9 +327,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 441208086}
-  - component: {fileID: 441208088}
   - component: {fileID: 441208087}
-  - component: {fileID: 441208089}
   - component: {fileID: 441208085}
   - component: {fileID: 441208084}
   - component: {fileID: 441208083}
@@ -439,35 +437,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e72d11d82597bb4dbdb389df4cdd505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noAdsButton: {fileID: 1745460854}
-  statusText: {fileID: 573866418}
---- !u!114 &441208088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 441208082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d11ff3398f3f13498219dc87041cc44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _numberScene: 2
-  _button: {fileID: 2051081446}
---- !u!114 &441208089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 441208082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e09d19b32cb14a46ac7236a06313587c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 1592456028}
+  _statusText: {fileID: 573866418}
+  _buttonNoAds: {fileID: 1745460854}
+  _buttonExit: {fileID: 1592456028}
+  _buttonStartGame: {fileID: 2051081446}
 --- !u!1 &496063620
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +589,7 @@ GameObject:
   - component: {fileID: 573866419}
   - component: {fileID: 573866418}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: TextStatusShop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1066,7 +1039,7 @@ GameObject:
   - component: {fileID: 1592456029}
   - component: {fileID: 1592456028}
   m_Layer: 5
-  m_Name: Exit
+  m_Name: ButtonExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

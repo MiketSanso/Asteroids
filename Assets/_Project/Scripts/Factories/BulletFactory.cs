@@ -1,17 +1,17 @@
 using Cysharp.Threading.Tasks;
-using GameScene.Repositories;
+using GameScene.Models;
 using GameScene.Entities.Player;
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
-using GameScene.Level;
+using GameScene.Common;
+using GameScene.Common.ConfigSaveSystem;
+using GameScene.Models.Configs;
+using GameScene.Game;
 using Zenject;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameSystem.Common.LoadAssetSystem;
+using UnityEngine;
 
 namespace GameScene.Factories
 {
-    public class BulletFactory : Factory<BulletFactoryConfig, Bullet, Bullet>, IInitializable
+    public class BulletFactory : Factory<BulletFactoryConfig, Bullet>, IInitializable
     {
         private const string BULLET_KEY = "Bullet";
         private const string FACTORY_CONFIG = "BulletFactoryConfig";
@@ -20,20 +20,20 @@ namespace GameScene.Factories
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameStateController gameStateController,
+            GameEventBus gameEventBus,
             PlayerUI player,
             IAnalyticService analyticService, 
-            LoadPrefab<Bullet> loadPrefab,
+            AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ConfigSaveService configSaveService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, loadPrefab, instantiator, configSaveService, musicService)
+            IConfigLoadService configLoadService,
+            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _playerUi = player;
         }
 
         public async void Initialize()
         {
-            Data = await ConfigSaveService.Load<BulletFactoryConfig>(FACTORY_CONFIG);
+            Data = await ConfigLoadService.Load<BulletFactoryConfig>(FACTORY_CONFIG);
             
             PoolObjects = new PoolObjects<Bullet>(Preload, 
                 Get, 
@@ -41,26 +41,26 @@ namespace GameScene.Factories
                 Data.SizePool);
         }
         
-        public void Respawn()
+        public async void Respawn()
         {
-            PoolObjects.Get();
+            await PoolObjects.Get();
         }
         
         private async UniTask<Bullet> Preload()
         {
             Bullet bullet = Instantiator.InstantiatePrefabForComponent<Bullet>(
-                await LoadPrefab.LoadPrefabFromAddressable(BULLET_KEY), 
+                await AddressablePrefabLoader.Load(BULLET_KEY), 
                 TransformParent.transform);
             
             bullet.Deactivate();
             return bullet;
         }
 
-        private void Get(Bullet bullet)
+        private async void Get(Bullet bullet)
         {
             MusicService.Shot();
             bullet.Activate(_playerUi.transform.position);
-            bullet.Shot(_playerUi.transform).Forget();
+            await bullet.Shot(_playerUi.transform);
             AnalyticService.AddBulletShot();
         }
     }

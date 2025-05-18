@@ -1,47 +1,45 @@
-using GameScene.Infrastructure;
-using GameScene.Infrastructure.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
-using GameScene.Interfaces;
-using GameScene.Level;
-using GameScene.Repositories;
-using GameSystem.Infrastructure.LoadAssetSystem;
+using GameScene.Common;
+using GameScene.Common.ConfigSaveSystem;
+using GameScene.Models.Configs;
+using GameScene.Game;
+using GameScene.Models;
+using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public abstract class Factory<TData, TTechObj, TSpawnObj> where TData : Config
+    public abstract class Factory<TData, TTechObj> where TData : Config
         where TTechObj : IPooledObject
-        where TSpawnObj : MonoBehaviour
     {
         protected PoolObjects<TTechObj> PoolObjects;
         protected TData Data;
         
         protected readonly IAnalyticService AnalyticService;
-        protected readonly LoadPrefab<TSpawnObj> LoadPrefab;
-        protected readonly ConfigSaveService ConfigSaveService;
+        protected readonly AddressablePrefabLoader<GameObject> AddressablePrefabLoader;
+        protected readonly IConfigLoadService ConfigLoadService;
         protected readonly IInstantiator Instantiator;
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
-        protected readonly GameStateController GameStateController;
+        protected readonly GameEventBus GameEventBus;
         protected readonly MusicService MusicService;
         
-        protected Factory(GameStateController gameStateController, 
+        protected Factory(GameEventBus gameEventBus, 
             TransformParent transformParent, 
             SpawnTransform spawnTransform,
             IAnalyticService analyticService, 
-            LoadPrefab<TSpawnObj> loadPrefab,
+            AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ConfigSaveService configSaveService,
+            IConfigLoadService configLoadService,
             MusicService musicService)
         {
-            GameStateController = gameStateController;
+            GameEventBus = gameEventBus;
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
             AnalyticService = analyticService;
-            LoadPrefab = loadPrefab;
+            AddressablePrefabLoader = addressablePrefabLoader;
             Instantiator = instantiator;
-            ConfigSaveService = configSaveService;
+            ConfigLoadService = configLoadService;
             MusicService = musicService;
         }
         

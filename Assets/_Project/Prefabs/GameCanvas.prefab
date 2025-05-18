@@ -145,8 +145,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1281593337395107531}
-  - component: {fileID: 8022040874445517118}
-  - component: {fileID: 7942121805914096760}
   m_Layer: 5
   m_Name: EndPanel
   m_TagString: Untagged
@@ -179,34 +177,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8022040874445517118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793609609420925796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07109b1a0c7f413e809239fbb9388157, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 6695712635469159219}
-  _endPanel: {fileID: 5559787792147050251}
---- !u!114 &7942121805914096760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793609609420925796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf5be8b7cb34162afde32a2fe860aff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 7578406723531773249}
-  _endPanel: {fileID: 5559787792147050251}
 --- !u!1 &808191442157692535
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,7 +1514,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3699299055346239022}
   - component: {fileID: 5559787792147050251}
-  - component: {fileID: 6567774994466356723}
   - component: {fileID: 7484100039278485279}
   - component: {fileID: 6312015065811885097}
   - component: {fileID: 546852955649879703}
@@ -1588,22 +1557,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e4c0bebe9db4399a65467cfe5f80148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonInterstitialAds: {fileID: 6695712635469159219}
+  _buttonRewardedAds: {fileID: 7578406723531773249}
+  _buttonGoMenu: {fileID: 7994368770967021445}
   _panel: {fileID: 793609609420925796}
   _text: {fileID: 3916332684860165126}
---- !u!114 &6567774994466356723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5662939416878517226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d11ff3398f3f13498219dc87041cc44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _numberScene: 1
-  _button: {fileID: 7994368770967021445}
 --- !u!223 &7484100039278485279
 Canvas:
   m_ObjectHideFlags: 0
