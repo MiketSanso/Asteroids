@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Models.Configs;
 using UnityEngine;

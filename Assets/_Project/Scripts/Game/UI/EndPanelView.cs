@@ -16,13 +16,13 @@ namespace GameScene.Game
         [SerializeField] private GameObject _panel;
         [SerializeField] private TMP_Text _text;
         
-        private ScoreModel _scoreModel;
+        private ScorePresenter _scoreModel;
         private GameEventBus _gameEventBus;
         private IAdsService _adsService;
         
         [Inject]
         private void Construct(GameEventBus gameEventBus, 
-            ScoreModel scoreModel, 
+            ScorePresenter scoreModel, 
             IAdsService adsService)
         {
             _gameEventBus = gameEventBus;
@@ -66,12 +66,11 @@ namespace GameScene.Game
         private void Activate()
         {
             _panel.SetActive(true);
-            _text.text = _scoreModel.Score.ToString();
         }
 
         public void UpdateScoreDisplay(float score)
         {
-            _text.text = _scoreModel.Score.ToString();
+            _text.text = score.ToString();
         }
     }
 }

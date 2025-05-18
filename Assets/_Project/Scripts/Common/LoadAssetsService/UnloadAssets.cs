@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using GameScene.Common;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Zenject;
