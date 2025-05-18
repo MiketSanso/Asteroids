@@ -1,4 +1,4 @@
-namespace GameScene.Repositories.Configs
+namespace GameScene.Models.Configs
 {
     public class Config
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using GameScene.Common;
 using Zenject;
 
@@ -20,12 +20,12 @@ namespace GameScene.Entities.Player
         private LaserConfig _laserData;
         
         private readonly IAnalyticService _analyticService;
-        private readonly ConfigLoadService _configLoadService;
+        private readonly IConfigLoadService _configLoadService;
         
         public float TimeRechargeLaser { get; private set; }
         public int CountShotsLaser { get; private set; }
 
-        public Laser(ConfigLoadService configLoadService, IAnalyticService analyticService)
+        public Laser(IConfigLoadService configLoadService, IAnalyticService analyticService)
         {
             _configLoadService = configLoadService;
             _analyticService = analyticService;

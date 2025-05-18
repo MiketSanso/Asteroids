@@ -10,7 +10,13 @@ namespace GameScene.Common
         public event Action OnCanRotate;
         public event Action OnCanMove;
         
-        public void Shot()
+        public void Tick()
+        {
+            Shot();
+            Move();
+        }
+        
+        private void Shot()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -23,7 +29,7 @@ namespace GameScene.Common
             }
         }
         
-        public void Move()
+        private void Move()
         {
             if (Input.GetButton("Horizontal"))
             {

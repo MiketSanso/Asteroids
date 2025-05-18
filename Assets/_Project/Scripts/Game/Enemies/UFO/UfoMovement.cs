@@ -1,4 +1,4 @@
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using GameScene.Entities.Player;
 using GameScene.Common;
 using UnityEngine;

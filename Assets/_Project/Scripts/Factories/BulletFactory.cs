@@ -1,16 +1,17 @@
 using Cysharp.Threading.Tasks;
-using GameScene.Repositories;
+using GameScene.Models;
 using GameScene.Entities.Player;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using GameScene.Game;
 using Zenject;
 using GameSystem.Common.LoadAssetSystem;
+using UnityEngine;
 
 namespace GameScene.Factories
 {
-    public class BulletFactory : Factory<BulletFactoryConfig, Bullet, Bullet>, IInitializable
+    public class BulletFactory : Factory<BulletFactoryConfig, Bullet>, IInitializable
     {
         private const string BULLET_KEY = "Bullet";
         private const string FACTORY_CONFIG = "BulletFactoryConfig";
@@ -19,13 +20,13 @@ namespace GameScene.Factories
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameStateController gameStateController,
+            GameEventBus gameEventBus,
             PlayerUI player,
             IAnalyticService analyticService, 
-            AddressablePrefabLoader<Bullet> addressablePrefabLoader,
+            AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ConfigLoadService configLoadService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            IConfigLoadService configLoadService,
+            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _playerUi = player;
         }
@@ -42,7 +43,7 @@ namespace GameScene.Factories
         
         public void Respawn()
         {
-            PoolObjects.Get();
+            PoolObjects.Get().Forget();
         }
         
         private async UniTask<Bullet> Preload()

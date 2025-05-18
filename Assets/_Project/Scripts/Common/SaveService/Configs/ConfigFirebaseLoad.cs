@@ -1,13 +1,14 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
+using GameScene.Models.Configs;
 using UnityEngine;
 
 namespace GameScene.Common.ConfigSaveSystem
 {
-    public class ConfigFirebaseLoad : ConfigLoadService
+    public class ConfigFirebaseLoad : IConfigLoadService
     {
-        public override async UniTask<T> Load<T>(string key)
+        public async UniTask<T> Load<T>(string key) where T : Config
         {
             var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
             

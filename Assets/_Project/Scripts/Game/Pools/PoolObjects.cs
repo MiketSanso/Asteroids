@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
-namespace GameScene.Repositories
+namespace GameScene.Models
 {
     public class PoolObjects<T>
     {

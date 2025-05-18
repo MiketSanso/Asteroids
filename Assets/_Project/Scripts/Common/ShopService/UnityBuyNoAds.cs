@@ -15,13 +15,13 @@ namespace GameScene.Common
         
         private string _gameId;
         private IStoreController _storeController;
-        private readonly SaveService _saveService;
+        private readonly DataPresenter _dataPresenter;
         private readonly string _androidGameId = "5833054";
         private readonly bool _testMode = true;
     
-        private UnityBuyNoAds(SaveService saveService)
+        private UnityBuyNoAds(DataPresenter dataPresenter)
         {
-            _saveService = saveService;
+            _dataPresenter = dataPresenter;
         }
     
         public void Initialize()
@@ -36,8 +36,8 @@ namespace GameScene.Common
         {
             if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
             {
-                _saveService.Data.IsAdsOff = true;
-                _saveService.Save();
+                _dataPresenter.ChangeAdsState(true);
+                _dataPresenter.Save();
                 OnDisableAds?.Invoke();
                 OnSendInfo?.Invoke("Реклама отключена! Спасибо!");
             }
@@ -57,7 +57,7 @@ namespace GameScene.Common
         {
             Product product = _storeController.products.WithID(NO_ABS_PRODUCT_ID);
     
-            if (product != null && product.availableToPurchase)
+            if (product is { availableToPurchase: true })
             {
                 _storeController.InitiatePurchase(product);
             }

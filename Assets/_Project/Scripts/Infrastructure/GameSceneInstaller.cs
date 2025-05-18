@@ -1,7 +1,7 @@
 using GameScene.Common;
 using GameScene.Entities.Player;
 using GameScene.Factories;
-using GameScene.Repositories;
+using GameScene.Models;
 using UnityEngine;
 using Zenject;
 using GameScene.Game;
@@ -15,13 +15,13 @@ namespace GameSystem.Common.Installers
         
         public override void InstallBindings()
         {
+            Container.BindInterfacesTo<EntryPoint>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<AsteroidFactory>().AsSingle(); 
-            Container.BindInterfacesAndSelfTo<EntryPoint>().AsSingle(); 
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<UfoFactory>().AsSingle(); 
-            Container.BindInterfacesAndSelfTo<ScoreRepository>().AsSingle(); 
-            Container.Bind<IInputService>().To<KeyboardInput>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ScorePresenter>().AsSingle(); 
+            Container.BindInterfacesAndSelfTo<KeyboardInput>().AsSingle();
             Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
         }
     }

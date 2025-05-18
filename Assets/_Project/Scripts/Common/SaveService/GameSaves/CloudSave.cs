@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GameScene.Repositories;
+using GameScene.Models;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
 namespace GameScene.Common.DataSaveSystem
 {
-    public class CloudSave : IGlobalSaveService
+    public class CloudSave : ISaveService
     {
-        public async UniTask<bool> Save(GameData gameData)
+        public async UniTask<bool> Save(DataModel dataModel)
         {
             try
             {
-                gameData.SaveTime = DateTime.Now;
-                string jsonKey = JsonUtility.ToJson(gameData);
+                dataModel.SaveTime = DateTime.Now;
+                string jsonKey = JsonUtility.ToJson(dataModel);
                 var data = new Dictionary<string, object> { { "GameData", jsonKey } };
                 await CloudSaveService.Instance.Data.ForceSaveAsync(data);
                 return true;
@@ -26,14 +26,14 @@ namespace GameScene.Common.DataSaveSystem
             }
         }
     
-        public async UniTask<GameData> Load()
+        public async UniTask<DataModel> Load()
         {
-            GameData serverSave = null;
+            DataModel serverSave = null;
             
             try
             {
                 Dictionary<string, string> serverData = await CloudSaveService.Instance.Data.LoadAsync(new HashSet<string> {"GameData"} );
-                serverSave = JsonUtility.FromJson<GameData>(serverData["GameData"]);
+                serverSave = JsonUtility.FromJson<DataModel>(serverData["GameData"]);
             }
             catch (Exception e)
             {

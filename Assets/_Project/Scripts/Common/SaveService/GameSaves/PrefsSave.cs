@@ -1,28 +1,30 @@
 using System;
-using GameScene.Repositories;
+using Cysharp.Threading.Tasks;
+using GameScene.Models;
 using UnityEngine;
 
 namespace GameScene.Common.DataSaveSystem
 {
-    public class PrefsSave : ILocalSaveService
+    public class PrefsSave : ISaveService
     {
-        public void Save(GameData data)
+        public UniTask<bool> Save(DataModel dataModel)
         {
-            data.SaveTime = DateTime.Now;
-            string jsonKey = JsonUtility.ToJson(data);
+            dataModel.SaveTime = DateTime.Now;
+            string jsonKey = JsonUtility.ToJson(dataModel);
             PlayerPrefs.SetString("GameData", jsonKey);
             PlayerPrefs.Save();
+            return new UniTask<bool>(true);
         }
     
-        public GameData Load()
+        public UniTask<DataModel> Load()
         {
             if (PlayerPrefs.HasKey("GameData"))
             {
                 string jsonKey = PlayerPrefs.GetString("GameData");
-                return JsonUtility.FromJson<GameData>(jsonKey);
+                return JsonUtility.FromJson<UniTask<DataModel>>(jsonKey);
             }
 
-            return null;
+            return new UniTask<DataModel>(null);
         }
     }
 }

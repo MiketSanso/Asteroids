@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -8,41 +9,36 @@ namespace GameSystem.Common.LoadAssetSystem
 {
     public class AddressablePrefabLoader<T> where T : Object
     {
-        private UnloadAssets _unloadAssets;
+        private readonly UnloadAssets _unloadAssets;
 
         public AddressablePrefabLoader(UnloadAssets unloadAssets)
         {
             _unloadAssets = unloadAssets;
         }
-
+        
         public async UniTask<T> Load(string prefabAddress)
         {
-            if (typeof(T) == typeof(AudioClip))
+            try
             {
-                var audioClipHandle = Addressables.LoadAssetAsync<AudioClip>(prefabAddress);
-                await audioClipHandle.Task;
-
-                if (audioClipHandle.Status == AsyncOperationStatus.Succeeded)
-                {
-                    _unloadAssets.AddUnloadElement(audioClipHandle);
-                    return (T)(object)audioClipHandle.Result;
-                }
-            }
-            else
-            {
-                var gameObjectHandle = Addressables.LoadAssetAsync<GameObject>(prefabAddress);
+                Debug.Log($"Trying to load addressable: {prefabAddress}");
+                var gameObjectHandle = Addressables.LoadAssetAsync<T>(prefabAddress);
                 await gameObjectHandle.Task;
 
                 if (gameObjectHandle.Status == AsyncOperationStatus.Succeeded)
                 {
-                    var component = gameObjectHandle.Result.GetComponent<T>();
-
+                    Debug.Log($"Successfully loaded: {prefabAddress}");
                     _unloadAssets.AddUnloadElement(gameObjectHandle);
-                    return component;
+                    return gameObjectHandle.Result;
                 }
+        
+                Debug.LogError($"Failed to load: {prefabAddress}. Status: {gameObjectHandle.Status}");
+                return null;
             }
-            
-            return null;
+            catch (Exception e)
+            {
+                Debug.LogError($"Addressable load error for {prefabAddress}: {e}");
+                return null;
+            }
         }
     }
 }

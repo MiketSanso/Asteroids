@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using UnityEngine;
 using Zenject;
 
@@ -12,9 +12,9 @@ namespace GameScene.Common
         
         private SpawnPositionConfig _spawnPositionData;
         
-        private readonly ConfigLoadService _configLoadService;
+        private readonly IConfigLoadService _configLoadService;
 
-        public SpawnTransform(ConfigLoadService configLoadService)
+        public SpawnTransform(IConfigLoadService configLoadService)
         {
             _configLoadService = configLoadService;
         }
@@ -22,22 +22,17 @@ namespace GameScene.Common
         public async void Initialize()
         {
             _spawnPositionData = await _configLoadService.Load<SpawnPositionConfig>(SPAWN_TRANSFORM_CONFIG);
-            
-            while (_spawnPositionData == null)
-            {
-                await UniTask.DelayFrame(1);
-            }
         }
         
         public Vector2 GetPosition()
         {
             Vector2 position;
 
-            var isSpawnX = Random.Range(0, 2) == 1;
+            var isSpawnX = Random.value > .5f;
 
             if (isSpawnX)
             {
-                var isRight = Random.Range(0, 2) == 1;
+                var isRight = Random.value > .5f;
 
                 if (isRight)
                     position = new Vector2(_spawnPositionData.MaxPositionX,
@@ -48,7 +43,7 @@ namespace GameScene.Common
             }
             else
             {
-                var isUp = Random.Range(0, 2) == 1;
+                var isUp = Random.value > .5f;
 
                 if (isUp)
                     position = new Vector2(

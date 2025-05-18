@@ -14,23 +14,23 @@ namespace GameScene.Common
         private readonly Laser _laser;
         private readonly AsteroidFactory _asteroidFactory;
         private readonly UfoFactory _ufoFactory;
-        private readonly GameStateController _gameStateController;
+        private readonly GameEventBus _gameEventBus;
 
-        public FirebaseAnalytic(GameStateController gameStateController)
+        public FirebaseAnalytic(GameEventBus gameEventBus)
         {
-            _gameStateController = gameStateController;
+            _gameEventBus = gameEventBus;
         }
 
         public void Initialize()
         {
-            _gameStateController.OnStart += Start;
-            _gameStateController.OnFinish += EndGame;
+            _gameEventBus.OnStart += Start;
+            _gameEventBus.OnFinish += EndGame;
         }
 
         public void Dispose()
         {
-            _gameStateController.OnStart -= Start;
-            _gameStateController.OnFinish -= EndGame;
+            _gameEventBus.OnStart -= Start;
+            _gameEventBus.OnFinish -= EndGame;
         }
         
         public void AddBulletShot() => _countBulletShots++;

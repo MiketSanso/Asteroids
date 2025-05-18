@@ -1,6 +1,6 @@
 using System;
 
-namespace GameScene.Repositories.Configs
+namespace GameScene.Models.Configs
 {
     [Serializable]
     public class UfoFactoryConfig : Config

@@ -9,16 +9,14 @@ namespace GameScene.Entities.Player
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private Transform _transformSpawn;
         
-        private GameStateController _gameStateController;
-        private IInputService _inputService;
+        private GameEventBus _gameEventBus;
         private PlayerController _playerController;
         private IInstantiator _instantiator;
 
         [Inject]
-        private void Construct(GameStateController gameStateController, IInputService inputService, IInstantiator instantiator)
+        private void Construct(GameEventBus gameEventBus, IInstantiator instantiator)
         {
-            _gameStateController = gameStateController;
-            _inputService = inputService;
+            _gameEventBus = gameEventBus;
             _instantiator = instantiator;
         }
         
@@ -26,21 +24,15 @@ namespace GameScene.Entities.Player
         {
             _playerController = _instantiator.Instantiate<PlayerController>(); 
             _playerController.Initialize(_rb, this, _transformSpawn);
-            _gameStateController.OnRestart += Activate;
-            _gameStateController.OnResume += Activate;
-        }
-        
-        private void Update()
-        {
-            _inputService.Move();
-            _inputService.Shot();
+            _gameEventBus.OnRestart += Activate;
+            _gameEventBus.OnResume += Activate;
         }
         
         private void OnDestroy()
         {
             _playerController.Destroy();
-            _gameStateController.OnResume -= Activate;
-            _gameStateController.OnRestart -= Activate;
+            _gameEventBus.OnResume -= Activate;
+            _gameEventBus.OnRestart -= Activate;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -52,7 +44,7 @@ namespace GameScene.Entities.Player
             }
         }
         
-        public void Activate()
+        private void Activate()
         {
             gameObject.SetActive(true);
             transform.position = Vector3.zero;
@@ -60,7 +52,7 @@ namespace GameScene.Entities.Player
         
         private void Deactivate()
         {
-            _gameStateController.FinishGame();
+            _gameEventBus.FinishGame();
             gameObject.SetActive(false);
         }
     }

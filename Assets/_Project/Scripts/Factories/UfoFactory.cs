@@ -1,20 +1,20 @@
 using System;
 using System.Threading;
-using GameScene.Repositories;
+using GameScene.Models;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 using GameScene.Game;
 using GameScene.Entities.UFOs;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
 
 namespace GameScene.Factories
 {
-    public class UfoFactory : Factory<UfoFactoryConfig, Ufo, UfoMovement>, IInitializable, IDisposable
+    public class UfoFactory : Factory<UfoFactoryConfig, Ufo>, IInitializable, IDisposable
     {
         private const string UFO_KEY = "Ufo";
         private const string FACTORY_CONFIG = "UfoFactoryConfig";
@@ -23,19 +23,19 @@ namespace GameScene.Factories
         private UfoConfig _ufoConfig;
         private CancellationTokenSource _tokenSource;
         
-        private readonly ScoreRepository _scoreRepository;
+        private readonly ScorePresenter _scorePresenter;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameStateController gameStateController,
+            GameEventBus gameEventBus,
             IAnalyticService analyticService,
-            AddressablePrefabLoader<UfoMovement> addressablePrefabLoader,
+            AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ScoreRepository scoreRepository,
-            ConfigLoadService configLoadService,
-            MusicService musicService) : base(gameStateController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            ScorePresenter scorePresenter,
+            IConfigLoadService configLoadService,
+            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _scoreRepository = scoreRepository;
+            _scorePresenter = scorePresenter;
         }
         
         public async void Initialize()
@@ -48,23 +48,23 @@ namespace GameScene.Factories
                 Return, 
                 Data.SizePool);
             
-            GameStateController.OnRestart += StartSpawn;
-            GameStateController.OnResume += StartSpawn;
-            GameStateController.OnFinish += StopSpawn;
+            GameEventBus.OnRestart += StartSpawn;
+            GameEventBus.OnResume += StartSpawn;
+            GameEventBus.OnFinish += StopSpawn;
             
             StartSpawn();
         }
         
         public void Dispose()
         {
-            GameStateController.OnFinish -= StopSpawn;
-            GameStateController.OnResume -= StartSpawn;
-            GameStateController.OnRestart -= StartSpawn;
+            GameEventBus.OnFinish -= StopSpawn;
+            GameEventBus.OnResume -= StartSpawn;
+            GameEventBus.OnRestart -= StartSpawn;
             
             foreach (Ufo ufo in PoolObjects.Pool)
             {
                 ufo.OnDestroy -= DestroyUfo;
-                ufo.OnDestroy -= _scoreRepository.AddScore;
+                ufo.OnDestroy -= _scorePresenter.AddScore;
             }
             
             PoolObjects.Pool.Clear();
@@ -75,10 +75,11 @@ namespace GameScene.Factories
             UfoMovement ufoMovement = Instantiator.InstantiatePrefabForComponent<UfoMovement>(
                 await AddressablePrefabLoader.Load(UFO_KEY), 
                 TransformParent.transform);
+
             Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
             
             ufo.OnDestroy += DestroyUfo;
-            ufo.OnDestroy += _scoreRepository.AddScore;
+            ufo.OnDestroy += _scorePresenter.AddScore;
             
             ufoMovement.Initialize(ufo, _ufoConfig);
             ufo.Deactivate();
@@ -96,7 +97,7 @@ namespace GameScene.Factories
             AnalyticService.AddDestroyedUfo();
         }
 
-        public void StartSpawn()
+        private void StartSpawn()
         {
             PoolObjects.ReturnAll();
             _tokenSource = new CancellationTokenSource();
@@ -116,7 +117,7 @@ namespace GameScene.Factories
                 {
                     float time = Random.Range(Data.MinTimeSpawn, Data.MaxTimeSpawn);
                     await UniTask.Delay(TimeSpan.FromSeconds(time), cancellationToken: _tokenSource.Token);
-                    PoolObjects.Get();
+                    PoolObjects.Get().Forget();
                 }
             }
             catch (OperationCanceledException)

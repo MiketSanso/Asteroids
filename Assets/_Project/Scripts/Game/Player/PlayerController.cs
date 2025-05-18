@@ -1,5 +1,5 @@
 using GameScene.Common;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using GameScene.Factories;
 using GameScene.Common.ConfigSaveSystem;
 using UnityEngine;
@@ -15,14 +15,14 @@ namespace GameScene.Entities.Player
         private Rigidbody2D _rb;
         private Transform _pointShot;
         
-        private readonly ConfigLoadService _configLoadService;
+        private readonly IConfigLoadService _configLoadService;
         private readonly IInputService _inputService;
         private readonly BulletFactory _bulletFactory;
         private readonly Laser _laser;
 
         public PlayerController(BulletFactory bulletFactory, 
             Laser laser,
-            ConfigLoadService configLoadService, 
+            IConfigLoadService configLoadService, 
             IInputService inputService)
         {
             _configLoadService = configLoadService;

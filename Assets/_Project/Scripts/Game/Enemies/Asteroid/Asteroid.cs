@@ -1,5 +1,5 @@
 using GameScene.Common;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

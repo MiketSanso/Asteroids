@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using GameScene.Models;
 using GameSystem.Common.LoadAssetSystem;
 using UnityEngine;
 using Zenject;
@@ -10,23 +12,38 @@ namespace GameScene.Game
 
         private Canvas _prefabGameCanvas;
         private IInstantiator Instantiator;
+        private readonly ScorePresenter _scorePresenter; 
         
-        private readonly AddressablePrefabLoader<Canvas> _loadAddressablePrefab;
+        private readonly AddressablePrefabLoader<GameObject> _loadAddressablePrefab;
 
-        public EntryPoint(AddressablePrefabLoader<Canvas> loadAddressablePrefab, IInstantiator instantiator)
+        public EntryPoint(AddressablePrefabLoader<GameObject> loadAddressablePrefab, 
+            IInstantiator instantiator,
+            ScorePresenter scorePresenter)
         {
             _loadAddressablePrefab = loadAddressablePrefab;
             Instantiator = instantiator;
+            _scorePresenter = scorePresenter;
         }
 
-        public async void Initialize()
+        public void Initialize()
+        {
+            LoadCanvas().Forget();
+        }
+
+        private async UniTask LoadCanvas()
         {
             Canvas canvas = Instantiator.InstantiatePrefabForComponent<Canvas>(
                 await _loadAddressablePrefab.Load(CANVAS_KEY));
-            canvas.worldCamera = Camera.main;
+
+            if (!canvas.TryGetComponent(out EndPanelView canvasComp))
+            {
+                Debug.LogError("Canvas don't have IScoreView");
+                return;
+            }
             
-            if (!canvas.TryGetComponent(out EndPanel endPanel))
-                Debug.LogError("Canvas don't have EndPanel!");
+            _scorePresenter.Initialize(canvas.GetComponent<EndPanelView>());
+
+            canvas.worldCamera = Camera.main;
         }
     }
 }

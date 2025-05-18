@@ -1,8 +1,8 @@
 using System;
 
-namespace GameScene.Repositories
+namespace GameScene.Models
 {
-    public class GameData
+    public class DataModel
     {
         public DateTime SaveTime;
         public bool IsAdsOff;

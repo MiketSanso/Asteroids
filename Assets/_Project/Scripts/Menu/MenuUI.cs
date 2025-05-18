@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Common.DataSaveSystem;
-using GameScene.Repositories.Configs;
+using GameScene.Models.Configs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,15 +21,15 @@ namespace  GameScene.Menu
         [SerializeField] private Button _buttonExit;
         [SerializeField] private Button _buttonStartGame;
         
-        private ConfigLoadService _configLoadService;
+        private IConfigLoadService _configLoadService;
         private AnimateShopConfig _animateShopData;  
         private IBuyNoAdsService _buyNoAdsService;
-        private SaveService _saveService;
+        private DataPresenter _dataPresenter;
         
         [Inject]
-        private void Construct(IBuyNoAdsService buyNoAdsService, SaveService saveService, ConfigLoadService configLoadService)
+        private void Construct(IBuyNoAdsService buyNoAdsService, DataPresenter dataPresenter, IConfigLoadService configLoadService)
         {
-            _saveService = saveService;
+            _dataPresenter = dataPresenter;
             _buyNoAdsService = buyNoAdsService;
             _configLoadService = configLoadService;
         }
@@ -74,7 +74,7 @@ namespace  GameScene.Menu
         
         private void UpdateUI()
         {
-            _buttonNoAds.interactable = !_saveService.Data.IsAdsOff;
+            _buttonNoAds.interactable = !_dataPresenter.GetAdsState();
         }
 
         private void ChangeText(string textMessage)

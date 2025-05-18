@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameScene.Game
 {
-    public class GameUI : MonoBehaviour
+    public class GameView : MonoBehaviour
     {
         [SerializeField] private TMP_Text _coordinates;
         [SerializeField] private TMP_Text _angleOfRotations;
