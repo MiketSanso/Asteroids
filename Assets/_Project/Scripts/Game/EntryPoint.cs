@@ -12,17 +12,17 @@ namespace GameScene.Game
 
         private Canvas _prefabGameCanvas;
         private IInstantiator Instantiator;
-        private readonly ScorePresenter _scorePresenter; 
+        private readonly EndGamePresenter _endGamePresenter; 
         
         private readonly AddressablePrefabLoader<GameObject> _loadAddressablePrefab;
 
         public EntryPoint(AddressablePrefabLoader<GameObject> loadAddressablePrefab, 
             IInstantiator instantiator,
-            ScorePresenter scorePresenter)
+            EndGamePresenter endGamePresenter)
         {
             _loadAddressablePrefab = loadAddressablePrefab;
             Instantiator = instantiator;
-            _scorePresenter = scorePresenter;
+            _endGamePresenter = endGamePresenter;
         }
 
         public void Initialize()
@@ -41,7 +41,7 @@ namespace GameScene.Game
                 return;
             }
             
-            _scorePresenter.Initialize(canvas.GetComponent<EndPanelView>());
+            _endGamePresenter.Initialize(canvas.GetComponent<EndPanelView>());
 
             canvas.worldCamera = Camera.main;
         }

@@ -16,17 +16,17 @@ namespace GameScene.Game
         [SerializeField] private GameObject _panel;
         [SerializeField] private TMP_Text _text;
         
-        private ScorePresenter _scoreModel;
+        private ScoreService _endGameModel;
         private GameEventBus _gameEventBus;
         private IAdsService _adsService;
         
         [Inject]
         private void Construct(GameEventBus gameEventBus, 
-            ScorePresenter scoreModel, 
+            ScoreService endGameModel, 
             IAdsService adsService)
         {
             _gameEventBus = gameEventBus;
-            _scoreModel = scoreModel;
+            _endGameModel = endGameModel;
             _adsService = adsService;
         }
         

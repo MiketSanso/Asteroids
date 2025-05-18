@@ -20,7 +20,8 @@ namespace GameSystem.Common.Installers
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<UfoFactory>().AsSingle(); 
-            Container.BindInterfacesAndSelfTo<ScorePresenter>().AsSingle(); 
+            Container.BindInterfacesAndSelfTo<EndGamePresenter>().AsSingle(); 
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<KeyboardInput>().AsSingle();
             Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
         }

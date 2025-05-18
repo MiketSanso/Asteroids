@@ -27,7 +27,7 @@ namespace GameScene.Factories
         private AsteroidConfig _asteroidDataSmall;
         private PoolObjects<Asteroid> _poolSmallObjects;
         
-        private readonly ScorePresenter _scorePresenter;
+        private readonly ScoreService _scoreService;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
@@ -35,11 +35,11 @@ namespace GameScene.Factories
             GameEventBus gameEventBus,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ScorePresenter scorePresenter,
+            ScoreService scoreService,
             IConfigLoadService configLoadService,
             MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _scorePresenter = scorePresenter;
+            _scoreService = scoreService;
         }
 
         public async void Initialize()
@@ -73,13 +73,13 @@ namespace GameScene.Factories
             {
                 asteroid.OnDestroy -= AddDestroyAsteroid;
                 asteroid.OnDestroy -= ActivateSmall;
-                asteroid.OnDestroy -= _scorePresenter.AddScore;
+                asteroid.OnDestroy -= _scoreService.AddScore;
             }
             
             foreach (Asteroid asteroid in _poolSmallObjects.Pool)
             {
                 asteroid.OnDestroy -= AddDestroyAsteroid;
-                asteroid.OnDestroy -= _scorePresenter.AddScore;
+                asteroid.OnDestroy -= _scoreService.AddScore;
             }
             
             PoolObjects.Pool.Clear();
@@ -109,7 +109,7 @@ namespace GameScene.Factories
             
             asteroid.OnDestroy += AddDestroyAsteroid;
             asteroid.OnDestroy += ActivateSmall;
-            asteroid.OnDestroy += _scorePresenter.AddScore;
+            asteroid.OnDestroy += _scoreService.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();
@@ -128,7 +128,7 @@ namespace GameScene.Factories
             Asteroid asteroid = new Asteroid(_asteroidDataSmall, rb, asteroidTrigger.gameObject);
             
             asteroid.OnDestroy += AddDestroyAsteroid;
-            asteroid.OnDestroy += _scorePresenter.AddScore;
+            asteroid.OnDestroy += _scoreService.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();
