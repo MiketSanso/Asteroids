@@ -1,6 +1,5 @@
 using System;
-using _Project.Scripts.Game.Data;
-using GameScene.Common.DataSaveSystem;
+using GameScene.Models;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.Purchasing;

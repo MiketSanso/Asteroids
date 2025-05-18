@@ -1,7 +1,5 @@
 using System;
-using _Project.Scripts.Game.Data;
 using GameScene.Common;
-using GameScene.Common.DataSaveSystem;
 using UnityEngine;
 
 namespace GameScene.Models

@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Common.DataSaveSystem;
+using GameScene.Models;
 using GameScene.Models.Configs;
 using TMPro;
 using UnityEngine;
