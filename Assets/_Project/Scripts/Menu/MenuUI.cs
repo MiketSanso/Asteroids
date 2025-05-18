@@ -42,8 +42,6 @@ namespace  GameScene.Menu
             _buttonExit.onClick.AddListener(Exit);
             _buttonStartGame.onClick.AddListener(StartGame);
             
-            UpdateUI();
-            _buyNoAdsService.OnDisableAds += UpdateUI;
             _buyNoAdsService.OnSendInfo += ChangeText;
         }
     
@@ -52,8 +50,7 @@ namespace  GameScene.Menu
             _buttonNoAds.onClick.RemoveListener(_buyNoAdsService.BuyNoAds);
             _buttonExit.onClick.RemoveListener(Exit);
             _buttonStartGame.onClick.RemoveListener(StartGame);
-            
-            _buyNoAdsService.OnDisableAds -= UpdateUI;
+
             _buyNoAdsService.OnSendInfo -= ChangeText;
         }
 
@@ -72,9 +69,9 @@ namespace  GameScene.Menu
             Application.Quit();
         }
         
-        private void UpdateUI()
+        private void UpdateUI(bool adsState)
         {
-            _buttonNoAds.interactable = !_dataPresenter.GetAdsState();
+            _buttonNoAds.interactable = adsState;
         }
 
         private async void ChangeText(string textMessage)

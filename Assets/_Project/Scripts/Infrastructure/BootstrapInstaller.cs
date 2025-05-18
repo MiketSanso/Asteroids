@@ -1,3 +1,4 @@
+using _Project.Scripts.Game.Data;
 using UnityEngine;
 using Zenject;
 using GameScene.Entities.Player;
@@ -6,7 +7,6 @@ using GameScene.Common.ConfigSaveSystem;
 using GameScene.Common.DataSaveSystem;
 using GameScene.Models;
 using GameSystem.Common.LoadAssetSystem;
-using DataPresenter = GameScene.Common.DataSaveSystem.DataPresenter;
 
 namespace GameSystem.Common.Installers
 {
@@ -26,7 +26,8 @@ namespace GameSystem.Common.Installers
             Container.Bind<GameEventBus>().FromInstance(gameEventBus).AsSingle();
             Container.BindInterfacesAndSelfTo<UnityAds>().AsSingle();
             Container.BindInterfacesAndSelfTo<UnityBuyNoAds>().AsSingle();
-            Container.BindInterfacesAndSelfTo<DataPresenter>().AsSingle().WithArguments(localSaveService, globalSaveService);
+            Container.BindInterfacesAndSelfTo<DataService>().AsSingle().WithArguments(localSaveService, globalSaveService);
+            Container.BindInterfacesAndSelfTo<DataPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<ConfigFirebaseLoad>().AsSingle();
             Container.Bind<MusicService>().FromInstance(_musicService).AsSingle();
             Container.Bind(typeof(AddressablePrefabLoader<>)).AsSingle();

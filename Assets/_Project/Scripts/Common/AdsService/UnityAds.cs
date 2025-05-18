@@ -1,3 +1,4 @@
+using _Project.Scripts.Game.Data;
 using GameScene.Common.DataSaveSystem;
 using UnityEngine.Advertisements;
 
@@ -63,7 +64,7 @@ namespace GameScene.Common
         
         public void ShowInterstitialAds()
         {
-            if (!_dataPresenter.GetAdsState())
+            if (_dataPresenter.CanShowAds())
             {
                 Advertisement.Show(INTERSTITIAL_AD_UNIT_ID, this);
             }

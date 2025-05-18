@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Game.Data;
 using GameScene.Common.DataSaveSystem;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -15,11 +16,11 @@ namespace GameScene.Common
         
         private string _gameId;
         private IStoreController _storeController;
-        private readonly DataPresenter _dataPresenter;
+        private readonly DataService _dataPresenter;
         private readonly string _androidGameId = "5833054";
         private readonly bool _testMode = true;
     
-        private UnityBuyNoAds(DataPresenter dataPresenter)
+        private UnityBuyNoAds(DataService dataPresenter)
         {
             _dataPresenter = dataPresenter;
         }
@@ -36,7 +37,7 @@ namespace GameScene.Common
         {
             if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
             {
-                _dataPresenter.ChangeAdsState(true);
+                _dataPresenter.SetAdsOff(true);
                 _dataPresenter.Save();
                 OnDisableAds?.Invoke();
                 OnSendInfo?.Invoke("Реклама отключена! Спасибо!");

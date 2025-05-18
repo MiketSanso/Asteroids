@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Game.Data;
 using GameScene.Common;
 using GameScene.Common.DataSaveSystem;
 using UnityEngine;
@@ -11,15 +12,20 @@ namespace GameScene.Models
         
         private readonly ScoreModel _model;
         private readonly GameEventBus _eventBus;
-        private readonly DataPresenter _saveDataService;
+        private readonly DataService _dataService;
+        private readonly DataPresenter _dataPresenter;
 
         public float CurrentScore => _model.Score;
 
-        public ScoreService(ScoreModel model, GameEventBus eventBus, DataPresenter saveDataService)
+        public ScoreService(ScoreModel model, 
+            GameEventBus eventBus, 
+            DataService dataService,
+            DataPresenter dataPresenter)
         {
             _model = model;
             _eventBus = eventBus;
-            _saveDataService = saveDataService;
+            _dataService = dataService;
+            _dataPresenter = dataPresenter;
 
             _eventBus.OnRestart += ResetScore;
             _eventBus.OnFinish += CheckScoreRecord;
@@ -39,10 +45,10 @@ namespace GameScene.Models
 
         private void CheckScoreRecord()
         {
-            if (_model.Score > _saveDataService.GetMaxScore())
+            if (_model.Score > _dataPresenter.GetMaxScore())
             {
-                _saveDataService.ChangeMaxScore(_model.Score);
-                _saveDataService.Save();
+                _dataService.SetMaxScore(_model.Score);
+                _dataService.Save();
             }
         }
 
