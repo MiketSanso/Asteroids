@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using Zenject;
 
 namespace GameScene.Game
@@ -13,23 +13,23 @@ namespace GameScene.Game
         [SerializeField] private TMP_Text _countLaserCharges;
         [SerializeField] private TMP_Text _timeRollbackLaser;
 
-        private PlayerUI _playerUI;
+        private Player _player;
         private Laser _laser;
 
         [Inject]
-        private void Construct(Laser laser, PlayerUI playerUI)
+        private void Construct(Laser laser, Player player)
         {
             _laser = laser;
-            _playerUI = playerUI;
+            _player = player;
         }
         
         private void Update()
         {
-            float speed = Mathf.Round(Mathf.Abs(_playerUI.GetComponent<Rigidbody2D>().linearVelocity.magnitude) * 100) / 100f;
+            float speed = Mathf.Round(Mathf.Abs(_player.GetComponent<Rigidbody2D>().linearVelocity.magnitude) * 100) / 100f;
             
             _instantaneousSpeed.text = $"Moment speed: {speed}";
-            _coordinates.text = $"Coordinates: {_playerUI.transform.position}";
-            _angleOfRotations.text = $"Rotation: {Mathf.Round(_playerUI.transform.rotation.eulerAngles.z)}°";
+            _coordinates.text = $"Coordinates: {_player.transform.position}";
+            _angleOfRotations.text = $"Rotation: {Mathf.Round(_player.transform.rotation.eulerAngles.z)}°";
             _countLaserCharges.text = $"Count shoots laser: {_laser.CountShotsLaser}";
             _timeRollbackLaser.text = $"Time rollback laser: {_laser.TimeRechargeLaser}";
         }

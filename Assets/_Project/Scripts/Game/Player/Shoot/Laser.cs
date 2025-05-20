@@ -6,7 +6,7 @@ using GameScene.Models.Configs;
 using GameScene.Common;
 using Zenject;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
     public class Laser : IInitializable
     {

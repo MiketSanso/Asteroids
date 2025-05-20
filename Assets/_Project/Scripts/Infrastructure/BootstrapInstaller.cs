@@ -1,6 +1,6 @@
 using UnityEngine;
 using Zenject;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Common;
 using GameScene.Common.ChangeSceneService;
 using GameScene.Common.ConfigSaveSystem;

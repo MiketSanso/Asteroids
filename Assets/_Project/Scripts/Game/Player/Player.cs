@@ -1,11 +1,10 @@
-using System;
 using GameScene.Common;
 using UnityEngine;
 using Zenject;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
-    public class PlayerUI : MonoBehaviour
+    public class Player : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private Transform _transformSpawn;
@@ -40,7 +39,6 @@ namespace GameScene.Entities.Player
         {
             if (other.TryGetComponent(out IDestroyableEnemy enemy))
             {
-                enemy.Destroy();
                 Deactivate();
             }
         }

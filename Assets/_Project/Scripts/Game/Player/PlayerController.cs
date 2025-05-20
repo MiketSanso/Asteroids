@@ -4,14 +4,14 @@ using GameScene.Factories;
 using GameScene.Common.ConfigSaveSystem;
 using UnityEngine;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
     public class PlayerController
     {
         private const string PLAYER_MOVEMENT_CONFIG = "PlayerMovementConfig";
         
         private PlayerMovementConfig _playerMovementConfig;
-        private PlayerUI _playerObject;
+        private Player _playerObject;
         private Rigidbody2D _rb;
         private Transform _pointShot;
         
@@ -32,7 +32,7 @@ namespace GameScene.Entities.Player
         }
 
         public async void Initialize(Rigidbody2D rb, 
-            PlayerUI playerObject,
+            Player playerObject,
             Transform pointShoot)
         {
             _rb = rb;

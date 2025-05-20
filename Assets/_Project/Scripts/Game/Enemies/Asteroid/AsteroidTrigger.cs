@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace GameScene.Entities.Asteroid
 {
-    public class AsteroidTrigger : MonoBehaviour, IDestroyableEnemy
+    public class AsteroidTrigger : IDestroyableEnemy
     {
         private Asteroid _asteroid;
 
-        public void Destroy()
+        public override void Destroy()
         {
             _asteroid.Destroy(gameObject);
         }

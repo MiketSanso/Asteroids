@@ -5,7 +5,7 @@ using Zenject;
 
 namespace GameScene.Models
 {
-    public class ScoreService : IInitializable, IDisposable
+    public class ScoreController : IInitializable, IDisposable
     {
         public event Action OnScoreChange;
     
@@ -16,7 +16,7 @@ namespace GameScene.Models
     
         public float CurrentScore => _model.Score;
     
-        public ScoreService(ScoreModel model,
+        public ScoreController(ScoreModel model,
             GameEventBus eventBus,
             DataService dataService,
             DataPresenter dataPresenter)

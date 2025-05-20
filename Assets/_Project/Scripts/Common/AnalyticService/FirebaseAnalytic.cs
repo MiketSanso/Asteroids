@@ -1,5 +1,5 @@
 using Firebase.Analytics;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Factories;
 
 namespace GameScene.Common

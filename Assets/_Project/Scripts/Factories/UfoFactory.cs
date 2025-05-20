@@ -23,7 +23,7 @@ namespace GameScene.Factories
         private UfoConfig _ufoConfig;
         private CancellationTokenSource _tokenSource;
         
-        private readonly ScoreService _scoreService;
+        private readonly ScoreController _scoreController;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
@@ -31,11 +31,11 @@ namespace GameScene.Factories
             IAnalyticService analyticService,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ScoreService scoreService,
+            ScoreController scoreController,
             IConfigLoadService configLoadService,
             MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _scoreService = scoreService;
+            _scoreController = scoreController;
         }
         
         public async void Initialize()
@@ -64,7 +64,7 @@ namespace GameScene.Factories
             foreach (Ufo ufo in PoolObjects.Pool)
             {
                 ufo.OnDestroy -= DestroyUfo;
-                ufo.OnDestroy -= _scoreService.AddScore;
+                ufo.OnDestroy -= _scoreController.AddScore;
             }
             
             PoolObjects.Pool.Clear();
@@ -79,7 +79,7 @@ namespace GameScene.Factories
             Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
             
             ufo.OnDestroy += DestroyUfo;
-            ufo.OnDestroy += _scoreService.AddScore;
+            ufo.OnDestroy += _scoreController.AddScore;
             
             ufoMovement.Initialize(ufo, _ufoConfig);
             ufo.Deactivate();

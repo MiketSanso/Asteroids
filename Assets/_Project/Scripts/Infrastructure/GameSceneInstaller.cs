@@ -1,5 +1,5 @@
 using GameScene.Common;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Factories;
 using GameScene.Models;
 using UnityEngine;
@@ -10,7 +10,7 @@ namespace GameSystem.Common.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {
-        [SerializeField] private PlayerUI _player;
+        [SerializeField] private Player _player;
         [SerializeField] private TransformParent _transformParent;
         
         public override void InstallBindings()
@@ -21,9 +21,9 @@ namespace GameSystem.Common.Installers
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<UfoFactory>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<EndGamePresenter>().AsSingle(); 
-            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle(); 
+            Container.BindInterfacesAndSelfTo<ScoreController>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<KeyboardInput>().AsSingle();
-            Container.Bind<PlayerUI>().FromInstance(_player).AsSingle();
+            Container.Bind<Player>().FromInstance(_player).AsSingle();
         }
     }
 }
