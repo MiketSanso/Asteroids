@@ -18,12 +18,12 @@ namespace GameScene.Common
         {
             _gameEventBus = gameEventBus;
             _dataPresenter = dataPresenter;
-
-            _gameEventBus.OnRestart += LoadAds;
         }
 
         public void Initialize()
         {
+            _gameEventBus.OnRestart += LoadAds;
+            
             Advertisement.Load(INTERSTITIAL_AD_UNIT_ID, this);
             Advertisement.Load(REWARDED_AD_UNIT_ID, this);
         }

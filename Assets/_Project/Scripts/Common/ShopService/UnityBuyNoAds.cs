@@ -11,7 +11,9 @@ namespace GameScene.Common
         private const string NO_ABS_PRODUCT_ID = "com.yourcompany.yourgame.noads";
         
         public event Action OnDisableAds;
-        public event Action<string> OnSendInfo;
+        public event Action OnBuySuccess;
+        public event Action OnBuyUnavailable;
+        public event Action OnBuyFailed;
         
         private string _gameId;
         private IStoreController _storeController;
@@ -39,7 +41,7 @@ namespace GameScene.Common
                 _dataPresenter.SetAdsOff(true);
                 _dataPresenter.Save();
                 OnDisableAds?.Invoke();
-                OnSendInfo?.Invoke("Реклама отключена! Спасибо!");
+                OnBuySuccess?.Invoke();
             }
     
             return PurchaseProcessingResult.Complete;
@@ -63,7 +65,7 @@ namespace GameScene.Common
             }
             else
             {
-                OnSendInfo?.Invoke("Продукт недоступен");
+                OnBuyUnavailable?.Invoke();
             }
         }
     
@@ -79,7 +81,7 @@ namespace GameScene.Common
     
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
-            OnSendInfo?.Invoke("Ошибка покупки.");
+            OnBuyFailed?.Invoke();
         }
     
         public void OnInitialized(IStoreController controller, IExtensionProvider extension)

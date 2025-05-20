@@ -11,12 +11,12 @@ namespace GameScene.Models
         public EndGamePresenter(ScoreService scoreService)
         {
             _scoreService = scoreService;
-            _scoreService.OnScoreChange += UpdateScoreDisplay;
         }
 
         public void Initialize(EndPanelView view)
         {
             _view = view;
+            _scoreService.OnScoreChange += UpdateScoreDisplay;
             UpdateScoreDisplay();
         }
 

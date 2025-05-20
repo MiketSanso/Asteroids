@@ -1,8 +1,7 @@
 using GameScene.Common;
+using GameScene.Common.ChangeSceneService;
 using UnityEngine;
-using GameScene.Models;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
@@ -16,23 +15,23 @@ namespace GameScene.Game
         [SerializeField] private GameObject _panel;
         [SerializeField] private TMP_Text _text;
         
-        private ScoreService _endGameModel;
         private GameEventBus _gameEventBus;
         private IAdsService _adsService;
+        private SceneChanger _sceneChanger;
         
         [Inject]
-        private void Construct(GameEventBus gameEventBus, 
-            ScoreService endGameModel, 
-            IAdsService adsService)
+        private void Construct(GameEventBus gameEventBus,
+            IAdsService adsService,
+            SceneChanger sceneChanger)
         {
             _gameEventBus = gameEventBus;
-            _endGameModel = endGameModel;
             _adsService = adsService;
+            _sceneChanger = sceneChanger;
         }
         
         private void Start()
         {
-            _buttonGoMenu.onClick.AddListener(ActivateMenu);
+            _buttonGoMenu.onClick.AddListener(_sceneChanger.ActivateMenu);
             _buttonInterstitialAds.onClick.AddListener(_adsService.ShowInterstitialAds);
             _buttonRewardedAds.onClick.AddListener(_adsService.ShowRewardedAds);
 
@@ -44,18 +43,13 @@ namespace GameScene.Game
         
         private void OnDestroy()
         {
-            _buttonGoMenu.onClick.RemoveListener(ActivateMenu);
+            _buttonGoMenu.onClick.RemoveListener(_sceneChanger.ActivateMenu);
             _buttonInterstitialAds.onClick.RemoveListener(_adsService.ShowInterstitialAds);
             _buttonRewardedAds.onClick.RemoveListener(_adsService.ShowRewardedAds);
             
             _gameEventBus.OnResume -= Deactivate;
             _gameEventBus.OnFinish -= Activate;
             _gameEventBus.OnRestart -= Deactivate;
-        }
-
-        private void ActivateMenu()
-        {
-            SceneManager.LoadScene(1);
         }
         
         private void Deactivate()

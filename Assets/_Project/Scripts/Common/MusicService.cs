@@ -21,10 +21,6 @@ namespace GameScene.Common
         private void Construct(AddressablePrefabLoader<AudioClip> sound)
         {
             _sound = sound;
-        }
-        
-        private void Start()
-        {
             LoadMusic().Forget();
         }
 

@@ -1,3 +1,4 @@
+using System;
 using GameScene.Common;
 using UnityEngine;
 using Zenject;
@@ -52,7 +53,7 @@ namespace GameScene.Entities.Player
         
         private void Deactivate()
         {
-            _gameEventBus.FinishGame();
+            OnPlayerDeath?.Invoke();
             gameObject.SetActive(false);
         }
     }

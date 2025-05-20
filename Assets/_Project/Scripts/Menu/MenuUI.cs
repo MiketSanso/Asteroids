@@ -1,12 +1,11 @@
 using System;
 using Cysharp.Threading.Tasks;
 using GameScene.Common;
+using GameScene.Common.ChangeSceneService;
 using GameScene.Common.ConfigSaveSystem;
-using GameScene.Models;
 using GameScene.Models.Configs;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
@@ -24,14 +23,19 @@ namespace  GameScene.Menu
         private IConfigLoadService _configLoadService;
         private AnimateShopConfig _animateShopData;  
         private IBuyNoAdsService _buyNoAdsService;
-        private DataPresenter _dataPresenter;
+        private ReportTextsData _reportTextsData;
+        private SceneChanger _sceneChanger;
         
         [Inject]
-        private void Construct(IBuyNoAdsService buyNoAdsService, DataPresenter dataPresenter, IConfigLoadService configLoadService)
+        private void Construct(IBuyNoAdsService buyNoAdsService, 
+            IConfigLoadService configLoadService,
+            ReportTextsData reportTextsData,
+            SceneChanger sceneChanger)
         {
-            _dataPresenter = dataPresenter;
             _buyNoAdsService = buyNoAdsService;
             _configLoadService = configLoadService;
+            _reportTextsData = reportTextsData;
+            _sceneChanger = sceneChanger;
         }
         
         private void Start()
@@ -39,44 +43,44 @@ namespace  GameScene.Menu
             Initialize();
             
             _buttonNoAds.onClick.AddListener(_buyNoAdsService.BuyNoAds);
-            _buttonExit.onClick.AddListener(Exit);
-            _buttonStartGame.onClick.AddListener(StartGame);
+            _buttonExit.onClick.AddListener(_sceneChanger.CloseGame);
+            _buttonStartGame.onClick.AddListener(_sceneChanger.ActivateGameScene);
             
-            _buyNoAdsService.OnSendInfo += ChangeText;
+            _buyNoAdsService.OnBuySuccess += SetSuccessText;
+            _buyNoAdsService.OnBuyUnavailable += SetUnavailableText;
+            _buyNoAdsService.OnBuyFailed += SetFailedText;
+
         }
     
         private void OnDestroy()
         {
             _buttonNoAds.onClick.RemoveListener(_buyNoAdsService.BuyNoAds);
-            _buttonExit.onClick.RemoveListener(Exit);
-            _buttonStartGame.onClick.RemoveListener(StartGame);
+            _buttonExit.onClick.RemoveListener(_sceneChanger.CloseGame);
+            _buttonStartGame.onClick.RemoveListener(_sceneChanger.ActivateGameScene);
 
-            _buyNoAdsService.OnSendInfo -= ChangeText;
+            _buyNoAdsService.OnBuySuccess -= SetSuccessText;
+            _buyNoAdsService.OnBuyUnavailable -= SetUnavailableText;
+            _buyNoAdsService.OnBuyFailed -= SetFailedText;
         }
 
         private async void Initialize()
         {
             _animateShopData = await _configLoadService.Load<AnimateShopConfig>(SHOP_CONFIG);
         }
-        
-        private void StartGame()
-        {
-            SceneManager.LoadScene(2);
-        }
-        
-        private void Exit()
-        {
-            Application.Quit();
-        }
-        
-        private void UpdateUI(bool adsState)
-        {
-            _buttonNoAds.interactable = adsState;
-        }
 
-        private async void ChangeText(string textMessage)
+        private async void SetFailedText()
         {
-            await UpdateTextInfo(textMessage);
+            await UpdateTextInfo(_reportTextsData.TextFailed);
+        }
+        
+        private async void SetSuccessText()
+        {
+            await UpdateTextInfo(_reportTextsData.TextSuccess);
+        }
+        
+        private async void SetUnavailableText()
+        {
+            await UpdateTextInfo(_reportTextsData.TextUnavailable);
         }
 
         private async UniTask UpdateTextInfo(string textMessage)

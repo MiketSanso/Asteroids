@@ -1,13 +1,20 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using GameScene.Common.ChangeSceneService;
+using Zenject;
 
 namespace GameScene.Common
 {
-    public class Bootstrap : MonoBehaviour
+    public class Bootstrap : IInitializable
     {
-        private void Start()
+        private SceneChanger _sceneChanger;
+        
+        public Bootstrap(SceneChanger sceneChanger)
         {
-            SceneManager.LoadScene(1);          
+            _sceneChanger = sceneChanger;
+        }
+
+        public void Initialize()
+        {
+            _sceneChanger.ActivateMenu();     
         }
     }
 }
