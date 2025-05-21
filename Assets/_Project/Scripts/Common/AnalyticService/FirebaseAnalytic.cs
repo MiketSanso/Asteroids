@@ -1,5 +1,5 @@
 using Firebase.Analytics;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Factories;
 
 namespace GameScene.Common
@@ -14,23 +14,23 @@ namespace GameScene.Common
         private readonly Laser _laser;
         private readonly AsteroidFactory _asteroidFactory;
         private readonly UfoFactory _ufoFactory;
-        private readonly GameEventBus _gameEventBus;
-
-        public FirebaseAnalytic(GameEventBus gameEventBus)
+        private readonly GameStateController _gameStateController;
+        
+        public FirebaseAnalytic(GameStateController gameStateController)
         {
-            _gameEventBus = gameEventBus;
+            _gameStateController = gameStateController;
         }
 
         public void Initialize()
         {
-            _gameEventBus.OnStart += Start;
-            _gameEventBus.OnFinish += EndGame;
+            _gameStateController.OnStart += Start;
+            _gameStateController.OnFinish += GameState;
         }
 
         public void Dispose()
         {
-            _gameEventBus.OnStart -= Start;
-            _gameEventBus.OnFinish -= EndGame;
+            _gameStateController.OnStart -= Start;
+            _gameStateController.OnFinish -= GameState;
         }
         
         public void AddBulletShot() => _countBulletShots++;
@@ -50,7 +50,7 @@ namespace GameScene.Common
             FirebaseAnalytics.LogEvent("start_game");
         }
 
-        private void EndGame()
+        private void GameState()
         {
             FirebaseAnalytics.LogEvent("end_game",
                 new Parameter("count_bullet_shots", _countBulletShots),

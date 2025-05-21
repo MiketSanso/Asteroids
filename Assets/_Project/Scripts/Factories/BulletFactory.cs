@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using GameScene.Models;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Common;
 using GameScene.Common.ConfigSaveSystem;
 using GameScene.Models.Configs;
@@ -16,19 +16,19 @@ namespace GameScene.Factories
         private const string BULLET_KEY = "Bullet";
         private const string FACTORY_CONFIG = "BulletFactoryConfig";
         
-        private readonly PlayerUI _playerUi;
+        private readonly Player _player;
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameEventBus gameEventBus,
-            PlayerUI player,
+            GameEndController gameEndController,
+            Player player,
             IAnalyticService analyticService, 
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _playerUi = player;
+            _player = player;
         }
 
         public async void Initialize()
@@ -59,8 +59,8 @@ namespace GameScene.Factories
         private async void Get(Bullet bullet)
         {
             MusicService.Shot();
-            bullet.Activate(_playerUi.transform.position);
-            await bullet.Shot(_playerUi.transform);
+            bullet.Activate(_player.transform.position);
+            await bullet.Shot(_player.transform);
             AnalyticService.AddBulletShot();
         }
     }

@@ -23,19 +23,22 @@ namespace GameScene.Factories
         private UfoConfig _ufoConfig;
         private CancellationTokenSource _tokenSource;
         
-        private readonly ScoreService _scoreService;
+        private readonly ScoreController _scoreController;
+        private readonly GameStateController _gameStateController;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             IAnalyticService analyticService,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ScoreService scoreService,
+            ScoreController scoreController,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService,
+            GameStateController gameStateController) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _scoreService = scoreService;
+            _scoreController = scoreController;
+            _gameStateController = gameStateController;
         }
         
         public async void Initialize()
@@ -48,23 +51,23 @@ namespace GameScene.Factories
                 Return, 
                 Data.SizePool);
             
-            GameEventBus.OnRestart += StartSpawn;
-            GameEventBus.OnResume += StartSpawn;
-            GameEventBus.OnFinish += StopSpawn;
+            GameStateController.OnRestart += StartSpawn;
+            GameStateController.OnResume += StartSpawn;
+            _gameStateController.OnFinish += StopSpawn;
             
             StartSpawn();
         }
         
         public void Dispose()
         {
-            GameEventBus.OnFinish -= StopSpawn;
-            GameEventBus.OnResume -= StartSpawn;
-            GameEventBus.OnRestart -= StartSpawn;
+            _gameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnResume -= StartSpawn;
+            GameStateController.OnRestart -= StartSpawn;
             
             foreach (Ufo ufo in PoolObjects.Pool)
             {
                 ufo.OnDestroy -= DestroyUfo;
-                ufo.OnDestroy -= _scoreService.AddScore;
+                ufo.OnDestroy -= _scoreController.AddScore;
             }
             
             PoolObjects.Pool.Clear();
@@ -79,7 +82,7 @@ namespace GameScene.Factories
             Ufo ufo = new Ufo(_ufoConfig, ufoMovement.gameObject);
             
             ufo.OnDestroy += DestroyUfo;
-            ufo.OnDestroy += _scoreService.AddScore;
+            ufo.OnDestroy += _scoreController.AddScore;
             
             ufoMovement.Initialize(ufo, _ufoConfig);
             ufo.Deactivate();

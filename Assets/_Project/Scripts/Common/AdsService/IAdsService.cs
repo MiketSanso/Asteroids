@@ -1,9 +1,8 @@
 using Zenject;
-using System;
 
 namespace GameScene.Common
 {
-    public interface IAdsService : IInitializable, IDisposable
+    public interface IAdsService : IInitializable
     {
         public void ShowInterstitialAds();
 

@@ -2,44 +2,45 @@ using GameScene.Common;
 using UnityEngine;
 using Zenject;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
-    public class PlayerUI : MonoBehaviour
+    public class Player : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private Transform _transformSpawn;
         
-        private GameEventBus _gameEventBus;
+        private GameEndController _gameEndController;
+        private GameStateController _gameStateController;
         private PlayerController _playerController;
         private IInstantiator _instantiator;
 
         [Inject]
-        private void Construct(GameEventBus gameEventBus, IInstantiator instantiator)
+        private void Construct(GameEndController gameEndController, IInstantiator instantiator, GameStateController gameStateController)
         {
-            _gameEventBus = gameEventBus;
+            _gameEndController = gameEndController;
             _instantiator = instantiator;
+            _gameStateController = gameStateController;
         }
         
         private void Start()
         {
             _playerController = _instantiator.Instantiate<PlayerController>(); 
             _playerController.Initialize(_rb, this, _transformSpawn);
-            _gameEventBus.OnRestart += Activate;
-            _gameEventBus.OnResume += Activate;
+            _gameEndController.OnRestart += Activate;
+            _gameEndController.OnResume += Activate;
         }
         
         private void OnDestroy()
         {
             _playerController.Destroy();
-            _gameEventBus.OnResume -= Activate;
-            _gameEventBus.OnRestart -= Activate;
+            _gameEndController.OnResume -= Activate;
+            _gameEndController.OnRestart -= Activate;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent(out IDestroyableEnemy enemy))
             {
-                enemy.Destroy();
                 Deactivate();
             }
         }
@@ -52,7 +53,7 @@ namespace GameScene.Entities.Player
         
         private void Deactivate()
         {
-            _gameEventBus.FinishGame();
+            _gameStateController.FinishGame();
             gameObject.SetActive(false);
         }
     }

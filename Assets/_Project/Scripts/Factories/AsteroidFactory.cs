@@ -22,30 +22,29 @@ namespace GameScene.Factories
         
         private int _destroyed;
         private Transform _destroyedPosition;
-       
         private AsteroidConfig _asteroidData;
         private AsteroidConfig _asteroidDataSmall;
         private PoolObjects<Asteroid> _poolSmallObjects;
         
-        private readonly ScoreService _scoreService;
+        private readonly ScoreController _scoreController;
         
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             IAnalyticService analyticService,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
-            ScoreService scoreService,
+            ScoreController scoreController,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
-            _scoreService = scoreService;
+            _scoreController = scoreController;
         }
 
         public async void Initialize()
         {
-            GameEventBus.OnResume += RestartFly;
-            GameEventBus.OnRestart += RestartFly;
+            GameStateController.OnResume += RestartFly;
+            GameStateController.OnRestart += RestartFly;
 
             _asteroidData = await ConfigLoadService.Load<AsteroidConfig>(ASTEROID_CONFIG);
             _asteroidDataSmall = await ConfigLoadService.Load<AsteroidConfig>(SMALL_ASTEROID_CONFIG);
@@ -66,20 +65,20 @@ namespace GameScene.Factories
         
         public void Dispose()
         {
-            GameEventBus.OnResume -= RestartFly;
-            GameEventBus.OnRestart -= RestartFly;
+            GameStateController.OnResume -= RestartFly;
+            GameStateController.OnRestart -= RestartFly;
             
             foreach (Asteroid asteroid in PoolObjects.Pool)
             {
                 asteroid.OnDestroy -= AddDestroyAsteroid;
                 asteroid.OnDestroy -= ActivateSmall;
-                asteroid.OnDestroy -= _scoreService.AddScore;
+                asteroid.OnDestroy -= _scoreController.AddScore;
             }
             
             foreach (Asteroid asteroid in _poolSmallObjects.Pool)
             {
                 asteroid.OnDestroy -= AddDestroyAsteroid;
-                asteroid.OnDestroy -= _scoreService.AddScore;
+                asteroid.OnDestroy -= _scoreController.AddScore;
             }
             
             PoolObjects.Pool.Clear();
@@ -109,7 +108,7 @@ namespace GameScene.Factories
             
             asteroid.OnDestroy += AddDestroyAsteroid;
             asteroid.OnDestroy += ActivateSmall;
-            asteroid.OnDestroy += _scoreService.AddScore;
+            asteroid.OnDestroy += _scoreController.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();
@@ -128,7 +127,7 @@ namespace GameScene.Factories
             Asteroid asteroid = new Asteroid(_asteroidDataSmall, rb, asteroidTrigger.gameObject);
             
             asteroid.OnDestroy += AddDestroyAsteroid;
-            asteroid.OnDestroy += _scoreService.AddScore;
+            asteroid.OnDestroy += _scoreController.AddScore;
             
             asteroidTrigger.Initialize(asteroid);
             asteroid.Deactivate();

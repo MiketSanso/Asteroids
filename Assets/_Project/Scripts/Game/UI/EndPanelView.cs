@@ -1,76 +1,30 @@
-using GameScene.Common;
 using UnityEngine;
-using GameScene.Models;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Zenject;
 
 namespace GameScene.Game
 {
     public class EndPanelView : MonoBehaviour
     {
-        [SerializeField] private Button _buttonInterstitialAds;
-        [SerializeField] private Button _buttonRewardedAds;
-        [SerializeField] private Button _buttonGoMenu;
-        [SerializeField] private GameObject _panel;
-        [SerializeField] private TMP_Text _text;
+        public Button ButtonInterstitialAds;
+        public Button ButtonRewardedAds;
+        public Button ButtonGoMenu;
+        public GameObject Panel;
+        public TMP_Text Text;
         
-        private ScoreService _endGameModel;
-        private GameEventBus _gameEventBus;
-        private IAdsService _adsService;
-        
-        [Inject]
-        private void Construct(GameEventBus gameEventBus, 
-            ScoreService endGameModel, 
-            IAdsService adsService)
+        public void Deactivate()
         {
-            _gameEventBus = gameEventBus;
-            _endGameModel = endGameModel;
-            _adsService = adsService;
-        }
-        
-        private void Start()
-        {
-            _buttonGoMenu.onClick.AddListener(ActivateMenu);
-            _buttonInterstitialAds.onClick.AddListener(_adsService.ShowInterstitialAds);
-            _buttonRewardedAds.onClick.AddListener(_adsService.ShowRewardedAds);
-
-            _gameEventBus.OnResume += Deactivate;
-            _gameEventBus.OnFinish += Activate;
-            _gameEventBus.OnRestart += Deactivate;
-            Deactivate();
-        }
-        
-        private void OnDestroy()
-        {
-            _buttonGoMenu.onClick.RemoveListener(ActivateMenu);
-            _buttonInterstitialAds.onClick.RemoveListener(_adsService.ShowInterstitialAds);
-            _buttonRewardedAds.onClick.RemoveListener(_adsService.ShowRewardedAds);
-            
-            _gameEventBus.OnResume -= Deactivate;
-            _gameEventBus.OnFinish -= Activate;
-            _gameEventBus.OnRestart -= Deactivate;
+            Panel.SetActive(false);
         }
 
-        private void ActivateMenu()
+        public void Activate()
         {
-            SceneManager.LoadScene(1);
-        }
-        
-        private void Deactivate()
-        {
-            _panel.SetActive(false);
-        }
-
-        private void Activate()
-        {
-            _panel.SetActive(true);
+            Panel.SetActive(true);
         }
 
         public void UpdateScoreDisplay(float score)
         {
-            _text.text = score.ToString();
+            Text.text = score.ToString();
         }
     }
 }

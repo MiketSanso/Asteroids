@@ -1,28 +1,28 @@
 using GameScene.Models.Configs;
-using GameScene.Entities.Player;
+using GameScene.Entities.PlayerSpace;
 using GameScene.Common;
 using UnityEngine;
 using Zenject;
 
 namespace GameScene.Entities.UFOs
 {
-    public class UfoMovement : MonoBehaviour,  IDestroyableEnemy
+    public class UfoMovement : IDestroyableEnemy
     {
         private Ufo _ufo;
-        private PlayerUI _playerUI;
+        private Player _player;
         private UfoConfig _ufoConfig;
 
         [Inject]
-        private void Construct(PlayerUI playerUI)
+        private void Construct(Player player)
         {
-            _playerUI = playerUI;
+            _player = player;
         }
         
         private void Update()
         {
-            if (_playerUI.gameObject.activeSelf && _ufoConfig != null)
+            if (_player.gameObject.activeSelf && _ufoConfig != null)
             {
-                Vector3 direction = _playerUI.transform.position - transform.position;
+                Vector3 direction = _player.transform.position - transform.position;
                 direction.Normalize();
 
                 transform.position += direction * _ufoConfig.Speed * Time.deltaTime;
@@ -35,7 +35,7 @@ namespace GameScene.Entities.UFOs
             _ufoConfig = ufoConfig;
         }
 
-        public void Destroy()
+        public override void Destroy()
         {
             if (_ufo != null)
                 _ufo.Destroy();

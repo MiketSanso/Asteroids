@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using GameScene.Common;
 using UnityEngine;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
     public class Bullet : MonoBehaviour, IPooledObject
     {

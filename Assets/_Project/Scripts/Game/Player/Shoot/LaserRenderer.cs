@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace GameScene.Entities.Player
+namespace GameScene.Entities.PlayerSpace
 {
     public class LaserRenderer : MonoBehaviour
     {

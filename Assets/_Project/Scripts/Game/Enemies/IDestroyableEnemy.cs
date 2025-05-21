@@ -1,7 +1,18 @@
+using GameScene.Entities.PlayerSpace;
+using UnityEngine;
+
 namespace GameScene.Common
 {
-    public interface IDestroyableEnemy
+    public abstract class IDestroyableEnemy : MonoBehaviour
     {
-        public void Destroy();
+        public abstract void Destroy();
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out Player player))
+            {
+                Destroy();
+            }
+        }
     }
 }

@@ -1,24 +1,29 @@
 using Cysharp.Threading.Tasks;
 using GameScene.Common.DataSaveSystem;
-using GameScene.Models;
+using Zenject;
 
 namespace GameScene.Models
 {
-    public class DataService
+    public class DataController : IInitializable
     {
         private DataModel _dataModel = new DataModel();
+        
         private readonly ISaveService _localSaveService;
         private readonly ISaveService _globalSaveService;
-
-        public DataService(ISaveService localSaveService, ISaveService globalSaveService)
+        
+        public DataController(ISaveService localSaveService, ISaveService globalSaveService)
         {
             _localSaveService = localSaveService;
             _globalSaveService = globalSaveService;
-            Load().Forget();
         }
 
-        public float MaxScore => _dataModel.MaxScore;
-        public bool IsAdsOff => _dataModel.IsAdsOff;
+        public void Initialize()
+        {
+            Load().Forget(); 
+        }
+        
+        public float GetMaxScore() => _dataModel.MaxScore;
+        public bool CanShowAds() => _dataModel.IsAdsOn;
 
         public async void SetMaxScore(float score)
         {
@@ -26,9 +31,9 @@ namespace GameScene.Models
             await SaveTask(); 
         }
 
-        public async void SetAdsOff(bool isOff)
+        public async void SetAdsState(bool isOn)
         {
-            _dataModel.IsAdsOff = isOff;
+            _dataModel.IsAdsOn = isOn;
             await SaveTask();
         }
         

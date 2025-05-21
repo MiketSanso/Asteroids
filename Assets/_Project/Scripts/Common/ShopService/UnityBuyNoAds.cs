@@ -11,17 +11,20 @@ namespace GameScene.Common
         private const string NO_ABS_PRODUCT_ID = "com.yourcompany.yourgame.noads";
         
         public event Action OnDisableAds;
-        public event Action<string> OnSendInfo;
+        public event Action OnBuySuccess;
+        public event Action OnBuyUnavailable;
+        public event Action OnBuyFailed;
         
         private string _gameId;
         private IStoreController _storeController;
-        private readonly DataService _dataPresenter;
+        
+        private readonly DataController _dataController;
         private readonly string _androidGameId = "5833054";
         private readonly bool _testMode = true;
     
-        private UnityBuyNoAds(DataService dataPresenter)
+        private UnityBuyNoAds(DataController dataController)
         {
-            _dataPresenter = dataPresenter;
+            _dataController = dataController;
         }
     
         public void Initialize()
@@ -36,21 +39,13 @@ namespace GameScene.Common
         {
             if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
             {
-                _dataPresenter.SetAdsOff(true);
-                _dataPresenter.Save();
+                _dataController.SetAdsState(true);
+                _dataController.Save();
                 OnDisableAds?.Invoke();
-                OnSendInfo?.Invoke("Реклама отключена! Спасибо!");
+                OnBuySuccess?.Invoke();
             }
     
             return PurchaseProcessingResult.Complete;
-        }
-    
-        private void InitializePurchasing()
-        {
-            var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-            builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
-    
-            UnityPurchasing.Initialize(this, builder);
         }
     
         public void BuyNoAds()
@@ -63,7 +58,7 @@ namespace GameScene.Common
             }
             else
             {
-                OnSendInfo?.Invoke("Продукт недоступен");
+                OnBuyUnavailable?.Invoke();
             }
         }
     
@@ -79,7 +74,7 @@ namespace GameScene.Common
     
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
-            OnSendInfo?.Invoke("Ошибка покупки.");
+            OnBuyFailed?.Invoke();
         }
     
         public void OnInitialized(IStoreController controller, IExtensionProvider extension)
@@ -95,6 +90,14 @@ namespace GameScene.Common
         public void OnInitializeFailed(InitializationFailureReason error, string message)
         {
             Debug.Log("Ошибка инициализации: " + error);
+        }
+        
+        private void InitializePurchasing()
+        {
+            var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+            builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
+    
+            UnityPurchasing.Initialize(this, builder);
         }
     }
 }

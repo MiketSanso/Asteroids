@@ -119,6 +119,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &31269485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 31269486}
+  - component: {fileID: 31269487}
+  m_Layer: 0
+  m_Name: Installer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &31269486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31269485}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 678363314}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &31269487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31269485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0d2bd0a7e449c6b3c3feced326944f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _reportTextsData: {fileID: 11400000, guid: ae0075145f0a9894dab595e3e234e3f0, type: 2}
+  _menuUI: {fileID: 441208087}
 --- !u!1 &156115787
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +346,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 31269487}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -437,10 +484,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e72d11d82597bb4dbdb389df4cdd505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statusText: {fileID: 573866418}
-  _buttonNoAds: {fileID: 1745460854}
-  _buttonExit: {fileID: 1592456028}
-  _buttonStartGame: {fileID: 2051081446}
+  StatusText: {fileID: 573866418}
+  ButtonNoAds: {fileID: 1745460854}
+  ButtonExit: {fileID: 1592456028}
+  ButtonStartGame: {fileID: 2051081446}
 --- !u!1 &496063620
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,6 +823,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 200269615}
+  - {fileID: 31269486}
   m_Father: {fileID: 640938124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &712766171
