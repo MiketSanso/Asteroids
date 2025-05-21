@@ -12,7 +12,7 @@ namespace GameSystem.Common.Installers
 {
     public class BootstrapInstaller : MonoInstaller
     {
-        [SerializeField] private GameEventBus gameEventBus;
+        [SerializeField] private GameStateController _gameStateController;
         [SerializeField] private MusicService _musicService;
         
         public override void InstallBindings()
@@ -20,16 +20,16 @@ namespace GameSystem.Common.Installers
             ISaveService localSaveService = new PrefsSave();
             ISaveService globalSaveService = new CloudSave();
 
+            Container.BindInterfacesAndSelfTo<GameStateController>().FromInstance(_gameStateController).AsSingle();
             Container.Bind<SceneChanger>().AsSingle();
             Container.BindInterfacesTo<Bootstrap>().AsSingle();
             Container.BindInterfacesTo<UnityAdsInitializer>().AsSingle();
             Container.BindInterfacesTo<Authentication>().AsSingle(); 
             Container.Bind<ScoreModel>().AsSingle();
-            Container.Bind<GameEventBus>().FromInstance(gameEventBus).AsSingle();
             Container.BindInterfacesTo<UnityAds>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameEndController>().AsSingle();
             Container.BindInterfacesAndSelfTo<UnityBuyNoAds>().AsSingle();
-            Container.BindInterfacesAndSelfTo<DataService>().AsSingle().WithArguments(localSaveService, globalSaveService);
-            Container.BindInterfacesAndSelfTo<DataPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DataController>().AsSingle().WithArguments(localSaveService, globalSaveService);
             Container.BindInterfacesAndSelfTo<ConfigFirebaseLoad>().AsSingle();
             Container.Bind(typeof(AddressablePrefabLoader<>)).AsSingle(); 
             Container.Bind<MusicService>().FromInstance(_musicService).AsSingle();

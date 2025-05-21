@@ -24,18 +24,21 @@ namespace GameScene.Factories
         private CancellationTokenSource _tokenSource;
         
         private readonly ScoreController _scoreController;
+        private readonly GameStateController _gameStateController;
         
         public UfoFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             IAnalyticService analyticService,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
             ScoreController scoreController,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService,
+            GameStateController gameStateController) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreController = scoreController;
+            _gameStateController = gameStateController;
         }
         
         public async void Initialize()
@@ -48,18 +51,18 @@ namespace GameScene.Factories
                 Return, 
                 Data.SizePool);
             
-            GameEventBus.OnRestart += StartSpawn;
-            GameEventBus.OnResume += StartSpawn;
-            GameEventBus.OnFinish += StopSpawn;
+            GameStateController.OnRestart += StartSpawn;
+            GameStateController.OnResume += StartSpawn;
+            _gameStateController.OnFinish += StopSpawn;
             
             StartSpawn();
         }
         
         public void Dispose()
         {
-            GameEventBus.OnFinish -= StopSpawn;
-            GameEventBus.OnResume -= StartSpawn;
-            GameEventBus.OnRestart -= StartSpawn;
+            _gameStateController.OnFinish -= StopSpawn;
+            GameStateController.OnResume -= StartSpawn;
+            GameStateController.OnRestart -= StartSpawn;
             
             foreach (Ufo ufo in PoolObjects.Pool)
             {

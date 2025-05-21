@@ -22,7 +22,6 @@ namespace GameScene.Factories
         
         private int _destroyed;
         private Transform _destroyedPosition;
-       
         private AsteroidConfig _asteroidData;
         private AsteroidConfig _asteroidDataSmall;
         private PoolObjects<Asteroid> _poolSmallObjects;
@@ -32,20 +31,20 @@ namespace GameScene.Factories
         public AsteroidFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform, 
             IAnalyticService analyticService,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
             ScoreController scoreController,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _scoreController = scoreController;
         }
 
         public async void Initialize()
         {
-            GameEventBus.OnResume += RestartFly;
-            GameEventBus.OnRestart += RestartFly;
+            GameStateController.OnResume += RestartFly;
+            GameStateController.OnRestart += RestartFly;
 
             _asteroidData = await ConfigLoadService.Load<AsteroidConfig>(ASTEROID_CONFIG);
             _asteroidDataSmall = await ConfigLoadService.Load<AsteroidConfig>(SMALL_ASTEROID_CONFIG);
@@ -66,8 +65,8 @@ namespace GameScene.Factories
         
         public void Dispose()
         {
-            GameEventBus.OnResume -= RestartFly;
-            GameEventBus.OnRestart -= RestartFly;
+            GameStateController.OnResume -= RestartFly;
+            GameStateController.OnRestart -= RestartFly;
             
             foreach (Asteroid asteroid in PoolObjects.Pool)
             {

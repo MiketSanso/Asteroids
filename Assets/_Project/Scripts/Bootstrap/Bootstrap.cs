@@ -5,7 +5,7 @@ namespace GameScene.Common
 {
     public class Bootstrap : IInitializable
     {
-        private SceneChanger _sceneChanger;
+        private readonly SceneChanger _sceneChanger;
         
         public Bootstrap(SceneChanger sceneChanger)
         {

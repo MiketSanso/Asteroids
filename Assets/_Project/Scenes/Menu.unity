@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _reportTextsData: {fileID: 11400000, guid: ae0075145f0a9894dab595e3e234e3f0, type: 2}
+  _menuUI: {fileID: 441208087}
 --- !u!1 &156115787
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,10 +484,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e72d11d82597bb4dbdb389df4cdd505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statusText: {fileID: 573866418}
-  _buttonNoAds: {fileID: 1745460854}
-  _buttonExit: {fileID: 1592456028}
-  _buttonStartGame: {fileID: 2051081446}
+  StatusText: {fileID: 573866418}
+  ButtonNoAds: {fileID: 1745460854}
+  ButtonExit: {fileID: 1592456028}
+  ButtonStartGame: {fileID: 2051081446}
 --- !u!1 &496063620
 GameObject:
   m_ObjectHideFlags: 0

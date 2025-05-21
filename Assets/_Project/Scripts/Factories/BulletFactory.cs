@@ -20,13 +20,13 @@ namespace GameScene.Factories
         
         public BulletFactory(TransformParent transformParent, 
             SpawnTransform spawnTransform,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             Player player,
             IAnalyticService analyticService, 
             AddressablePrefabLoader<GameObject> addressablePrefabLoader,
             IInstantiator instantiator,
             IConfigLoadService configLoadService,
-            MusicService musicService) : base(gameEventBus, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
+            MusicService musicService) : base(gameEndController, transformParent, spawnTransform, analyticService, addressablePrefabLoader, instantiator, configLoadService, musicService)
         {
             _player = player;
         }

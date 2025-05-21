@@ -10,27 +10,33 @@ namespace GameScene.Models
         public event Action OnScoreChange;
     
         private readonly ScoreModel _model;
-        private readonly GameEventBus _eventBus;
-        private readonly DataService _dataService;
-        private readonly DataPresenter _dataPresenter;
+        private readonly GameStateController _stateController;
+        private readonly DataController _dataController;
+        private readonly GameEndController _gameEndController;
     
         public float CurrentScore => _model.Score;
     
         public ScoreController(ScoreModel model,
-            GameEventBus eventBus,
-            DataService dataService,
-            DataPresenter dataPresenter)
+            GameStateController stateController,
+            GameEndController gameEndController,
+            DataController dataController)
         {
             _model = model;
-            _eventBus = eventBus;
-            _dataService = dataService;
-            _dataPresenter = dataPresenter;
+            _stateController = stateController;
+            _dataController = dataController;
+            _gameEndController = gameEndController;
         }
     
         public void Initialize()
         {
-            _eventBus.OnRestart += ResetScore;
-            _eventBus.OnFinish += CheckScoreRecord;
+            _gameEndController.OnRestart += ResetScore;
+            _stateController.OnFinish += CheckScoreRecord;
+        }
+        
+        public void Dispose()
+        {
+            _gameEndController.OnRestart -= ResetScore;
+            _stateController.OnFinish -= CheckScoreRecord;
         }
     
         public void AddScore(int value, Transform transform)
@@ -47,17 +53,11 @@ namespace GameScene.Models
     
         private void CheckScoreRecord()
         {
-            if (_model.Score > _dataPresenter.GetMaxScore())
+            if (_model.Score > _dataController.GetMaxScore())
             {
-                _dataService.SetMaxScore(_model.Score);
-                _dataService.Save();
+                _dataController.SetMaxScore(_model.Score);
+                _dataController.Save();
             }
-        }
-    
-        public void Dispose()
-        {
-            _eventBus.OnRestart -= ResetScore;
-            _eventBus.OnFinish -= CheckScoreRecord;
         }
     }
 }

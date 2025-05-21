@@ -17,13 +17,14 @@ namespace GameScene.Common
         
         private string _gameId;
         private IStoreController _storeController;
-        private readonly DataService _dataPresenter;
+        
+        private readonly DataController _dataController;
         private readonly string _androidGameId = "5833054";
         private readonly bool _testMode = true;
     
-        private UnityBuyNoAds(DataService dataPresenter)
+        private UnityBuyNoAds(DataController dataController)
         {
-            _dataPresenter = dataPresenter;
+            _dataController = dataController;
         }
     
         public void Initialize()
@@ -38,21 +39,13 @@ namespace GameScene.Common
         {
             if (args.purchasedProduct.definition.id == NO_ABS_PRODUCT_ID)
             {
-                _dataPresenter.SetAdsOff(true);
-                _dataPresenter.Save();
+                _dataController.SetAdsState(true);
+                _dataController.Save();
                 OnDisableAds?.Invoke();
                 OnBuySuccess?.Invoke();
             }
     
             return PurchaseProcessingResult.Complete;
-        }
-    
-        private void InitializePurchasing()
-        {
-            var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-            builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
-    
-            UnityPurchasing.Initialize(this, builder);
         }
     
         public void BuyNoAds()
@@ -97,6 +90,14 @@ namespace GameScene.Common
         public void OnInitializeFailed(InitializationFailureReason error, string message)
         {
             Debug.Log("Ошибка инициализации: " + error);
+        }
+        
+        private void InitializePurchasing()
+        {
+            var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+            builder.AddProduct(NO_ABS_PRODUCT_ID, ProductType.NonConsumable);
+    
+            UnityPurchasing.Initialize(this, builder);
         }
     }
 }

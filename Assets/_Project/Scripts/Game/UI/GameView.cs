@@ -33,5 +33,19 @@ namespace GameScene.Game
             _countLaserCharges.text = $"Count shoots laser: {_laser.CountShotsLaser}";
             _timeRollbackLaser.text = $"Time rollback laser: {_laser.TimeRechargeLaser}";
         }
+
+        public void UpdateUI(float speed, 
+            Vector3 playerPosition, 
+            float playerRotation,
+            int countShotLaser,
+            float timeRechargeLaser)
+
+        {
+            _instantaneousSpeed.text = $"Moment speed: {speed}";
+            _coordinates.text = $"Coordinates: {playerPosition}";
+            _angleOfRotations.text = $"Rotation: {playerRotation}°";
+            _countLaserCharges.text = $"Count shoots laser: {countShotLaser}";
+            _timeRollbackLaser.text = $"Time rollback laser: {timeRechargeLaser}";
+        }
     }
 }

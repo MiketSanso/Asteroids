@@ -654,7 +654,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1133344628059693849}
-  - component: {fileID: 2841982754506319784}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -686,23 +685,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2841982754506319784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3794626497090923225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc3df4f2a954415db1d53337a9a6461a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _coordinates: {fileID: 1836133723226705205}
-  _angleOfRotations: {fileID: 2506921426886829470}
-  _instantaneousSpeed: {fileID: 2178042336453175685}
-  _countLaserCharges: {fileID: 8815362894265997878}
-  _timeRollbackLaser: {fileID: 1757627782497198785}
 --- !u!1 &4138487306192871640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,6 +1499,7 @@ GameObject:
   - component: {fileID: 7484100039278485279}
   - component: {fileID: 6312015065811885097}
   - component: {fileID: 546852955649879703}
+  - component: {fileID: 8501301868559670372}
   m_Layer: 5
   m_Name: GameCanvas
   m_TagString: Untagged
@@ -1557,11 +1540,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e4c0bebe9db4399a65467cfe5f80148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _buttonInterstitialAds: {fileID: 6695712635469159219}
-  _buttonRewardedAds: {fileID: 7578406723531773249}
-  _buttonGoMenu: {fileID: 7994368770967021445}
-  _panel: {fileID: 793609609420925796}
-  _text: {fileID: 3916332684860165126}
+  ButtonInterstitialAds: {fileID: 6695712635469159219}
+  ButtonRewardedAds: {fileID: 7578406723531773249}
+  ButtonGoMenu: {fileID: 7994368770967021445}
+  Panel: {fileID: 793609609420925796}
+  Text: {fileID: 3916332684860165126}
 --- !u!223 &7484100039278485279
 Canvas:
   m_ObjectHideFlags: 0
@@ -1625,6 +1608,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8501301868559670372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662939416878517226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3df4f2a954415db1d53337a9a6461a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coordinates: {fileID: 1836133723226705205}
+  _angleOfRotations: {fileID: 2506921426886829470}
+  _instantaneousSpeed: {fileID: 2178042336453175685}
+  _countLaserCharges: {fileID: 8815362894265997878}
+  _timeRollbackLaser: {fileID: 1757627782497198785}
 --- !u!1 &7957096214414666234
 GameObject:
   m_ObjectHideFlags: 0

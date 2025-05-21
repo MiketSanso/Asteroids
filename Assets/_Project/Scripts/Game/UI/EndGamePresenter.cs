@@ -10,16 +10,19 @@ namespace GameScene.Models
         private EndPanelView _endPanelView;
         
         private readonly ScoreController _scoreController;
-        private readonly GameEventBus _gameEventBus;
+        private readonly GameStateController _gameStateController;
         private readonly IAdsService _adsService;
         private readonly SceneChanger _sceneChanger;
+        private readonly GameEndController _gameEndController;
         
         public EndGamePresenter(ScoreController scoreController,
-            GameEventBus gameEventBus,
+            GameEndController gameEndController,
             IAdsService adsService,
-            SceneChanger sceneChanger)
+            SceneChanger sceneChanger,
+            GameStateController gameStateController)
         {
-            _gameEventBus = gameEventBus;
+            _gameEndController = gameEndController;
+            _gameStateController = gameStateController;
             _adsService = adsService;
             _sceneChanger = sceneChanger;
             _scoreController = scoreController;
@@ -27,13 +30,15 @@ namespace GameScene.Models
 
         public void Initialize(EndPanelView endPanelView)
         {
+            _endPanelView = endPanelView;
+
             _endPanelView.ButtonGoMenu.onClick.AddListener(_sceneChanger.ActivateMenu);
             _endPanelView.ButtonInterstitialAds.onClick.AddListener(_adsService.ShowInterstitialAds);
             _endPanelView.ButtonRewardedAds.onClick.AddListener(_adsService.ShowRewardedAds);
-
-            _gameEventBus.OnResume += _endPanelView.Deactivate;
-            _gameEventBus.OnFinish += _endPanelView.Activate;
-            _gameEventBus.OnRestart += _endPanelView.Deactivate;
+            
+            _gameEndController.OnResume += _endPanelView.Deactivate;
+            _gameStateController.OnFinish += _endPanelView.Activate;
+            _gameEndController.OnRestart += _endPanelView.Deactivate;
             _endPanelView.Deactivate();
             
             _endPanelView = endPanelView;
@@ -47,9 +52,9 @@ namespace GameScene.Models
             _endPanelView.ButtonInterstitialAds.onClick.RemoveListener(_adsService.ShowInterstitialAds);
             _endPanelView.ButtonRewardedAds.onClick.RemoveListener(_adsService.ShowRewardedAds);
             
-            _gameEventBus.OnResume -= _endPanelView.Deactivate;
-            _gameEventBus.OnFinish -= _endPanelView.Activate;
-            _gameEventBus.OnRestart -= _endPanelView.Deactivate;
+            _gameEndController.OnResume -= _endPanelView.Deactivate;
+            _gameStateController.OnFinish -= _endPanelView.Activate;
+            _gameEndController.OnRestart -= _endPanelView.Deactivate;
             
             _scoreController.OnScoreChange -= UpdateScoreDisplay;
         }

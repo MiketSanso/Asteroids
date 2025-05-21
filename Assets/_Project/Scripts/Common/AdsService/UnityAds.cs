@@ -1,36 +1,31 @@
+using System;
 using GameScene.Models;
 using UnityEngine.Advertisements;
 
 namespace GameScene.Common
 {
-    public class UnityAds : IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
+    public class UnityAds : IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService, IGameEndEventer
     {
         private const string INTERSTITIAL_AD_UNIT_ID = "Interstitial_Android";
         private const string REWARDED_AD_UNIT_ID = "Rewarded_Android";
+
+        public event Action OnRestart;
+        public event Action OnResume;
         
         private IUnityAdsLoadListener _unityAdsLoadListenerImplementation;
         private bool _isAdsReady;
         
-        private readonly GameEventBus _gameEventBus;
-        private readonly DataPresenter _dataPresenter;
+        private readonly DataController _dataController;
         
-        private UnityAds(GameEventBus gameEventBus, DataPresenter dataPresenter)
+        private UnityAds(DataController dataController)
         {
-            _gameEventBus = gameEventBus;
-            _dataPresenter = dataPresenter;
+            _dataController = dataController;
         }
 
         public void Initialize()
         {
-            _gameEventBus.OnRestart += LoadAds;
-            
             Advertisement.Load(INTERSTITIAL_AD_UNIT_ID, this);
             Advertisement.Load(REWARDED_AD_UNIT_ID, this);
-        }
-        
-        public void Dispose()
-        {
-            _gameEventBus.OnRestart -= LoadAds;
         }
         
         public void OnUnityAdsAdLoaded(string adUnitId)
@@ -53,23 +48,24 @@ namespace GameScene.Common
         {
             if (placementId == REWARDED_AD_UNIT_ID)
             {
-                _gameEventBus.ResumeGame();
+                OnResume?.Invoke();
             }
             else if (placementId == INTERSTITIAL_AD_UNIT_ID)
             {
-                ShowComplete();
+                OnRestart?.Invoke();
             }
         }
         
         public void ShowInterstitialAds()
         {
-            if (_dataPresenter.CanShowAds())
+            if (!_dataController.CanShowAds())
             {
                 Advertisement.Show(INTERSTITIAL_AD_UNIT_ID, this);
             }
             else
             {
-                ShowComplete();
+                Advertisement.Load(REWARDED_AD_UNIT_ID, this);
+                OnRestart?.Invoke();
             }
         }
         
@@ -82,15 +78,5 @@ namespace GameScene.Common
             }
         }
         
-        private void ShowComplete()
-        {
-            _gameEventBus.RestartGame();
-        }
-        
-    
-        private void LoadAds()
-        {
-            Advertisement.Load(REWARDED_AD_UNIT_ID, this);
-        }
     }
 }

@@ -15,15 +15,16 @@ namespace GameSystem.Common.Installers
         
         public override void InstallBindings()
         {
-            Container.BindInterfacesTo<EntryPoint>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<AsteroidFactory>().AsSingle(); 
             Container.Bind<TransformParent>().FromInstance(_transformParent).AsSingle();
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<UfoFactory>().AsSingle(); 
-            Container.BindInterfacesAndSelfTo<EndGamePresenter>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<ScoreController>().AsSingle(); 
             Container.BindInterfacesAndSelfTo<KeyboardInput>().AsSingle();
             Container.Bind<Player>().FromInstance(_player).AsSingle();
+            Container.BindInterfacesAndSelfTo<EndGamePresenter>().AsSingle(); 
+            Container.BindInterfacesAndSelfTo<GamePresenter>().AsSingle();
+            Container.BindInterfacesTo<EntryPoint>().AsSingle(); 
         }
     }
 }

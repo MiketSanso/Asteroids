@@ -9,22 +9,22 @@ namespace GameScene.Game
         public Button ButtonInterstitialAds;
         public Button ButtonRewardedAds;
         public Button ButtonGoMenu;
-        public GameObject _panel;
-        public TMP_Text _text;
+        public GameObject Panel;
+        public TMP_Text Text;
         
         public void Deactivate()
         {
-            _panel.SetActive(false);
+            Panel.SetActive(false);
         }
 
         public void Activate()
         {
-            _panel.SetActive(true);
+            Panel.SetActive(true);
         }
 
         public void UpdateScoreDisplay(float score)
         {
-            _text.text = score.ToString();
+            Text.text = score.ToString();
         }
     }
 }

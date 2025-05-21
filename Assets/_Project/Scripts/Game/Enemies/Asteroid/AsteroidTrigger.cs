@@ -1,5 +1,4 @@
 using GameScene.Common;
-using UnityEngine;
 
 namespace GameScene.Entities.Asteroid
 {

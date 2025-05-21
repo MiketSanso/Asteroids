@@ -21,10 +21,10 @@ namespace GameScene.Factories
         protected readonly IInstantiator Instantiator;
         protected readonly SpawnTransform SpawnTransform;
         protected readonly TransformParent TransformParent;
-        protected readonly GameEventBus GameEventBus;
+        protected readonly GameEndController GameStateController;
         protected readonly MusicService MusicService;
         
-        protected Factory(GameEventBus gameEventBus, 
+        protected Factory(GameEndController gameEndController, 
             TransformParent transformParent, 
             SpawnTransform spawnTransform,
             IAnalyticService analyticService, 
@@ -33,7 +33,7 @@ namespace GameScene.Factories
             IConfigLoadService configLoadService,
             MusicService musicService)
         {
-            GameEventBus = gameEventBus;
+            GameStateController = gameEndController;
             SpawnTransform = spawnTransform;
             TransformParent = transformParent;
             AnalyticService = analyticService;
